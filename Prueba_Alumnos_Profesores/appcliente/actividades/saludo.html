@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>SALUDO </h1>
+    <input type="text" name="input" id="input">
+    <button id="boton">Haz Click</button>
+    <p id="target">Esperando texto...</p>
+
+    <script>
+        let boton = document.getElementById('boton');
+
+        boton.addEventListener('click', function() {
+            let texto = document.getElementById('input');
+
+            if (texto.value == "") {
+                alert('No has introducido ningun texto');
+            } else {
+                document.getElementById('target').innerHTML = texto.value;
+            }
+        })
+    </script>
+</body>
+
+</html>

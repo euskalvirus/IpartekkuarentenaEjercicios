@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        .subrayado {
+            color: teal;
+            text-decoration: underline;
+        }
+    </style>
+    <h1 id="titulo1">JavaScript Basico 1</h1>
+    <h2 id="titulo2">Manipulacion del DOM y Selectores</h2>
+
+    <p>DOM Document Object Model
+        <a href="https://es.wikipedia.org/wiki/Document_Object_Model">WIKIPEDIA</a> </p>
+
+    <ul id="lista">
+        <!-- innerHTML -->
+        <li>Cargando...</li>
+    </ul>
+
+    <script>
+        console.info('Esta funcionando');
+
+        var persona = "Pepe";
+
+        if (!persona) {
+            alert('Persona no tiene valor es UNDEFINED');
+        } else {
+            console.debug(persona);
+        }
+
+        //JavaScript tiene dos comparadores
+        // ==
+        // === comparador estricto
+
+        if (2 == "2") {
+            console.debug(' 2 == "2" es true')
+        }
+
+        if (2 === "2") {
+            console.debug(' 2 === "2" es true')
+        } else {
+            console.debug(' 2 === "2" es false')
+        }
+
+        console.debug(persona);
+
+        const PI = 3.14;
+        console.debug('PI = ' + PI);
+        //Seleccionamos un elemento por su id
+        var elH1 = document.getElementById('titulo1');
+        var elH2 = document.getElementById('titulo2');
+
+        //Cambiar el color a rojo
+        elH1.style.color = 'red';
+
+        //Añadimos una clase a traves de classList API
+        elH2.classList.add('subrayado');
+
+        //Podemos manipular tambien el texto
+        elH1.textContent = 'Cambiado mediante JS';
+
+        //Cargar dinamicamente la lista
+        var lista = document.getElementById('lista');
+
+        //Limpiar el contenido
+        lista.innerHTML = '';
+
+        //Cargar datos
+        for (let i = 0; i < 4; i++) {
+            lista.innerHTML += `<li>Elemento ${i}</li>`;
+        }
+    </script>
+</body>
+
+</html>

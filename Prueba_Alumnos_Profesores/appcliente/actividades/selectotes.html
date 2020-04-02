@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Selectores</h1>
+
+    <div id="box">
+        <a href="top1">Enlace1</a>
+    </div>
+
+    <a href="top2">Enlace2</a>
+
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis tenetur, quaerat, sit quibusdam asperiores placeat aliquam laborum commodi earum possimus recusandae eaque praesentium fugit. Beatae sed numquam aspernatur dolorum blanditiis?</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam optio eveniet doloribus voluptates sint amet aut repellendus assumenda natus harum consectetur alias architecto aspernatur, id dolorum excepturi delectus labore! Tenetur!</p>
+    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cupiditate at id eos temporibus minima pariatur voluptates, quae, veniam officiis quos accusantium quasi soluta, natus culpa hic molestiae molestias sequi eum.</p>
+
+    <script>
+        //Exitten distintos selectores de JavaScript
+        let parrafos = document.getElementsByTagName('p');
+        console.debug('Tenemos ' + parrafos.length + ' parrafos en el documento')
+
+        for (let i = 0; i < parrafos.length; i++) {
+            let p = parrafos[i];
+            p.style.color = 'red';
+            p.innerHTML += ' leer mas..'
+        }
+
+        let anclaDerntroDiv = document.querySelector('div#box a');
+        anclaDerntroDiv.style.color = 'green';
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Eventos</h1>
+    <p>Cada vez que usemo el botón sumará uno</p>
+    <button onclick="sumar()">Sumar</button>
+
+    <button id="boton">Restar</button>
+    <button id="botonReset">Resetear</button>
+
+    <p id="texto">0</p>
+
+    <script>
+        //Podemos hacer eventos con listener sin tener que usar el html
+        let elBotonResta = document.getElementById('boton');
+        //En este caso registramos un evento y no se usa onClick
+        elBotonResta.addEventListener("click", restar);
+
+        let botonReset = document.getElementById('botonReset');
+        //podemos declara una funcion dentro de otra, fijaremos el 2º parametro de addEventListener
+        botonReset.addEventListener('click', function() {
+            console.trace('pulsado boton reset');
+            if (confirm('¿Seguro que quiere empezar de cero?')) {
+                document.getElementById('texto').innerHTML = '0';
+            } else {
+                console.debug('Cancelado reset de contador')
+            }
+
+        })
+
+        let elTexto = document.getElementById('texto');
+
+        function sumar() {
+            let elTexto = document.getElementById('texto');
+            let numero = parseInt(elTexto.innerHTML);
+            numero++;
+            elTexto.innerHTML = numero;
+        }
+
+        function restar() {
+            console.debug(event);
+            console.debug(event.target.id == 'boton');
+            let elTexto = document.getElementById('texto');
+            let numero = parseInt(elTexto.innerHTML);
+            numero--;
+            elTexto.innerHTML = numero;
+        }
+    </script>
+</body>
+
+</html>
