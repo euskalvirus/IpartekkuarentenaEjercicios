@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>JSON</h1>
+    <p>Java Script Object Notation
+        <a href="https://es.wikipedia.ork/wiki/JSON" target="_blank">Documentacion</a>
+    </p>
+    <p><a href="https://jsonlint.com/" target="_blank">Validador Online</a></p>
+
+    <p>Nombre <b id="nombre">x</b></p>
+
+    <input type="text" name="" id="iNombre" value="" placeholder="Dime tu nombre">
+    <script>
+        let persona = {
+            "nombre": "Marian",
+            "edad": 34,
+            "aprobado": true
+        };
+        console.debug(persona);
+
+        console.debug("nombre " + persona.nombre);
+        console.debug("edad " + persona.edad);
+        console.debug("Si me equivoco de atributo " + persona.meLoInvento);
+
+        //mostrar en el HTML el nombre de la persona
+        let elNombre = document.getElementById("nombre").textContent = persona.nombre;
+        let elInputNombre = document.getElementById("iNombre").value = persona.nombre;
+
+        //Una persona, pero un poco mas compleja
+        let personaCompleja = {
+            "nombre": "Pepe",
+            "apellido": "gorrokoetxea",
+            "peso": 3.45,
+            "obeso": false,
+            "estudios": [{
+                "nombre": "Java",
+                "anyo": 2019,
+                "nota": 7.9
+            }, {
+                "nombre": "Html",
+                "anyo": 2004,
+                "nota": 4.9
+            }]
+        };
+
+        console.debug(`personaCompleja = ${personaCompleja.nombre}`);
+        console.debug(`tiene ${personaCompleja.estudios.length} estudios`);
+
+        for (let i = 0; i < personaCompleja.estudios.length; i++) {
+            let estudio = personaCompleja.estudios[i];
+            console.debug(estudio.nombre + " " + estudio.nota + " " + estudio.anyo);
+        }
+    </script>
+</body>
+
+</html>
