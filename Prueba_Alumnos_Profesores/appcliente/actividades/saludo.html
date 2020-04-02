@@ -19,7 +19,7 @@
         boton.addEventListener('click', function() {
             let texto = document.getElementById('input');
 
-            if (texto.value == "") {
+            if (texto.value.trim() == "") {
                 alert('No has introducido ningun texto');
             } else {
                 document.getElementById('target').innerHTML = texto.value;
