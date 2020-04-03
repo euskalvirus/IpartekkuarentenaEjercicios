@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1></h1>
+    <p>
+        <a href="http://carlosazaustre.es/ecmascript6" target="_blank"></a>
+    </p>
+    <p>Videos de ES6</p>
+
+    <script>
+        function saludar(valor = "foo") {
+            console.info(`Hola ${valor}`);
+        }
+
+        saludar("ander");
+        saludar();
+
+        console.log(`hola
+                que
+                ase`);
+
+        let frutas = ["pera", "manzana", "kigui"];
+
+        console.debug('foreach')
+        frutas.forEach(fruta => {
+            console.debug(fruta);
+        });
+
+        console.debug('arrow function');
+        //arrow function =>, viene a substituir function
+
+        frutas.forEach(fruta => console.debug(fruta));
+
+        //si hay varias sentencias, hay que usar {}
+
+        frutas.forEach(fruta => {
+            console.debug('otra sentencia');
+            console.debug(fruta);
+        });
+
+        //ES5
+        function sumar(num) {
+            console.debug(num + num);
+        };
+        sumar(4);
+
+        //ES6
+        var sumar = (num) => num + num;
+
+        console.debug(sumar(5));
+    </script>
+</body>
+
+</html>
