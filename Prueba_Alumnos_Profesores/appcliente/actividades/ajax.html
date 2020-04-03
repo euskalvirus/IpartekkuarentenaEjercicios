@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Ejemplo Ajax</h1>
+    <p>Documentacion
+        <a href="https://www.w3schools.com/xml/ajax_intro.asp" target="_blank">W3School</a>
+    </p>
+    <p>Vamos a aprende a realizar una llamada Ajax con Vanilla JavaScript</p>
+    <p>Vamos a consumir un servicio Rest y pintar los datos en HTML
+        <a href="http://randomuser.me/" target="_blank">API Personas</a>
+    </p>
+
+    <h2>Listado Personas</h2>
+    <ol id="lista">
+        <li>Cargando...</li>
+    </ol>
+
+    <script>
+        window.addEventListener('load', init());
+
+        function init() {
+            console.debug('Document Load and Ready');
+
+            const url = "https://randomuser.me/api/?results=5";
+
+            //Creamos un objeto para realizar la REQUEST con Ajax
+            var xhttp = new XMLHttpRequest();
+
+            //CUIDADO este motodo funciona de forma asincrona
+            //debemos meter nuestro codigo aqui dentro apra trabajar con los datos enteros
+            xhttp.onreadystatechange = function() {
+                //Recibimos la RESPONSE
+                if (this.readyState == 4 && this.status == 200) {
+                    console.info('Peticion GET ' + url);
+                    console.debug(this.responseText);
+
+                    //Parsear el texto a Json
+                    const jsonData = JSON.parse(this.responseText);
+                    console.debug(jsonData);
+
+                    //Array con personas
+                    const personas = jsonData.results;
+
+                    let lista = document.getElementById("lista");
+                    lista.innerHTML = "";
+
+                    personas.forEach(persona => {
+                        console.debug(persona.name.first + " " + persona.name.last);
+
+                        lista.innerHTML += `<li>
+                                <img src="${persona.picture.thumbnail}" alt="avatar"> 
+                                    ${persona.name.first} ${persona.name.last}
+                            </li>`
+                    }); // foreach
+
+                } // this.readyState == 4 && this.status == 200
+
+            }; // onreadystatechange
+
+            //preparamos la peticion GET
+            xhttp.open("GET", url, true);
+            //enviar la peticion asincrona, meter el codigo en overreadystatechange
+            xhttp.send();
+        }
+    </script>
+</body>
+
+</html>
