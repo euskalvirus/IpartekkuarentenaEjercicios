@@ -36,9 +36,19 @@
             border: 1px solid;
             text-align: center;
         }
+        
+        #buscador {
+            width: 60vw;
+            text-align: center;
+        }
     </style>
 
     <h1>Listado Personas</h1>
+
+    <div id="buscador">
+        <p>Cuantas personas quieres mostrar?</p>
+        <input type="search" name="" id="cantidad"><button id="botonBuscador">Buscar</button>
+    </div>
 
     <ul id="lista">
         <li>Cargando...</li>
@@ -49,7 +59,23 @@
 
         function init() {
 
-            const url = "https://randomuser.me/api/?results=5";
+            let elBotonBuscador = document.getElementById('botonBuscador');
+
+            elBotonBuscador.addEventListener("click", cantidad);
+            cantidad(5);
+        }
+
+
+
+        function cantidad() {
+            let cant = 5;
+            let val = document.getElementById("cantidad").value;
+            if (event && event.target.id === "botonBuscador" && parseInt(val)) {
+                cant = parseInt(val);
+            }
+
+            console.debug(cant);
+            const url = `https://randomuser.me/api/?results=${cant}`;
 
             var xhttp = new XMLHttpRequest();
 
