@@ -5,9 +5,9 @@ console.trace(`Esto suele ser para tracear o decir ${nombre}`);
 console.warn('mensaje de warking');
 console.error('mensaje de error')
 
-var lista = document.getElementById('lista');
+let lista = document.getElementById('lista');
 
-let personas = [{
+const personas = [{
         "avatar": "img/avatar1.png",
         "nombre": "Mary",
         "sexo": "F"
@@ -40,6 +40,18 @@ let personas = [{
     }
 ]
 lista.innerHTML = '';
-for (let i = 0; i < 7; i++) {
+for (let i = 0; i < personas.length; i++) {
     lista.innerHTML += `<li class="list-group-item "><img src=${personas[i].avatar} " alt="imagen avatar ">${personas[i].nombre} </li>`
+}
+
+//Segunda forma de hacer la iteración
+lista.innerHTML = '';
+personas.forEach(persona => {
+    lista.innerHTML += `<li class="list-group-item "><img src=${persona.avatar} " alt="imagen avatar ">${persona.nombre} </li>`
+});
+
+window.addEventListener('load', init());
+
+function init() {
+    console.debug('Document Load and Ready');
 }
