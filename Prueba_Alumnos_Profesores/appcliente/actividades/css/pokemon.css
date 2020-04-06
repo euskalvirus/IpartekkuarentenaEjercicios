@@ -1,0 +1,99 @@
+.jumbotron {
+    background-color: rgb(74, 74, 180);
+    color: white;
+    text-align: center;
+}
+
+h1 {
+    font-size: 50px !important;
+}
+
+ul {
+    width: 20vw;
+    padding-left: 0;
+}
+
+#todosPokemon {
+    margin-left: 0em;
+    padding-left: 2em;
+    padding-top: 2em;
+    background-color: rgb(9, 202, 128);
+    border: 1px solid;
+    padding-bottom: 2em;
+}
+
+ul>div.row {
+    border: 0px solid;
+    padding-bottom: 0em;
+}
+
+#buscador {
+    width: 60vw;
+    text-align: center;
+}
+
+.pokemon {
+    max-width: 100% !important;
+    width: 50vw !important;
+    height: 100%;
+}
+
+ul>li {
+    max-width: 100% !important;
+    width: 50vw !important;
+    height: 100%;
+    justify-content: center;
+    vertical-align: middle;
+    margin: 0.1em auto;
+    font-size: 12px;
+    border: 1px solid;
+    text-align: center;
+    padding: 0 !important;
+}
+
+.titulos {
+    padding-left: 1em;
+    padding-bottom: 1.5em;
+    text-align: center;
+}
+
+.habilidades * {
+    font-size: 20px;
+    font-weight: 900;
+    text-decoration: none;
+    color: white;
+    background-color: rgb(230, 88, 88);
+}
+
+h2,
+h2 * {
+    font-size: 50px;
+    font-weight: 900 !important;
+}
+
+h2>span {
+    border: 1px solid;
+}
+
+body>* {
+    width: 60vw;
+}
+
+.btn-secondary {
+    background-color: gray;
+    font-size: 20px;
+    font-weight: 1000;
+}
+
+#nav-link {
+    width: fit-content;
+}
+
+#nav-item {
+    width: fit-content;
+}
+
+body {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}

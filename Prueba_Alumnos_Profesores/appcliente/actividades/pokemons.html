@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/pokemon.css">
+
+    <title>Document</title>
+</head>
+
+<body class="container">
+
+    <div class="jumbotron">
+        <h1>LISTADO POKEMONS</h1>
+    </div>
+    <div class="titulos row justify-content-around">
+        <h2 id="titulopokemon" class="col-5"><span class="badge badge-light">POKEMONS<span class="badge badge-secondary"></span></h2>
+        <h2 id="titulohabilidad" class="col-5"><span class="badge badge-light">HABILIDADES</span></h2>
+    </div>
+    <div id="todosPokemon" class="row">
+        <ul id="lista" class="col list-group">
+            <div id="pokemon" class="row list-group-item justify-content-around">
+                <li id="li1" class="col-5 list-group-item">Cargando...</li>
+                <ul id="lista2" class="col-5 habilidades">
+                    <li id="li2" hidden></li>
+                </ul>
+            </div>
+        </ul>
+
+        <!-- <ul id="lista2" class="col-5">
+            <li hidden>Cargando...</li>
+        </ul> -->
+
+    </div>
+
+    <!-- jQuery -->
+    <script src="js/jquery-3.4.1.min.js "></script>
+    <!-- Bootstrap -->
+    <script src="js/bootstrap.bundle.min.js "></script>
+    <script src="js/pokemon.js "></script>
+
+</body>
+
+</html>
