@@ -25,15 +25,32 @@
         <ul id="lista" class="col list-group">
             <div id="pokemon" class="row list-group-item justify-content-around">
                 <li id="li1" class="col-5 list-group-item">Cargando...</li>
-                <ul id="lista2" class="col-5 habilidades">
+                <!--<ul id="lista2" class="col-5 habilidades">
                     <li id="li2" hidden></li>
-                </ul>
+                </ul> -->
+                <div id="lista2" class="card col" style="width: 18rem;">
+                    <img id="imagenpokemon" src="" class="card-img-top imgpokemon" alt="...">
+                    <div class="card-body row">
+                        <h5 id="titulo" class="card-title">$pokemon.name # $pokemon.id</h5>
+                        <div id="habilidades" class="col">
+                            <p class="card-text">Habilidades</p>
+                            <div id="listahabilidades">
+                                <p>habilidad 1</p>
+                                <p>habilidad 2</p>
+                            </div>
+                        </div>
+                        <div id="stats" class="col">
+                            <p class="card-text">Stats</p>
+                            <div id="listastats">
+                                <p>stat 1</p>
+                                <p>stat 2</p>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary">CLOSE</a>
+                    </div>
+                </div>
             </div>
         </ul>
-
-        <!-- <ul id="lista2" class="col-5">
-            <li hidden>Cargando...</li>
-        </ul> -->
 
     </div>
 

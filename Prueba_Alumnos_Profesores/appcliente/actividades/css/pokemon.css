@@ -15,7 +15,7 @@ ul {
 
 #todosPokemon {
     margin-left: 0em;
-    padding-left: 2em;
+    padding-left: 1em;
     padding-top: 2em;
     background-color: rgb(9, 202, 128);
     border: 1px solid;
@@ -25,11 +25,6 @@ ul {
 ul>div.row {
     border: 0px solid;
     padding-bottom: 0em;
-}
-
-#buscador {
-    width: 60vw;
-    text-align: center;
 }
 
 .pokemon {
@@ -75,9 +70,7 @@ h2>span {
     border: 1px solid;
 }
 
-body>* {
-    width: 60vw;
-}
+body>* {}
 
 .btn-secondary {
     background-color: gray;
@@ -96,4 +89,18 @@ body>* {
 body {
     padding-top: 1em;
     padding-bottom: 1em;
+}
+
+.imgpokemon {
+    align-self: center;
+    max-width: 240px;
+}
+
+h5 {
+    text-align: center;
+    font-size: 35px;
+}
+
+.card {
+    margin-right: 1em !important;
 }
