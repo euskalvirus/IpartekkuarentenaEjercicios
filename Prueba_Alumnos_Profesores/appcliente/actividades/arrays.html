@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Map, filter, reduce</h1>
+    <p>TODO con enlaces de interes</p>
+
+    <script>
+        const frutas = [{
+            "nombre": "fresa",
+            "precio": 4.56,
+            "colores": ["rojo"]
+        }, {
+            "nombre": "manzana",
+            "precio": 1.99,
+            "colores": ["rojo", "verde", "amarillo"]
+        }, {
+            "nombre": "kiwi",
+            "precio": 3.00,
+            "colores": ["verde", "amarillo"]
+        }];
+        console.debug(frutas);
+
+        //ejemplo de MAP, quiero solo los nombres de las frutas
+        const frutasNombres = frutas.map(fruta => fruta.nombre);
+        console.debug(frutasNombres);
+
+        const frutasNombres2 = frutas.map(fruta => {
+            console.debug(fruta);
+            return fruta.nombre;
+        });
+
+        //reducir el array para sacar el total de precio, cuidado primero un map
+        const valorinicial = 0;
+        const totalprecio = frutas.map(el => el.precio).reduce((previous, current) => {
+            console.debug('previous' + previous);
+            console.debug('current' + current);
+
+            return previous + current;
+        }, valorinicial);
+        console.info('totalPrecio= ' + totalprecio);
+
+        //filtrar frutas que precio >3
+        const frutasFiltradas = frutas.filter(el => {
+            return el.precio >= 3;
+        });
+        console.info('frutasFiltradas= %o', frutasFiltradas);
+
+        const frutasFiltradas2 = frutas.filter(el => el.precio >= 3);
+        console.info('frutasFiltradas= %o', frutasFiltradas2);
+    </script>
+</body>
+
+</html>
