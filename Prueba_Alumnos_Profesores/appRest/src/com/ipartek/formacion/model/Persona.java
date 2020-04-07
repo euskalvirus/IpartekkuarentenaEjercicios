@@ -5,19 +5,20 @@ public class Persona {
 	private int id;
 	private String nombre;
 	private String avatar;
+	private String sexo;
 	
 	public Persona() {
-		super();
 		this.id = 0;
 		this.nombre = "";
 		this.avatar = "avatar1.png";
+		this.sexo = "";
 	}
 
-	public Persona(int id, String nombre, String avatar) {		
-		this();
+	public Persona(int id, String nombre, String avatar, String sexo) {		
 		this.id = id;
 		this.nombre = nombre;
 		this.avatar = avatar;
+		this.sexo = sexo;
 		
 	}
 
@@ -43,6 +44,14 @@ public class Persona {
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
+	}
+
+	public String getSexo() {
+		return sexo;
+	}
+
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
 	}
 
 	@Override

@@ -24,15 +24,17 @@ public class PersonaController {
 	
 	private static ArrayList<Persona> personas = new ArrayList<Persona>();
 	
-	
+	static {
+		personas.add( new Persona(1,"Arantxa","img/avatar1.png", "F") );
+		personas.add( new Persona(2,"Idoia","img/avatar2.png", "F") );
+		personas.add( new Persona(3,"Iker","img/avatar3.png", "M") );
+		personas.add( new Persona(4,"Hodei","img/avatar4.png", "M") );
+	}
 	
 	
 	public PersonaController() {
 		super();
-		personas.add( new Persona(1,"Arantxa","avatar1.png") );
-		personas.add( new Persona(1,"Idoia","avatar2.png") );
-		personas.add( new Persona(1,"Iker","avatar3.png") );
-		personas.add( new Persona(1,"Hodei","avatar4.png") );
+		
 	}
 
 
