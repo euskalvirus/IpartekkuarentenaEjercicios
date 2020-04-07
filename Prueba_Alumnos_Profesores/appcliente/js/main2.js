@@ -70,6 +70,18 @@ function init() {
                 break;
         }
     })
+
+    let buscador = document.getElementById('search');
+
+    buscador.addEventListener('keyup', function() {
+        let valor = this.value;
+        if (valor == "") {
+            pintar(personas);
+        } else {
+            let array = buscar(valor);
+            pintar(array);
+        }
+    })
     console.debug('Document Load and Ready');
     pintar(personas);
 }
@@ -86,4 +98,8 @@ function pintar(arraypersonas) {
 function filtarPorSexo(sexo) {
     let array = personas.filter(persona => persona.sexo == sexo);
     pintar(array);
+}
+
+function buscar(indicionombre) {
+    return personas.filter(persona => persona.nombre.toLowerCase().startsWith(indicionombre.toLowerCase()));
 }
