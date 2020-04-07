@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Actividad7</h1>
+
+    <script>
+        const frutas = [{
+            "nombre": "fresa",
+            "precio": 4.56,
+            "colores": ["rojo"],
+            "oferta": true
+        }, {
+            "nombre": "manzana",
+            "precio": 1.99,
+            "colores": ["rojo", "verde", "amarillo"],
+            "oferta": false
+        }, {
+            "nombre": "kiwi",
+            "precio": 3.00,
+            "colores": ["verde", "amarillo"],
+            "oferta": true
+        }, {
+            "nombre": "platano",
+            "precio": 1.27,
+            "colores": ["verde", "amarillo"],
+            "oferta": true
+        }, {
+            "nombre": "melón",
+            "precio": 5.00,
+            "colores": ["verde", "amarillo", "naranja"],
+            "oferta": false
+        }];
+
+        Array.prototype.concatAll = function() {
+            var results = [];
+            this.forEach(function(subArray) {
+                subArray.map(num => {
+                    results.push(num)
+                });
+            });
+            return results;
+        };
+
+        Array.prototype.concatAllUnrepited = function() {
+            var results = [];
+            this.forEach(function(subArray) {
+                subArray.map(num => {
+                    if (!results.includes(num)) {
+                        results.push(num)
+                    }
+                });
+            });
+            return results;
+        };
+
+        console.debug(frutas.map(fruta => fruta.nombre));
+
+        console.debug(frutas.filter(fruta => fruta.oferta).map(fruta => fruta.nombre));
+
+        console.debug(frutas.map(fruta => fruta.precio).reduce((acc, current) => [(+acc) + (+current)]));
+
+        console.debug(frutas.filter(fruta => fruta.oferta).map(fruta => fruta.precio).reduce((acc, current) => [(+acc) + (+current)]));
+
+        console.debug(frutas.map(fruta => fruta.colores).concatAll());
+
+        console.debug(frutas.map(fruta => fruta.colores).concatAllUnrepited());
+    </script>
+</body>
+
+</html>
