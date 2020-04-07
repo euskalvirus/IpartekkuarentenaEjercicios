@@ -15,27 +15,32 @@
             "nombre": "fresa",
             "precio": 4.56,
             "colores": ["rojo"],
-            "oferta": true
+            "oferta": true,
+            "ofertapor": 20
         }, {
             "nombre": "manzana",
             "precio": 1.99,
             "colores": ["rojo", "verde", "amarillo"],
-            "oferta": false
+            "oferta": false,
+            "oferpor": 0
         }, {
             "nombre": "kiwi",
             "precio": 3.00,
             "colores": ["verde", "amarillo"],
-            "oferta": true
+            "oferta": true,
+            "ofertapor": 15
         }, {
             "nombre": "platano",
             "precio": 1.27,
             "colores": ["verde", "amarillo"],
-            "oferta": true
+            "oferta": true,
+            "ofertapor": 10
         }, {
             "nombre": "melón",
             "precio": 5.00,
             "colores": ["verde", "amarillo", "naranja"],
-            "oferta": false
+            "oferta": false,
+            "ofertapor": 0
         }];
 
         Array.prototype.concatAll = function() {
@@ -66,11 +71,36 @@
 
         console.debug(frutas.map(fruta => fruta.precio).reduce((acc, current) => [(+acc) + (+current)]));
 
+        //suma del precio de los productos en oferta (sin oferta)
         console.debug(frutas.filter(fruta => fruta.oferta).map(fruta => fruta.precio).reduce((acc, current) => [(+acc) + (+current)]));
 
+        //sumna de todos los precios, con la oferta ejecutada
+        console.debug(frutas.map(fruta => {
+            if (fruta.oferta) {
+                return fruta.precio - (fruta.precio * fruta.ofertapor / 100);
+            } else {
+                return fruta.precio;
+            }
+        }).reduce((acc, current) => [(+acc) + (+current)]));
+
+        console.debug(frutas.map(fruta => {
+            fruta.oferta ? fruta.precio : (fruta.precio - (fruta.precio * fruta.ofertapor / 100))
+        }).reduce((acc, current) => [(+acc) + (+current)]));
+
+        //
         console.debug(frutas.map(fruta => fruta.colores).concatAll());
 
+        console.debug(frutas.map(el => el.colores).reduce(function(previous, current) {
+            return previous.concat(current);
+        }));
+        //*
+
+        //
         console.debug(frutas.map(fruta => fruta.colores).concatAllUnrepited());
+
+        console.debug([...new Set(frutas.map(el => el.colores).reduce((p, c) => p.concat(c)))]);
+        //*
+        console.debug(frutas.map(fruta => fruta.colores));
     </script>
 </body>
 
