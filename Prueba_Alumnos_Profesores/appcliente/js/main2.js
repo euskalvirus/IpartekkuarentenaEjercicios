@@ -90,7 +90,6 @@ function filtarPorSexo(sexo, lista) {
 }
 
 function buscar(indicionombre, lista) {
-
     //usar includes si quires que contenga y no empieze
     return lista.filter(persona => persona.nombre.toLowerCase().startsWith(indicionombre.toLowerCase()));
 }
