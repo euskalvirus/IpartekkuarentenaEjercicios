@@ -101,6 +101,19 @@
         console.debug([...new Set(frutas.map(el => el.colores).reduce((p, c) => p.concat(c)))]);
         //*
         console.debug(frutas.map(fruta => fruta.colores));
+
+        //sacar las frutas de un color
+        console.debug(frutas.filter(fruta => {
+            let bol = false;
+            fruta.colores.forEach(function(color) {
+                if (color == "verde") {
+                    bol = true;
+                }
+            });
+            if (bol) {
+                return fruta;
+            }
+        }));
     </script>
 </body>
 
