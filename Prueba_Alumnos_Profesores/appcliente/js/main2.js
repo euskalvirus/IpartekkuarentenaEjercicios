@@ -54,36 +54,26 @@ window.addEventListener('load', init());
 
 function init() {
     let select = document.getElementById('despegable');
+
+    //TODO llamada Ajax apra servicio REST
+
     select.addEventListener('change', function() {
         let valor = this.value.toUpperCase();
-        switch (valor) {
-            case "M":
-                filtarPorSexo("M");
-                break;
-            case "F":
-                filtarPorSexo("F");
-                break;
-            case "T":
-                pintar(personas);
-                break;
-            default:
-                break;
-        }
+        let buscador = document.getElementById('search').value;
+
+        obtenerDatosRest(valor, buscador);
     })
 
     let buscador = document.getElementById('search');
 
     buscador.addEventListener('keyup', function() {
         let valor = this.value;
-        if (valor == "") {
-            pintar(personas);
-        } else {
-            let array = buscar(valor);
-            pintar(array);
-        }
+        let listasexo = document.getElementById('despegable').value;
+
+        obtenerDatosRest(listasexo, valor);
     })
     console.debug('Document Load and Ready');
-    pintar(personas);
+    obtenerDatosRest(select.value, buscador.value);
 }
 
 function pintar(arraypersonas) {
@@ -95,11 +85,59 @@ function pintar(arraypersonas) {
 
 }
 
-function filtarPorSexo(sexo) {
-    let array = personas.filter(persona => persona.sexo == sexo);
-    pintar(array);
+function filtarPorSexo(sexo, lista) {
+    return array = lista.filter(persona => persona.sexo == sexo);
 }
 
-function buscar(indicionombre) {
-    return personas.filter(persona => persona.nombre.toLowerCase().startsWith(indicionombre.toLowerCase()));
+function buscar(indicionombre, lista) {
+
+    //usar includes si quires que contenga y no empieze
+    return lista.filter(persona => persona.nombre.toLowerCase().startsWith(indicionombre.toLowerCase()));
+}
+
+function obtenerDatosRest(listasexo, buscador) {
+    const url = "http://localhost:8080/apprest/api/personas/";
+
+    //Creamos un objeto para realizar la REQUEST con Ajax
+    var xhttp = new XMLHttpRequest();
+
+    //CUIDADO este motodo funciona de forma asincrona
+    //debemos meter nuestro codigo aqui dentro apra trabajar con los datos enteros
+    xhttp.onreadystatechange = function() {
+        //Recibimos la RESPONSE
+        if (this.readyState == 4 && this.status == 200) {
+            console.info('Peticion GET ' + url);
+            console.debug(this.responseText);
+
+            //Parsear el texto a Json
+            const jsonData = JSON.parse(this.responseText);
+
+            let listafiltrada = [];
+            switch (listasexo.toUpperCase()) {
+                case "M":
+                    listafiltrada = filtarPorSexo("M", jsonData);
+                    break;
+                case "F":
+                    listafiltrada = filtarPorSexo("F", jsonData);
+                    break;
+                case "T":
+                    listafiltrada = jsonData;
+                    break;
+                default:
+                    break;
+            }
+
+            if (buscador !== "") {
+                listafiltrada = buscar(buscador, listafiltrada);
+            }
+
+            pintar(listafiltrada);
+        } // this.readyState == 4 && this.status == 200
+
+    }; // onreadystatechange
+
+    //preparamos la peticion GET
+    xhttp.open("GET", url, true);
+    //enviar la peticion asincrona, meter el codigo en overreadystatechange
+    xhttp.send();
 }
