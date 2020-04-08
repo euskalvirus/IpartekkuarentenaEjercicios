@@ -74,8 +74,6 @@ function guardar() {
     } else {
         alert("no has rellenado todos los campos");
     }
-
-
 }
 
 function validate(id, nombre, avatar, sexo, op) {
@@ -95,7 +93,6 @@ function eliminar(indice) {
         limpiarFormulario()
         pintar(personas);
     }
-
 }
 
 function seleccionar(indice) {
@@ -157,8 +154,6 @@ function obtenerDatosRest(listasexo, buscador) {
     promesa.catch((error) => {
         alert(error);
     })
-
-
 }
 
 /**
