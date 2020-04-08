@@ -7,6 +7,8 @@
 
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="css/all.min.css" />
     <link rel="stylesheet" href="css/prueba.css">
 
 
@@ -28,9 +30,26 @@
                 <input id="search" type="search " placeholder="Escribe un nombre " class="form-control col-9">
             </div>
         </div>
-        <ul class="list-group" id="lista">
-            <li>Cargando...</li>
-        </ul>
+        <div class="row">
+            <ul class="list-group col" id="lista">
+                <li>Cargando...</li>
+            </ul>
+            <div class="col list-group" id="formulario">
+                <label id="opcion" name="nuevo">NUEVO ALUMNO</label>
+                <input type="text" name="id" id="id" placeholder="id" readOnly>
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre">
+                <input type="text" name="avatar" id="avatar" placeholder="Avatar">
+                <select name="sexo" id="sexo">
+                    <option disabled selected value> -- select an option -- </option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+                <div id="botones" class="row justify-content-around">
+                    <input class="col-5" type="button" value="Guardar" onclick="guardar()">
+                    <input class="col-5" type="button" value="Nuevo Alumno" onclick="limpiarFormulario()">
+                </div>
+            </div>
+        </div>
 
         </div>
     </main>
