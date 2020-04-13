@@ -90,13 +90,11 @@ public class PersonaController {
 		Boolean encontrado = false;
 		while(i<personas.size() && !encontrado) {
 			if(personas.get(i).getId()==id) {
-				System.out.println("encontrado");
 				personas.remove(i);
 				encontrado=true;
 			}
 			i++;
 		}
-		System.out.println(personas);
 		return personas;
 		
 	}

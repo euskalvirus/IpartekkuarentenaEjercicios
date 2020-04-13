@@ -77,10 +77,7 @@ function guardar() {
     } else {
         alert("no has rellenado todos los campos");
     }
-    promesa.then(function(pers) {
-        console.debug("Datos recogidos");
-        pintar(pers);
-    });
+    promesa.then(pers => pintar(pers));
 
     promesa.catch((error) => {
         alert(error);
