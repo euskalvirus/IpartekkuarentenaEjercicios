@@ -1,10 +1,12 @@
 "use strict"
 let lista = document.getElementById('lista');
+const urlBase = "http://localhost:8080/apprest/api/personas/";
 
 let personas = [];
 window.addEventListener('load', init());
 
 function init() {
+
     let select = document.getElementById('despegable');
 
     //TODO llamada Ajax apra servicio REST
@@ -86,12 +88,12 @@ function guardar() {
         switch (op) {
             case "MODIFICAR ALUMNO":
                 console.debug("MODIFICAR ALUMNO");
-                url = `http://localhost:8080/apprest/api/personas/${id}`;
+                url = urlBase + id;
                 promesa = ajax('PUT', url, persona);
                 break;
             case "NUEVO ALUMNO":
                 console.debug("NUEVO ALUMNO");
-                url = "http://localhost:8080/apprest/api/personas/";
+                url = urlBase;
                 promesa = ajax('POST', url, persona);
                 break;
             default:
@@ -101,17 +103,7 @@ function guardar() {
     } else {
         alert("no has rellenado todos los campos");
     }
-    promesa.then(pers => {
-        if (op === "NUEVO ALUMNO") {
-            tempPersonas.push(pers);
-        } else {
-            let index = tempPersonas.findIndex(pers => pers.id == id);
-            tempPersonas[index] = pers;
-        }
-
-        personas = tempPersonas;
-        pintar(personas)
-    });
+    promesa.then(pers => obtenerDatosRest('T', ""));
 
     promesa.catch((error) => {
         alert(error);
@@ -132,20 +124,20 @@ function eliminar(indice) {
     let personasSeleccionada = personas.filter(persona => persona.id == indice)[0];
     console.debug(`Click eliminar, persona seleccionada %o`, personasSeleccionada);
     if (confirm(`¿Estas seguro que quieres eliminar a ${personasSeleccionada.nombre} ?`)) {
-        const url = `http://localhost:8080/apprest/api/personas/${indice}`;
+        const url = urlBase + indice;
         const promesa = ajax('DELETE', url, null);
-
-        promesa.then(pers => { pintar(pers) });
+        promesa.then(pers => { obtenerDatosRest('T', "") });
         promesa.catch((error) => {
             alert(error);
         })
-    }
+    };
+
 }
 
 function seleccionar(indice) {
     document.getElementById('opcion').name = "modificar";
     document.getElementById('opcion').textContent = "MODIFICAR ALUMNO"
-    const url = `http://localhost:8080/apprest/api/personas/${indice}`;
+    const url = urlBase + indice
     let tempPersonas = personas;
     const promesa = ajax('GET', url, null);
 
@@ -181,7 +173,7 @@ function buscar(indicionombre, lista) {
 }
 
 function obtenerDatosRest(listasexo, buscador) {
-    const url = "http://localhost:8080/apprest/api/personas/";
+    const url = urlBase;
 
     const promesa = ajax('GET', url, null);
 

@@ -13,6 +13,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.ipartek.formacion.model.Persona;
 
@@ -49,47 +51,50 @@ public class PersonaController {
 	
 	@GET
 	@Path("/{id}")
-	public Persona getPersona(@PathParam("id") Long id) {	
+	public Object getPersona(@PathParam("id") Long id) {	
 		LOGGER.info("getPersona");
 		for (Persona per : personas) {
-			if(per.getId()==id) {return per;}
+			if(per.getId()==id) {return Response.status(Status.OK).entity(per).build();}
 		}
-		return null;
+		return Response.status(Status.NOT_FOUND).build();
 	}
 	
 	@POST
-	public Persona addPersona(Persona persona){
+	public Object addPersona(Persona persona){
 		LOGGER.info("addPersona");
 		persona.setId(personas.get(personas.size()-1).getId()+1);
 		personas.add(persona);
-		return persona;
+		return Response.status(Status.OK).entity(persona).build();
 	}
 	
 	@PUT
 	@Path("/{id}")
-	public Persona modifyPersona(Persona persona,@PathParam("id") Long id){
+	public Object modifyPersona(Persona persona,@PathParam("id") Long id){
 		LOGGER.info("modifyPersona");
 				
 		for(int i=0;i<personas.size();i++) {
 			if(personas.get(i).getId()==id) {
 				personas.set(i, persona);
-				break;
+				return Response.status(Status.OK).entity(persona).build();
 			}
 		}
-		return persona;
+		return Response.status(Status.NOT_FOUND).build();
 	}
 	
 	@DELETE
 	@Path("/{id}")
-	public ArrayList<Persona> deletePersona(@PathParam("id") Long id){
+	public Object deletePersona(@PathParam("id") Long id){
 		LOGGER.info("deletePersona");
+		Persona persona = null;
 		for(int i=0;i<personas.size();i++) {
 			if(personas.get(i).getId()==id) {
+				persona = personas.get(i);
 				personas.remove(i);
-				break;
+				return Response.status(Status.OK).entity(persona).build();
 			}
 		}
-		return personas;
+		
+		return Response.status(Status.NOT_FOUND).build();
 		
 	}
 	
