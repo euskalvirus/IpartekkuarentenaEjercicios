@@ -114,6 +114,7 @@ function validate(id, nombre, avatar, sexo, op) {
 }
 
 function eliminar(indice) {
+    console.debug(JSON.stringify(personas));
     let personasSeleccionada = personas.filter(persona => persona.id == indice)[0];
     console.debug(`Click eliminar, persona seleccionada %o`, personasSeleccionada);
     if (confirm(`¿Estas seguro que quieres eliminar a ${personasSeleccionada.nombre} ?`)) {
@@ -131,6 +132,7 @@ function seleccionar(indice) {
     document.getElementById('opcion').name = "modificar";
     document.getElementById('opcion').textContent = "MODIFICAR ALUMNO"
     const url = `http://localhost:8080/apprest/api/personas/${indice}`;
+    let tempPersonas = personas;
     const promesa = ajax('GET', url, null);
 
     promesa.then(persona => {
@@ -139,6 +141,7 @@ function seleccionar(indice) {
         document.getElementById('avatar').value = persona.avatar;
         document.getElementById('sexo').value = persona.sexo;
         selectAvatar(null, persona.avatar);
+        personas = tempPersonas;
     });
 }
 

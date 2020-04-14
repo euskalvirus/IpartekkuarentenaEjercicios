@@ -60,6 +60,7 @@ public class PersonaController {
 	@POST
 	public ArrayList<Persona> addPersona(Persona persona){
 		LOGGER.info("addPersona");
+		persona.setId(personas.get(personas.size()-1).getId()+1);
 		personas.add(persona);
 		return personas;
 	}
