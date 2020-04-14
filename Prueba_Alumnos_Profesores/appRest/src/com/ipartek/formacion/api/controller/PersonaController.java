@@ -58,42 +58,36 @@ public class PersonaController {
 	}
 	
 	@POST
-	public ArrayList<Persona> addPersona(Persona persona){
+	public Persona addPersona(Persona persona){
 		LOGGER.info("addPersona");
 		persona.setId(personas.get(personas.size()-1).getId()+1);
 		personas.add(persona);
-		return personas;
+		return persona;
 	}
 	
 	@PUT
 	@Path("/{id}")
-	public ArrayList<Persona> modifyPersona(Persona persona,@PathParam("id") Long id){
+	public Persona modifyPersona(Persona persona,@PathParam("id") Long id){
 		LOGGER.info("modifyPersona");
-		
-		int i = 0;
-		Boolean encontrado = false;
-		while(i<personas.size() && !encontrado) {
+				
+		for(int i=0;i<personas.size();i++) {
 			if(personas.get(i).getId()==id) {
 				personas.set(i, persona);
-				encontrado=true;
+				break;
 			}
-			i++;
 		}
-		return personas;
+		return persona;
 	}
 	
 	@DELETE
 	@Path("/{id}")
 	public ArrayList<Persona> deletePersona(@PathParam("id") Long id){
 		LOGGER.info("deletePersona");
-		int i = 0;
-		Boolean encontrado = false;
-		while(i<personas.size() && !encontrado) {
+		for(int i=0;i<personas.size();i++) {
 			if(personas.get(i).getId()==id) {
 				personas.remove(i);
-				encontrado=true;
+				break;
 			}
-			i++;
 		}
 		return personas;
 		

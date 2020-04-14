@@ -67,6 +67,8 @@ function guardar() {
     let avatar = document.getElementById('avatar').value;
     let sexo = document.getElementById('sexo').value;
 
+    let tempPersonas = personas;
+
     let op = document.getElementById('opcion').textContent;
     console.debug(document.getElementById('opcion'));
     let url = "";
@@ -78,6 +80,8 @@ function guardar() {
             "avatar": `${avatar}`,
             "sexo": sexo
         }
+
+
 
         switch (op) {
             case "MODIFICAR ALUMNO":
@@ -97,7 +101,17 @@ function guardar() {
     } else {
         alert("no has rellenado todos los campos");
     }
-    promesa.then(pers => pintar(pers));
+    promesa.then(pers => {
+        if (op === "NUEVO ALUMNO") {
+            tempPersonas.push(pers);
+        } else {
+            let index = tempPersonas.findIndex(pers => pers.id == id);
+            tempPersonas[index] = pers;
+        }
+
+        personas = tempPersonas;
+        pintar(personas)
+    });
 
     promesa.catch((error) => {
         alert(error);
@@ -158,7 +172,7 @@ function limpiarFormulario() {
 }
 
 function filtarPorSexo(sexo, lista) {
-    return array = lista.filter(persona => persona.sexo == sexo);
+    return lista.filter(persona => persona.sexo == sexo);
 }
 
 function buscar(indicionombre, lista) {
@@ -226,7 +240,7 @@ function ajax(metodo, url, datos) {
 
         }; // onreadystatechange
 
-        //preparamos la peticion GET
+        //preparamos la peticion
         xhttp.open(metodo, url, true);
         var undefinded;
         //enviar la peticion asincrona, meter el codigo en overreadystatechange
