@@ -1,7 +1,6 @@
 package com.ipartek.formacion.api.controller;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;

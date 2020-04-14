@@ -1,3 +1,4 @@
+"use strict"
 let lista = document.getElementById('lista');
 
 let personas = [];
@@ -25,6 +26,27 @@ function init() {
     })
     console.debug('Document Load and Ready');
     obtenerDatosRest(select.value, buscador.value);
+    initGallery();
+}
+
+function initGallery() {
+    let divImagenes = document.getElementById('imagenes');
+    divImagenes.innerHTML = "";
+    for (let i = 1; i <= 7; i++) {
+        divImagenes.innerHTML += `<img onclick="selectAvatar(event,null)" src="img/avatar${i}.png" alt="avatar${i}.png" id="avatar${i}.png" data-nombre="avatar${i}.png">`;
+    }
+}
+
+function selectAvatar(evento, id) {
+    const avatares = document.querySelectorAll('#imagenes img');
+    avatares.forEach(el => el.classList.remove('selected'));
+    if (id == null) {
+        evento.target.classList.add('selected');
+        document.getElementById('avatar').value = evento.target.dataset.nombre;
+    } else {
+        let a = document.getElementById(id);
+        a.classList.add('selected');
+    }
 }
 
 function pintar(arraypersonas) {
@@ -36,8 +58,6 @@ function pintar(arraypersonas) {
             <i class="fa fa-pen" onclick="seleccionar(${arraypersonas[i].id})"></i> 
             <i class="fa fa-trash" onclick="eliminar(${arraypersonas[i].id})"></i></li>`
     }
-
-
 }
 
 function guardar() {
@@ -118,6 +138,7 @@ function seleccionar(indice) {
         document.getElementById('nombre').value = persona.nombre;
         document.getElementById('avatar').value = persona.avatar;
         document.getElementById('sexo').value = persona.sexo;
+        selectAvatar(null, persona.avatar);
     });
 }
 
@@ -128,6 +149,9 @@ function limpiarFormulario() {
     document.getElementById('nombre').value = "";
     document.getElementById('avatar').value = "";
     document.getElementById('sexo').value = "";
+
+    const avatares = document.querySelectorAll('#imagenes img');
+    avatares.forEach(el => el.classList.remove('selected'));
 }
 
 function filtarPorSexo(sexo, lista) {

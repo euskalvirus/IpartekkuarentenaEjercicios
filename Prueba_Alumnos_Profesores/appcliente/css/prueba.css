@@ -16,3 +16,15 @@ h1 {
     color: white;
     font-size: 2em;
 }
+
+#imagenes img {
+    filter: grayscale(100%);
+}
+
+#imagenes img.selected {
+    filter: grayscale(0);
+}
+
+#formulario>* {
+    margin: 2px;
+}
