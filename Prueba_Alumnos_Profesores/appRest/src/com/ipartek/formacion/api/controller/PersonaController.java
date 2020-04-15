@@ -1,9 +1,14 @@
 package com.ipartek.formacion.api.controller;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +32,9 @@ public class PersonaController {
 	
 	@Context
 	private ServletContext context;
+	
+	private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+	private Validator validator = factory.getValidator();
 	
 	private static ArrayList<Persona> personas = new ArrayList<Persona>();
 	
@@ -62,9 +70,24 @@ public class PersonaController {
 	@POST
 	public Object addPersona(Persona persona){
 		LOGGER.info("addPersona");
-		persona.setId(personas.get(personas.size()-1).getId()+1);
-		personas.add(persona);
-		return Response.status(Status.OK).entity(persona).build();
+		Response response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(null).build();
+		//Validar pojo
+		Set<ConstraintViolation<Persona>> violations = validator.validate(persona);
+		
+		if(violations.isEmpty()) {
+			persona.setId(personas.get(personas.size()-1).getId()+1);
+			personas.add(persona);
+			response = Response.status(Status.CREATED).entity(persona).build();
+		}else {
+			ArrayList<String> errores = new ArrayList<String>();
+			
+			for (ConstraintViolation<Persona> violation : violations) {
+				errores.add(violation.getPropertyPath() + ": " + violation.getMessage());
+			}
+			response = Response.status(Status.BAD_REQUEST).entity(errores).build();
+		}
+		
+		return response;
 	}
 	
 	@PUT

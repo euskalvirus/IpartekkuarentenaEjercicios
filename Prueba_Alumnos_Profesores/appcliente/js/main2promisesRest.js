@@ -226,7 +226,7 @@ function ajax(metodo, url, datos) {
                     resolve(personas);
                 } // this.status == 200
                 else {
-                    reject('Ha habido un error en la obtencion de datos');
+                    reject(Error(JSON.parse(this.responseText)));
                 }
             } // this.readyState == 4
 
