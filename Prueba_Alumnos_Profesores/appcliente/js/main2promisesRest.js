@@ -149,6 +149,10 @@ function seleccionar(indice) {
         selectAvatar(null, persona.avatar);
         personas = tempPersonas;
     });
+
+    promesa.catch((error) => {
+        alert(error);
+    })
 }
 
 function limpiarFormulario() {

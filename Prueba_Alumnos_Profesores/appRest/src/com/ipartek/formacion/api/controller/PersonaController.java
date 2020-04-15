@@ -61,10 +61,17 @@ public class PersonaController {
 	@Path("/{id}")
 	public Object getPersona(@PathParam("id") Long id) {	
 		LOGGER.info("getPersona");
+		ArrayList<String> errores = new ArrayList<String>();
+		errores.add("No se ha encontrado ninguna persona con ese id.");
+		
+		Response response = Response.status(Status.NOT_FOUND).entity(errores).build();
+		
 		for (Persona per : personas) {
-			if(per.getId()==id) {return Response.status(Status.OK).entity(per).build();}
+			if(per.getId()==id) {
+				response = Response.status(Status.OK).entity(per).build();
+			}
 		}
-		return Response.status(Status.NOT_FOUND).build();
+		return response;
 	}
 	
 	@POST
@@ -94,14 +101,30 @@ public class PersonaController {
 	@Path("/{id}")
 	public Object modifyPersona(Persona persona,@PathParam("id") Long id){
 		LOGGER.info("modifyPersona");
-				
-		for(int i=0;i<personas.size();i++) {
-			if(personas.get(i).getId()==id) {
-				personas.set(i, persona);
-				return Response.status(Status.OK).entity(persona).build();
+		
+		Response response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(null).build();
+		//Validar pojo
+		Set<ConstraintViolation<Persona>> violations = validator.validate(persona);
+		ArrayList<String> errores = new ArrayList<String>();
+		
+		if(violations.isEmpty()) {
+			for(int i=0;i<personas.size();i++) {
+				if(personas.get(i).getId()==id) {
+					personas.set(i, persona);
+					response = Response.status(Status.OK).entity(persona).build();
+					break;
+				}
 			}
+			errores.add("No se ha encontrado ninguna persona con ese id.");
+			response = Response.status(Status.NOT_FOUND).entity(errores).build();
+		}else {
+			for (ConstraintViolation<Persona> violation : violations) {
+				errores.add(violation.getPropertyPath() + ": " + violation.getMessage());
+			}
+			response = Response.status(Status.BAD_REQUEST).entity(errores).build();
 		}
-		return Response.status(Status.NOT_FOUND).build();
+		
+		return response;
 	}
 	
 	@DELETE
