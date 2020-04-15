@@ -112,7 +112,7 @@ function guardar() {
 
 function validate(id, nombre, avatar, sexo, op) {
     if (op === "NUEVO ALUMNO") { id = "1000"; }
-    if (id !== "" && nombre !== "" && avatar !== "" && (sexo === 'F' || sexo === 'M')) {
+    if (id !== "" && nombre !== "" && avatar !== "" && (sexo === 'M' || sexo === 'H')) {
         return true;
     } else {
         return false;
@@ -185,10 +185,10 @@ function obtenerDatosRest(listasexo, buscador) {
         let listafiltrada = [];
         switch (listasexo.toUpperCase()) {
             case "M":
-                listafiltrada = filtarPorSexo("M", personas);
+                listafiltrada = filtarPorSexo("H", personas);
                 break;
             case "F":
-                listafiltrada = filtarPorSexo("F", personas);
+                listafiltrada = filtarPorSexo("M", personas);
                 break;
             case "T":
                 listafiltrada = personas;

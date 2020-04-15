@@ -14,7 +14,7 @@ public class Persona {
 	@NotEmpty
 	private String avatar;
 	
-	//TODO regexp para "F" o "M"
+	//TODO regexp para "H" o "M"
 	//@Pattern(regexp = "")
 	private String sexo;
 	
