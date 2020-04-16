@@ -85,11 +85,11 @@ public class PersonaDao implements IDAO<Persona> {
 				pst.setInt(1, id);
 				int numeroRegistrosModificados = pst.executeUpdate();
 				if (numeroRegistrosModificados != 1) {
-					throw new Exception(
+					throw new SQLException(
 							"El alumno existe pero no se ha podido eliminar el registro para el Alumno=" + id + ".");
 				}
 
-			} catch (Exception e) {
+			} catch (SQLException e) {
 				throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
 			}
 		}
@@ -106,24 +106,29 @@ public class PersonaDao implements IDAO<Persona> {
 			pst.setString(3, persona.getSexo());
 			int numeroRegistrosModificados = pst.executeUpdate();
 			if (numeroRegistrosModificados != 1) {
-				persona = null;
+				throw new Exception("No se ha podido agregar el registro.");
 			} else {
 				ResultSet keys = pst.getGeneratedKeys();
 				if (keys.next()) {
 					persona.setId(keys.getInt(1));
+				}else {
+					throw new Exception(
+							"Hay algun error de constrain en la DDBB.");
 				}
 			}
 
-		} catch (Exception e) {
+		}catch(SQLException e) {
 			e.printStackTrace();
-			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+			throw new SQLException("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
 		}
 		return persona;
 	}
 
 	@Override
 	public Persona update(Persona persona) throws Exception, SQLException {
-
 		try (Connection con = ConnectionManager.getConnection();
 				PreparedStatement pst = con.prepareStatement(sql_update);) {
 			pst.setString(1, persona.getNombre());
@@ -135,8 +140,11 @@ public class PersonaDao implements IDAO<Persona> {
 				throw new Exception("No se modificado ningun registro para el idAlumno=" + persona.getId() + ".");
 			}
 
+		}catch(SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
 		} catch (Exception e) {
-			throw new Exception("Ha habido un problema con la conexión DDBB: " + e.getMessage());
+			throw new Exception(e.getMessage());
 		}
 		return persona;
 	}

@@ -76,12 +76,11 @@ public class PersonaController {
 			if (persona != null) {
 				response = Response.status(Status.OK).entity(persona).build();
 			}
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			errores.add(e.getMessage());
 			response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errores).build();
 			e.printStackTrace();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			errores.add("No se ha encontrado ninguna persona con ese id.");
 			response = Response.status(Status.NOT_FOUND).entity(errores).build();
 		}
@@ -102,11 +101,15 @@ public class PersonaController {
 			try {
 				// INSERT DE PERSONA CON EL DAO
 				dao.insert(persona);
-				response = Response.status(Status.OK).entity(persona).build();
-			} catch (Exception e) {
+				response = Response.status(Status.CREATED).entity(persona).build();
+			} catch (SQLException e) {
 				errores.add(e.getMessage());
-				response = Response.status(Status.BAD_REQUEST).entity(errores).build();
+				response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errores).build();
 				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+				errores.add("Hay un conflicto al intentar agregar el registro: " + e.getMessage());
+				response = Response.status(Status.CONFLICT).entity(errores).build();
 			}
 		} else {
 			for (ConstraintViolation<Persona> violation : violations) {
@@ -127,9 +130,9 @@ public class PersonaController {
 		Set<ConstraintViolation<Persona>> violations = validator.validate(persona);
 		ArrayList<String> errores = new ArrayList<String>();
 
-		errores.add("No se ha encontrado ninguna persona con ese id.");
+		
 
-		Response response = Response.status(Status.NOT_FOUND).entity(null).build();
+		Response response = null;
 
 		if (violations.isEmpty()) {
 			try {
@@ -138,10 +141,13 @@ public class PersonaController {
 				if (pers != null) {
 					response = Response.status(Status.OK).entity(pers).build();
 				}
-			} catch (Exception e) {
+			} catch (SQLException e) {
 				errores.add(e.getMessage());
 				response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errores).build();
 				e.printStackTrace();
+			} catch (Exception e) {
+				errores.add("O No se ha encontrado ninguna persona con ese id, o ha habido algun conflicto de constrain: " + e.getMessage());
+				response = Response.status(Status.CONFLICT).entity(null).build();
 			}
 		} else {
 			for (ConstraintViolation<Persona> violation : violations) {
@@ -157,23 +163,20 @@ public class PersonaController {
 	@Path("/{id}")
 	public Object deletePersona(@PathParam("id") int id) {
 		LOGGER.info("deletePersona");
-		Persona persona;
 		ArrayList<String> errores = new ArrayList<String>();
-		errores.add("No se ha encontrado ninguna persona con ese id.");
-
-		Response response = Response.status(Status.NOT_FOUND).entity(errores).build();
+		Response response = null;
 		try {
-			persona = dao.delete(id);
-			if (persona != null) {
-				response = Response.status(Status.OK).entity(persona).build();
-			}
+			Persona persona = dao.delete(id);
+			response = Response.status(Status.OK).entity(persona).build();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			errores.add("Hay un conflicto al intentar eliminar el registro.");
+			errores.add("Hay un conflicto al intentar eliminar el registro: " + e.getMessage());
 			response = Response.status(Status.CONFLICT).entity(errores).build();
 		} catch (Exception e) {
 			e.printStackTrace();
-			//NOT FOUND DEFINIDO AL PRINCIPIO
+			errores.add(e.getMessage());
+
+			response = Response.status(Status.NOT_FOUND).entity(errores).build();
 		}
 
 		return response;
