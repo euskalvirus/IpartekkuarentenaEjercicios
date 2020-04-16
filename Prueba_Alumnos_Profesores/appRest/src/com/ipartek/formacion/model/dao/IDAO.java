@@ -5,14 +5,14 @@ import java.util.List;
 
 public interface IDAO<T> {
 	
-	List<T> getAll();
+	List<T> getAll() throws Exception;
 	/***
 	 * busca un pojo por su id
 	 * @param id
 	 * @return
 	 * @throws Exception si no encuentra pojo
 	 */
-	T getById(int id) throws Exception;
+	T getById(int id) throws Exception, SQLException;
 	
 	/***
 	 * Elimina pojo por su id

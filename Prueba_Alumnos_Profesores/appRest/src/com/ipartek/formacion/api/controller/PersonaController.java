@@ -40,25 +40,26 @@ public class PersonaController {
 
 	private PersonaDao dao = (PersonaDao) PersonaDao.getInstancia();
 
-	private static ArrayList<Persona> personas = new ArrayList<Persona>();
-
-	static {
-		personas.add(new Persona(1, "Arantxa", "avatar1.png", "M"));
-		personas.add(new Persona(2, "Idoia", "avatar2.png", "M"));
-		personas.add(new Persona(3, "Iker", "avatar3.png", "H"));
-		personas.add(new Persona(4, "Hodei", "avatar4.png", "H"));
-	}
-
 	public PersonaController() {
-		super();
-
 	}
 
 	@GET
-	public ArrayList<Persona> getAll() {
+	public Object getAll() {
 		LOGGER.info("getAll");
-		personas = (ArrayList<Persona>) dao.getAll();
-		return personas;
+
+		Response response;
+		try {
+			ArrayList<Persona> personas = new ArrayList<Persona>();
+			personas = (ArrayList<Persona>) dao.getAll();
+			response = Response.status(Status.OK).entity(personas).build();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ArrayList<String> errores = new ArrayList<String>();
+			errores.add(e.getMessage());
+			response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errores).build();
+		}
+		return response;
 	}
 
 	@GET
@@ -66,25 +67,23 @@ public class PersonaController {
 	public Object getPersona(@PathParam("id") int id) {
 		LOGGER.info("getPersona");
 		ArrayList<String> errores = new ArrayList<String>();
-		errores.add("No se ha encontrado ninguna persona con ese id.");
-
-		Response response = Response.status(Status.NOT_FOUND).entity(errores).build();
+		Response response = null;
 
 		Persona persona;
 		try {
 			persona = dao.getById(id);
 
-			if (persona != null)
-				for (Persona per : personas) {
-					if (per.getId() == id) {
-						response = Response.status(Status.OK).entity(persona).build();
-					}
-				}
-
-		} catch (Exception e) {
+			if (persona != null) {
+				response = Response.status(Status.OK).entity(persona).build();
+			}
+		}catch(SQLException e) {
 			errores.add(e.getMessage());
 			response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errores).build();
 			e.printStackTrace();
+		}
+		catch (Exception e) {
+			errores.add("No se ha encontrado ninguna persona con ese id.");
+			response = Response.status(Status.NOT_FOUND).entity(errores).build();
 		}
 		return response;
 
@@ -102,8 +101,8 @@ public class PersonaController {
 		if (violations.isEmpty()) {
 			try {
 				// INSERT DE PERSONA CON EL DAO
-				Persona pers = dao.insert(persona);
-				response = Response.status(Status.OK).entity(pers).build();
+				dao.insert(persona);
+				response = Response.status(Status.OK).entity(persona).build();
 			} catch (Exception e) {
 				errores.add(e.getMessage());
 				response = Response.status(Status.BAD_REQUEST).entity(errores).build();
@@ -123,7 +122,7 @@ public class PersonaController {
 	@Path("/{id}")
 	public Object modifyPersona(Persona persona, @PathParam("id") Long id) {
 		LOGGER.info("modifyPersona");
-		
+
 		// Validar pojo
 		Set<ConstraintViolation<Persona>> violations = validator.validate(persona);
 		ArrayList<String> errores = new ArrayList<String>();
@@ -168,9 +167,13 @@ public class PersonaController {
 			if (persona != null) {
 				response = Response.status(Status.OK).entity(persona).build();
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException e) {
 			e.printStackTrace();
+			errores.add("Hay un conflicto al intentar eliminar el registro.");
+			response = Response.status(Status.CONFLICT).entity(errores).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			//NOT FOUND DEFINIDO AL PRINCIPIO
 		}
 
 		return response;
