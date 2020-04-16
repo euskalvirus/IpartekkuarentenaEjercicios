@@ -68,7 +68,7 @@ function guardar() {
     let id = document.getElementById('id').value;
     let nombre = document.getElementById('nombre').value;
     let avatar = document.getElementById('avatar').value;
-    let sexo = document.getElementById('sexo').value;
+    let sexo = (document.getElementById('radioHombre').checked ? "H" : "M");
 
     let tempPersonas = personas;
 
@@ -147,7 +147,7 @@ function seleccionar(indice) {
         document.getElementById('id').value = persona.id;
         document.getElementById('nombre').value = persona.nombre;
         document.getElementById('avatar').value = persona.avatar;
-        document.getElementById('sexo').value = persona.sexo;
+        (persona.sexo == "H") ? document.getElementById('radioHombre').checked = true: document.getElementById('radioMujer').checked = true;
         selectAvatar(null, persona.avatar);
         personas = tempPersonas;
     });
@@ -163,7 +163,7 @@ function limpiarFormulario() {
     document.getElementById('id').value = "";
     document.getElementById('nombre').value = "";
     document.getElementById('avatar').value = "";
-    document.getElementById('sexo').value = "";
+    document.getElementById('radioHombre').checked = true;
 
     const avatares = document.querySelectorAll('#imagenes img');
     avatares.forEach(el => el.classList.remove('selected'));
@@ -186,10 +186,10 @@ function obtenerDatosRest(listasexo, buscador) {
     promesa.then((personas) => {
         let listafiltrada = [];
         switch (listasexo.toUpperCase()) {
-            case "M":
+            case "H":
                 listafiltrada = filtarPorSexo("H", personas);
                 break;
-            case "F":
+            case "M":
                 listafiltrada = filtarPorSexo("M", personas);
                 break;
             case "T":

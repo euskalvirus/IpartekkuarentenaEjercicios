@@ -28,3 +28,9 @@ h1 {
 #formulario>* {
     margin: 2px;
 }
+
+#radioMujer,
+#labelRadioMujer {
+    padding-left: 1.5em;
+    margin-left: 1.5em;
+}
