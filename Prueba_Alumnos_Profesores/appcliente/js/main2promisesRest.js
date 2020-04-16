@@ -52,6 +52,7 @@ function selectAvatar(evento, id) {
 }
 
 function pintar(arraypersonas) {
+    console.debug('pintar');
     personas = arraypersonas;
     limpiarFormulario();
     lista.innerHTML = '';
@@ -120,9 +121,9 @@ function validate(id, nombre, avatar, sexo, op) {
 }
 
 function eliminar(indice) {
-    console.debug(JSON.stringify(personas));
+    console.debug(`Eliminar`);
     let personasSeleccionada = personas.filter(persona => persona.id == indice)[0];
-    console.debug(`Click eliminar, persona seleccionada %o`, personasSeleccionada);
+
     if (confirm(`¿Estas seguro que quieres eliminar a ${personasSeleccionada.nombre} ?`)) {
         const url = urlBase + indice;
         const promesa = ajax('DELETE', url, null);
@@ -135,6 +136,7 @@ function eliminar(indice) {
 }
 
 function seleccionar(indice) {
+    console.debug(`seleccionar(${indice})`);
     document.getElementById('opcion').name = "modificar";
     document.getElementById('opcion').textContent = "MODIFICAR ALUMNO"
     const url = urlBase + indice
@@ -247,7 +249,7 @@ function ajax(metodo, url, datos) {
                 break;
             default:
                 var pers = JSON.stringify(datos);
-                console.debug(`Metodo ${metodo} ${url} ${pers}`);
+                console.debug(`Metodo default ${metodo}`);
                 xhttp.setRequestHeader("Content-type", "application/json");
                 xhttp.send(pers);
                 console.debug(`Enviados datos`);

@@ -37,7 +37,7 @@ public interface IDAO<T> {
 	 * @param pojo
 	 * @return el pojo modificado
 	 * @throws Exception si no pasa la validacion o si no existe el pojo modificar
-	 * @throws SQLException
+	 * @throws SQLException si existe algun constrain
 	 */
 	T update(T pojo) throws Exception, SQLException;
 }
