@@ -38,7 +38,7 @@ public class PersonaController {
 	private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 	private Validator validator = factory.getValidator();
 
-	private PersonaDao dao = new PersonaDao();
+	private PersonaDao dao = (PersonaDao) PersonaDao.getInstancia();
 
 	private static ArrayList<Persona> personas = new ArrayList<Persona>();
 

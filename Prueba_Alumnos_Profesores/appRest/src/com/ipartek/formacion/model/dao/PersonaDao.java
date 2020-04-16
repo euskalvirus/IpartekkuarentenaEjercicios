@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import com.ipartek.formacion.model.Persona;
 import java.sql.Statement;
@@ -20,6 +21,19 @@ public class PersonaDao implements IDAO<Persona> {
 	private final static String sql_insert = "INSERT INTO persona(nombre, avatar,sexo) VALUES(?,?,?)";
 	private final static String sql_update = "UPDATE persona SET nombre=?, avatar=?, sexo=? WHERE id=?;";
 
+	private static PersonaDao INSTANCIA = null;
+	
+	private PersonaDao() {
+	}
+	
+	public static IDAO<Persona> getInstancia (){
+		if(INSTANCIA == null) {
+			INSTANCIA = new PersonaDao();
+		}
+		return INSTANCIA;
+	}
+	
+	
 	@Override
 	public List<Persona> getAll() {
 
