@@ -72,10 +72,13 @@ public class PersonaDao implements IDAO<Persona> {
 			}
 
 		} catch (SQLException e) {
+			LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
 			e.printStackTrace();
 			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
 
 		} catch (Exception e) {
+			LOGGER.warning("No se ha encontrado ningun registro para el id: " + id);
+			e.printStackTrace();
 			throw new Exception("No se ha encontrado ningun registro para el id: " + id);
 		}
 		return persona;
@@ -91,11 +94,14 @@ public class PersonaDao implements IDAO<Persona> {
 				pst.setInt(1, id);
 				int numeroRegistrosModificados = pst.executeUpdate();
 				if (numeroRegistrosModificados != 1) {
+					LOGGER.warning(
+							"El alumno existe pero no se ha podido eliminar el registro para el Alumno=" + id + ".");
 					throw new SQLException(
 							"El alumno existe pero no se ha podido eliminar el registro para el Alumno=" + id + ".");
 				}
 
 			} catch (SQLException e) {
+				LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
 				throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
 			}
 		}
@@ -113,22 +119,31 @@ public class PersonaDao implements IDAO<Persona> {
 			pst.setString(3, persona.getSexo());
 			int numeroRegistrosModificados = pst.executeUpdate();
 			if (numeroRegistrosModificados != 1) {
+				LOGGER.warning("No se ha podido agregar el registro.");
 				throw new Exception("No se ha podido agregar el registro.");
 			} else {
 				ResultSet keys = pst.getGeneratedKeys();
 				if (keys.next()) {
 					persona.setId(keys.getInt(1));
-				}else {
-					throw new Exception(
-							"Hay algun error de constrain en la DDBB.");
+					LOGGER.info("Persona Insert correctamente: " + persona);
+				} else {
+					LOGGER.warning("Hay algun error de constrain en la DDBB.");
+					throw new Exception("Hay algun error de constrain en la DDBB.");
 				}
 			}
 
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new SQLException("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
-		}catch (Exception e) {
+			if (e.getErrorCode() == 1062) {
+				LOGGER.warning("El nombre introducido ya existe.");
+				throw new SQLException("El nombre introducido ya existe.");
+			} else {
+				LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+				throw new SQLException("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
+			LOGGER.warning(e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 		return persona;
@@ -145,13 +160,22 @@ public class PersonaDao implements IDAO<Persona> {
 			pst.setInt(4, persona.getId());
 			int numeroRegistrosModificados = pst.executeUpdate();
 			if (numeroRegistrosModificados != 1) {
+				LOGGER.warning("No se modificado ningun registro para el idAlumno=" + persona.getId() + ".");
 				throw new Exception("No se modificado ningun registro para el idAlumno=" + persona.getId() + ".");
 			}
+			LOGGER.info("Persona UPDATE correctamente: " + persona);
 
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new SQLException("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+			if (e.getErrorCode() == 1062) {
+				LOGGER.warning("El nombre introducido ya existe.");
+				throw new SQLException("El nombre introducido ya existe.");
+			} else {
+				LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+				throw new SQLException("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+			}
 		} catch (Exception e) {
+			LOGGER.warning(e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 		return persona;

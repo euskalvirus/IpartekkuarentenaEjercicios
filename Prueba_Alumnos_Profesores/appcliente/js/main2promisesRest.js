@@ -12,6 +12,7 @@ function init() {
     //TODO llamada Ajax apra servicio REST
 
     select.addEventListener('change', function() {
+        console.debug("select EventListener");
         let valor = this.value.toUpperCase();
         let buscador = document.getElementById('search').value;
 
@@ -21,6 +22,7 @@ function init() {
     let buscador = document.getElementById('search');
 
     buscador.addEventListener('keyup', function() {
+        console.debug("buscador EventListener");
         let valor = this.value;
         let listasexo = document.getElementById('despegable').value;
 
@@ -32,6 +34,7 @@ function init() {
 }
 
 function initGallery() {
+    selectAvatar("initGallery")
     let divImagenes = document.getElementById('imagenes');
     divImagenes.innerHTML = "";
     for (let i = 1; i <= 7; i++) {
@@ -40,12 +43,15 @@ function initGallery() {
 }
 
 function selectAvatar(evento, id) {
+    console.debug("selectAvatar");
     const avatares = document.querySelectorAll('#imagenes img');
     avatares.forEach(el => el.classList.remove('selected'));
     if (id == null) {
+        selectAvatar("id == null");
         evento.target.classList.add('selected');
         document.getElementById('avatar').value = evento.target.dataset.nombre;
     } else {
+        selectAvatar("id != null");
         let a = document.getElementById(id);
         a.classList.add('selected');
     }
@@ -104,14 +110,19 @@ function guardar() {
     } else {
         alert("no has rellenado todos los campos");
     }
-    promesa.then(pers => obtenerDatosRest('T', ""));
+    promesa.then(() => {
+        console.debug("promesa then");
+        obtenerDatosRest('T', "")
+    });
 
     promesa.catch((error) => {
+        console.debug("promesa catch");
         alert(error);
     })
 }
 
 function validate(id, nombre, avatar, sexo, op) {
+    console.debug("validate");
     if (op === "NUEVO ALUMNO") { id = "1000"; }
     if (id !== "" && nombre !== "" && avatar !== "" && (sexo === 'M' || sexo === 'H')) {
         return true;
@@ -127,8 +138,12 @@ function eliminar(indice) {
     if (confirm(`¿Estas seguro que quieres eliminar a ${personasSeleccionada.nombre} ?`)) {
         const url = urlBase + indice;
         const promesa = ajax('DELETE', url, null);
-        promesa.then(() => { obtenerDatosRest('T', "") });
+        promesa.then(() => {
+            console.debug("promesa then");
+            obtenerDatosRest('T', "")
+        });
         promesa.catch((error) => {
+            console.debug("promesa catch");
             alert(error);
         })
     };
@@ -144,6 +159,7 @@ function seleccionar(indice) {
     const promesa = ajax('GET', url, null);
 
     promesa.then(persona => {
+        console.debug("promesa then");
         document.getElementById('id').value = persona.id;
         document.getElementById('nombre').value = persona.nombre;
         document.getElementById('avatar').value = persona.avatar;
@@ -153,11 +169,13 @@ function seleccionar(indice) {
     });
 
     promesa.catch((error) => {
+        console.debug("promesa catch");
         alert(error);
     })
 }
 
 function limpiarFormulario() {
+    console.debug("limpiarFormulario");
     document.getElementById('opcion').name = "nuevo";
     document.getElementById('opcion').textContent = "NUEVO ALUMNO"
     document.getElementById('id').value = "";
@@ -179,11 +197,13 @@ function buscar(indicionombre, lista) {
 }
 
 function obtenerDatosRest(listasexo, buscador) {
+    console.debug("obtenerDatosRest");
     const url = urlBase;
 
     const promesa = ajax('GET', url, null);
 
     promesa.then((personas) => {
+        console.debug("promesa then");
         let listafiltrada = [];
         switch (listasexo.toUpperCase()) {
             case "H":
@@ -207,6 +227,7 @@ function obtenerDatosRest(listasexo, buscador) {
     });
 
     promesa.catch((error) => {
+        console.debug("promesa catch");
         alert(error);
     })
 }
@@ -218,6 +239,7 @@ function obtenerDatosRest(listasexo, buscador) {
  * @param {*} datos 
  */
 function ajax(metodo, url, datos) {
+    console.debug("ajax");
     return new Promise((resolve, reject) => {
         //Creamos un objeto para realizar la REQUEST con Ajax
         var xhttp = new XMLHttpRequest();
@@ -228,10 +250,12 @@ function ajax(metodo, url, datos) {
             //Recibimos la RESPONSE
             if (this.readyState == 4) {
                 if (this.status == 200 || this.status == 201) {
+                    console.debug("Llamada ajax GONE OK");
                     personas = JSON.parse(this.responseText);
                     resolve(personas);
                 } // this.status == 200
                 else {
+                    console.debug("Llamada ajax GONE WRONG");
                     reject(Error(JSON.parse(this.responseText)));
                 }
             } // this.readyState == 4
