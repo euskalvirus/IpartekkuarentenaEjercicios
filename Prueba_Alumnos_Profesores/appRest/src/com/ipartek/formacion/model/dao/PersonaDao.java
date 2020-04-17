@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.ipartek.formacion.model.Persona;
 
@@ -13,6 +14,7 @@ import java.sql.Statement;
 
 public class PersonaDao implements IDAO<Persona> {
 
+	private static final Logger LOGGER = Logger.getLogger(PersonaDao.class.getCanonicalName());
 	private ArrayList<Persona> registros;
 
 	private final static String sql_get_all = "SELECT  id, nombre, avatar, sexo FROM persona ORDER BY id DESC LIMIT 500";
@@ -27,6 +29,7 @@ public class PersonaDao implements IDAO<Persona> {
 	}
 
 	public static IDAO<Persona> getInstancia() {
+		LOGGER.info("getInstancia");
 		if (INSTANCIA == null) {
 			INSTANCIA = new PersonaDao();
 		}
@@ -35,6 +38,7 @@ public class PersonaDao implements IDAO<Persona> {
 
 	@Override
 	public List<Persona> getAll() throws Exception {
+		LOGGER.info("getAll");
 		registros = new ArrayList<Persona>();
 		try (Connection con = ConnectionManager.getConnection();
 				PreparedStatement pst = con.prepareStatement(sql_get_all);
@@ -54,6 +58,7 @@ public class PersonaDao implements IDAO<Persona> {
 
 	@Override
 	public Persona getById(int id) throws Exception, SQLException {
+		LOGGER.info("getById(" + id + ")");
 		Persona persona = null;
 		try (Connection con = ConnectionManager.getConnection();
 				PreparedStatement pst = con.prepareStatement(sql_get_by_id);) {
@@ -78,6 +83,7 @@ public class PersonaDao implements IDAO<Persona> {
 
 	@Override
 	public Persona delete(int id) throws Exception, SQLException {
+		LOGGER.info("delete(" + id + ")");
 		Persona persona = getById(id);
 		if (persona != null) {
 			try (Connection con = ConnectionManager.getConnection();
@@ -99,6 +105,7 @@ public class PersonaDao implements IDAO<Persona> {
 
 	@Override
 	public Persona insert(Persona persona) throws Exception, SQLException {
+		LOGGER.info("insert(" + persona + ")");
 		try (Connection con = ConnectionManager.getConnection();
 				PreparedStatement pst = con.prepareStatement(sql_insert, Statement.RETURN_GENERATED_KEYS);) {
 			pst.setString(1, persona.getNombre());
@@ -129,6 +136,7 @@ public class PersonaDao implements IDAO<Persona> {
 
 	@Override
 	public Persona update(Persona persona) throws Exception, SQLException {
+		LOGGER.info("update(" + persona + ")");
 		try (Connection con = ConnectionManager.getConnection();
 				PreparedStatement pst = con.prepareStatement(sql_update);) {
 			pst.setString(1, persona.getNombre());
@@ -150,6 +158,7 @@ public class PersonaDao implements IDAO<Persona> {
 	}
 
 	private Persona mapper(ResultSet rs) throws SQLException {
+		LOGGER.info("mapper()");
 		Persona persona = new Persona();
 		persona.setId(rs.getInt("id"));
 		persona.setNombre(rs.getString("nombre"));

@@ -127,7 +127,7 @@ function eliminar(indice) {
     if (confirm(`¿Estas seguro que quieres eliminar a ${personasSeleccionada.nombre} ?`)) {
         const url = urlBase + indice;
         const promesa = ajax('DELETE', url, null);
-        promesa.then(pers => { obtenerDatosRest('T', "") });
+        promesa.then(() => { obtenerDatosRest('T', "") });
         promesa.catch((error) => {
             alert(error);
         })
