@@ -34,7 +34,7 @@ function init() {
 }
 
 function initGallery() {
-    selectAvatar("initGallery")
+    console.debug("initGallery")
     let divImagenes = document.getElementById('imagenes');
     divImagenes.innerHTML = "";
     for (let i = 1; i <= 7; i++) {
@@ -47,11 +47,11 @@ function selectAvatar(evento, id) {
     const avatares = document.querySelectorAll('#imagenes img');
     avatares.forEach(el => el.classList.remove('selected'));
     if (id == null) {
-        selectAvatar("id == null");
+        console.debug("id == null");
         evento.target.classList.add('selected');
         document.getElementById('avatar').value = evento.target.dataset.nombre;
     } else {
-        selectAvatar("id != null");
+        console.debug("id != null");
         let a = document.getElementById(id);
         a.classList.add('selected');
     }
@@ -166,12 +166,40 @@ function seleccionar(indice) {
         (persona.sexo == "H") ? document.getElementById('radioHombre').checked = true: document.getElementById('radioMujer').checked = true;
         selectAvatar(null, persona.avatar);
         personas = tempPersonas;
-    });
-
-    promesa.catch((error) => {
+        console.debug(persona.id);
+        obtenerListasCursos(persona.id);
+    }).catch((error) => {
         console.debug("promesa catch");
         alert(error);
-    })
+    });
+}
+
+function obtenerListasCursos(idPersona) {
+    console.debug("obtenerListasCursos")
+    const url = urlBase + idPersona + "/cursos/";
+
+    const promesa = ajax('GET', url, null);
+
+    promesa.then(arrayCursos => {
+        console.debug("dentro then");
+        let activos = document.getElementById("cursosactivos");
+        let inactivos = document.getElementById("cursosinactivos");
+        inactivos.innerHTML = "";
+        activos.innerHTML = "";
+        console.debug(JSON.stringify(arrayCursos));
+        arrayCursos.cursosNotIn.forEach(cursos => {
+            inactivos.innerHTML += `<img onclick="selectInactivo(event,null)" id="${cursos.id}" src="img/${cursos.imagen}" alt="${cursos.nombre}">`
+        })
+
+        arrayCursos.cursosIn.forEach(cursos => {
+            activos.innerHTML += `<img onclick="selectActivo(event,null)" id="${cursos.id}" src="img/${cursos.imagen}" alt="${cursos.nombre}">`
+        })
+
+        let bDel = document.getElementById("del");
+        bDel.disabled = true;
+        let bAdd = document.getElementById("add");
+        bAdd.disabled = true;
+    });
 }
 
 function limpiarFormulario() {
@@ -185,10 +213,80 @@ function limpiarFormulario() {
 
     const avatares = document.querySelectorAll('#imagenes img');
     avatares.forEach(el => el.classList.remove('selected'));
+    let divCursos = document.getElementById("cursos");
+    divCursos.disabled = true;
+
+    obtenerTodosLosCursos();
+    let bDel = document.getElementById("del");
+    bDel.disabled = true;
+    let bAdd = document.getElementById("add");
+    bAdd.disabled = true;
+}
+
+function obtenerTodosLosCursos() {
+    console.debug("obtenerTodosLosCursos")
+    const url = "http://localhost:8080/apprest/api/cursos/";
+
+    const promesa = ajax('GET', url, null);
+
+    promesa.then(cursos => {
+        console.debug("dentro then");
+        let inactivos = document.getElementById("cursosinactivos");
+        let activos = document.getElementById("cursosactivos");
+        inactivos.innerHTML = "";
+        activos.innerHTML = "";
+
+        cursos.forEach(cursos => {
+            inactivos.innerHTML += `<img class="disabled" id="${cursos.id}" src="img/${cursos.imagen}" alt="${cursos.nombre}" disabled>`
+        })
+    });
 }
 
 function filtarPorSexo(sexo, lista) {
     return lista.filter(persona => persona.sexo == sexo);
+}
+
+function selectInactivo(evento, id) {
+    console.debug("selectInactivo");
+    const cursosIna = document.querySelectorAll('#cursosinactivos img');
+    cursosIna.forEach(el => el.classList.remove('selected'));
+
+    const cursosAc = document.querySelectorAll('#cursosactivos img');
+    cursosAc.forEach(el => el.classList.remove('selected'));
+    if (id == null) {
+        console.debug("id == null");
+        evento.target.classList.add('selected');
+    } else {
+        console.debug("id != null");
+        let a = document.getElementById(id);
+        a.classList.add('selected');
+    }
+
+    let bDel = document.getElementById("del");
+    bDel.disabled = true;
+    let bAdd = document.getElementById("add");
+    bAdd.disabled = false;
+}
+
+function selectActivo(evento, id) {
+    console.debug("selectInactivo");
+    const cursosIna = document.querySelectorAll('#cursosinactivos img');
+    cursosIna.forEach(el => el.classList.remove('selected'));
+
+    const cursosAc = document.querySelectorAll('#cursosactivos img');
+    cursosAc.forEach(el => el.classList.remove('selected'));
+    if (id == null) {
+        console.debug("id == null");
+        evento.target.classList.add('selected');
+    } else {
+        console.debug("id != null");
+        let a = document.getElementById(id);
+        a.classList.add('selected');
+    }
+    let bDel = document.getElementById("del");
+    bDel.disabled = false;
+    let bAdd = document.getElementById("add");
+    bAdd.disabled = true;
 }
 
 function buscar(indicionombre, lista) {
@@ -240,6 +338,7 @@ function obtenerDatosRest(listasexo, buscador) {
  */
 function ajax(metodo, url, datos) {
     console.debug("ajax");
+    console.debug(metodo + " " + url)
     return new Promise((resolve, reject) => {
         //Creamos un objeto para realizar la REQUEST con Ajax
         var xhttp = new XMLHttpRequest();
@@ -282,4 +381,62 @@ function ajax(metodo, url, datos) {
         }
 
     });
+}
+
+function agregarCurso(evento) {
+    let idPersona = document.getElementById("id").value;
+    let idCurso = "";
+    const cursosIna = document.querySelectorAll('#cursosinactivos img');
+
+    let curso;
+    cursosIna.forEach(el => {
+        if (el.classList.contains('selected')) {
+            idCurso = el.id;
+            curso = el;
+        }
+    });
+
+    let url = urlBase + idPersona + "/cursos/" + idCurso;
+
+    console.debug(curso)
+    console.debug(curso.innerHTML)
+    console.debug(curso.outerHTML)
+    let promesa = ajax('POST', url, null);
+
+    promesa.then(() => {
+        let activos = document.getElementById("cursosactivos");
+        curso.classList.remove("selected");
+        curso.setAttribute("onclick", "selectActivo(event,null)");
+        console.debug(curso);
+        activos.innerHTML += curso.outerHTML;
+        curso.parentNode.removeChild(curso);
+        evento.target.disabled = true;
+    }).catch(errores => {});
+}
+
+function eliminarCurso(evento) {
+    let idPersona = document.getElementById("id").value;
+    let idCurso = "";
+
+    const cursosAc = document.querySelectorAll('#cursosactivos img');
+
+    let curso;
+    cursosAc.forEach(el => {
+        if (el.classList.contains('selected')) {
+            idCurso = el.id;
+            curso = el;
+        }
+    });
+    let url = urlBase + idPersona + "/cursos/" + idCurso;
+    let promesa = ajax('DELETE', url, null);
+
+    promesa.then(() => {
+        let inactivos = document.getElementById("cursosinactivos");
+        curso.classList.remove("selected");
+        console.debug(curso);
+        curso.setAttribute("onclick", "selectInactivo(event,null)");
+        inactivos.innerHTML += curso.outerHTML;
+        curso.parentNode.removeChild(curso);
+        evento.target.disabled = true;
+    }).catch(errores => {});
 }
