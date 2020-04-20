@@ -18,6 +18,33 @@ USE `alumnos`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `curso`
+--
+
+DROP TABLE IF EXISTS `curso`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `curso` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) COLLATE utf8_spanish2_ci NOT NULL,
+  `imagen` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
+  `precio` decimal(6,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `titulo_UNIQUE` (`nombre`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `curso`
+--
+
+LOCK TABLES `curso` WRITE;
+/*!40000 ALTER TABLE `curso` DISABLE KEYS */;
+INSERT INTO `curso` VALUES (1,'HTML/CSS','html.png',1.10),(2,'Java','java.png',2.20),(3,'Javascript','javascript.png',3.30),(4,'PHP','php.png',4.40),(5,'MySQL','mysql.png',5.50);
+/*!40000 ALTER TABLE `curso` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `persona`
 --
 
@@ -45,6 +72,35 @@ INSERT INTO `persona` VALUES (1,'Arantxa','avatar1.png','M'),(2,'Idoia','avatar2
 UNLOCK TABLES;
 
 --
+-- Table structure for table `personacurso`
+--
+
+DROP TABLE IF EXISTS `personacurso`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `personacurso` (
+  `persona_id` int NOT NULL,
+  `curso_id` int NOT NULL,
+  `precio_pagado` decimal(6,2) NOT NULL,
+  PRIMARY KEY (`persona_id`,`curso_id`),
+  KEY `fk_persona_has_curso_curso1_idx` (`curso_id`),
+  KEY `fk_persona_has_curso_persona_idx` (`persona_id`),
+  CONSTRAINT `fk_persona_has_curso_curso1` FOREIGN KEY (`curso_id`) REFERENCES `curso` (`id`),
+  CONSTRAINT `fk_persona_has_curso_persona` FOREIGN KEY (`persona_id`) REFERENCES `persona` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `personacurso`
+--
+
+LOCK TABLES `personacurso` WRITE;
+/*!40000 ALTER TABLE `personacurso` DISABLE KEYS */;
+INSERT INTO `personacurso` VALUES (1,5,5.50),(2,4,4.40),(3,1,1.10),(3,2,2.20),(4,1,1.10),(4,2,2.20),(4,5,5.50);
+/*!40000 ALTER TABLE `personacurso` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping events for database 'alumnos'
 --
 
@@ -61,4 +117,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-17 10:36:00
+-- Dump completed on 2020-04-20  8:52:57

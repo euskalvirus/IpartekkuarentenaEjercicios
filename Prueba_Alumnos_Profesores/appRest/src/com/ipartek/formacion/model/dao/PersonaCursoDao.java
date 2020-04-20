@@ -19,9 +19,9 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 
 	private static PersonaCursoDao INSTANCIA = null;
 
-	private final static String sql_get_all = "SELECT id, titulo, imagen, precio FROM curso";
-	private final static String sql_get_by_idpersona = "SELECT c.id id, c.titulo titulo, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc, curso c WHERE pc.curso_id = c.id AND pc.persona_id = ? ";
-	private final static String sql_get_by_notidpersona = "SELECT c.id id, c.titulo titulo, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc RIGHT JOIN curso c on pc.curso_id = c.id WHERE c.id NOT IN (SELECT curso_id FROM personacurso WHERE persona_id = ?) GROUP BY id";
+	private final static String sql_get_all = "SELECT id, nombre, imagen, precio FROM curso";
+	private final static String sql_get_by_idpersona = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc, curso c WHERE pc.curso_id = c.id AND pc.persona_id = ? ";
+	private final static String sql_get_by_notidpersona = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc RIGHT JOIN curso c on pc.curso_id = c.id WHERE c.id NOT IN (SELECT curso_id FROM personacurso WHERE persona_id = ?) GROUP BY id";
 	private final static String sql_add_personacurso =  "INSERT INTO personacurso VALUES(?,?,?)";
 	private final static String sql_delete_personacurso =  "DELETE FROM personacurso WHERE persona_id = ? AND curso_id = ?";
 
@@ -113,7 +113,7 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 		LOGGER.info("mapper()");
 		Curso curso = new Curso();
 		curso.setId(rs.getInt("id"));
-		curso.setNombre(rs.getString("titulo"));
+		curso.setNombre(rs.getString("nombre"));
 		curso.setImagen(rs.getString("imagen"));
 		curso.setPrecio(rs.getDouble("precio"));
 		return curso;
