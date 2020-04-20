@@ -40,7 +40,7 @@ function init() {
         console.debug(this.value);
         if (valor.length > 2) {
             previous.value = valor.length;
-            cargarCursosModal(event, "?filter=" + valor);
+            cargarCursosModal(event, "?filtro=" + valor);
         } else if ((valor.length == 2 && (keyCode == 8 || e.ctrlKey)) || (valor.length < 3 && previous.value > 2)) {
             previous.value = valor.length;
             console.debug("longitud: " + valor.length + ", keycode: " + keyCode)

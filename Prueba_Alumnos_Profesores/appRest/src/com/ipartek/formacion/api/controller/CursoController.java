@@ -31,7 +31,7 @@ public class CursoController {
 	public CursoController() {}
 	
 	@GET
-	public Object getAll(@QueryParam("filter") String filtro) {
+	public Object getAll(@QueryParam("filtro") String filtro) {
 		LOGGER.info("getAll " + filtro);
 		
 		Response response;
