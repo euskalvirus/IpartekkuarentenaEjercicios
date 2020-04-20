@@ -141,7 +141,7 @@ function eliminar(indice) {
         const promesa = ajax('DELETE', url, null);
         promesa.then(() => {
             console.debug("promesa then");
-            obtenerDatosRest('T', "")
+            obtenerDatosRest(document.getElementById('despegable').value, document.getElementById('search').value)
         });
         promesa.catch((error) => {
             console.debug("promesa catch");
