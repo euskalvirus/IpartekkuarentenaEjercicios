@@ -411,7 +411,10 @@ function agregarCurso(evento) {
         activos.innerHTML += curso.outerHTML;
         curso.parentNode.removeChild(curso);
         evento.target.disabled = true;
-    }).catch(errores => {});
+    }).catch(error => {
+        console.debug("promesa catch");
+        alert(error);
+    });
 }
 
 function eliminarCurso(evento) {
@@ -438,5 +441,8 @@ function eliminarCurso(evento) {
         inactivos.innerHTML += curso.outerHTML;
         curso.parentNode.removeChild(curso);
         evento.target.disabled = true;
-    }).catch(errores => {});
+    }).catch(error => {
+        console.debug("promesa catch");
+        alert(error);
+    });
 }

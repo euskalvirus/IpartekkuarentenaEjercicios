@@ -19,11 +19,11 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 
 	private static PersonaCursoDao INSTANCIA = null;
 
-	private final static String sql_get_all = "SELECT id, nombre, imagen, precio FROM curso";
-	private final static String sql_get_by_idpersona = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc, curso c WHERE pc.curso_id = c.id AND pc.persona_id = ? ";
-	private final static String sql_get_by_notidpersona = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc RIGHT JOIN curso c on pc.curso_id = c.id WHERE c.id NOT IN (SELECT curso_id FROM personacurso WHERE persona_id = ?) GROUP BY id";
-	private final static String sql_add_personacurso =  "INSERT INTO personacurso VALUES(?,?,?)";
-	private final static String sql_delete_personacurso =  "DELETE FROM personacurso WHERE persona_id = ? AND curso_id = ?";
+	private final static String SQL_GET_ALL = "SELECT id, nombre, imagen, precio FROM curso";
+	private final static String SQL_GET_BY_IDPERSONA = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc, curso c WHERE pc.curso_id = c.id AND pc.persona_id = ? ";
+	private final static String SQL_GET_BY_NOTIDPERSONA = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc RIGHT JOIN curso c on pc.curso_id = c.id WHERE c.id NOT IN (SELECT curso_id FROM personacurso WHERE persona_id = ?) GROUP BY id";
+	private final static String SQL_ADD_PERSONACURSO =  "INSERT INTO personacurso VALUES(?,?,?)";
+	private final static String SQL_DELETE_PERSONACURSO =  "DELETE FROM personacurso WHERE persona_id = ? AND curso_id = ?";
 
 	private PersonaCursoDao() {
 	}
@@ -41,7 +41,7 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 		LOGGER.info("getAll");
 		registros = new ArrayList<Curso>();
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(sql_get_all);
+				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);
 				ResultSet rs = pst.executeQuery();) {
 			while (rs.next()) {
 				Curso c = mapper(rs);
@@ -56,11 +56,11 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 	}
 
 	@Override
-	public List<Curso> getPersonaCursos(int id) throws Exception, SQLException {
+	public List<Curso> getPersonaCursos(int id) throws Exception {
 		LOGGER.info("getPersonaCursos(" + id + ")");
 		ArrayList<Curso> cursos = null;
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(sql_get_by_idpersona);) {
+				PreparedStatement pst = con.prepareStatement(SQL_GET_BY_IDPERSONA);) {
 			pst.setInt(1, id);
 			try (ResultSet rs = pst.executeQuery();) {
 				cursos = new ArrayList<Curso>();
@@ -69,25 +69,20 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 				}
 			}
 
-		} catch (SQLException e) {
-			LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+		} catch (Exception e) {
+			LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + id);
 			e.printStackTrace();
 			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
-
-		} catch (Exception e) {
-			LOGGER.warning("No se ha encontrado ningun registro para el idPersona: " + id);
-			e.printStackTrace();
-			throw new Exception("No se ha encontrado ningun registro para el id: " + id);
 		}
 		return cursos;
 	}
 
 	@Override
-	public List<Curso> getPersonaNoCursos(int id) throws Exception, SQLException {
+	public List<Curso> getPersonaNoCursos(int id) throws Exception{
 		LOGGER.info("getPersonaNoCursos(" + id + ")");
 		ArrayList<Curso> cursos = null;
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(sql_get_by_notidpersona);) {
+				PreparedStatement pst = con.prepareStatement(SQL_GET_BY_NOTIDPERSONA);) {
 			pst.setInt(1, id);
 			try (ResultSet rs = pst.executeQuery();) {
 				cursos = new ArrayList<Curso>();
@@ -96,15 +91,10 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 				}
 			}
 
-		} catch (SQLException e) {
-			LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+		} catch (Exception e) {
+			LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + id);
 			e.printStackTrace();
 			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
-
-		} catch (Exception e) {
-			LOGGER.warning("No se ha encontrado ningun registro para el idPersona: " + id);
-			e.printStackTrace();
-			throw new Exception("No se ha encontrado ningun registro para el id: " + id);
 		}
 		return cursos;
 	}
@@ -119,64 +109,83 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 		return curso;
 	}
 
+	@Override
 	public PersonaCurso addPersonaCurso(int idPersona, int idCurso) throws Exception, SQLException {
 		LOGGER.info("addPersonaCurso(idPersona: " + idPersona + ", idCurso: " + idCurso + ")");
 		Persona persona = PersonaDao.getInstancia().getById(idPersona);
 		Curso curso = CursoDao.getInstancia().getById(idCurso);
 		PersonaCurso pc = null;
-		System.out.println("persona: " + persona);
-		System.out.println("curso: " + curso);
+		
+		//No se deberia de dar el caso, porque en los getById  se lanza throw si no existe
 		if (persona != null && curso !=null) {
 			try (Connection con = ConnectionManager.getConnection();
-					PreparedStatement pst = con.prepareStatement(sql_add_personacurso);) {
+					PreparedStatement pst = con.prepareStatement(SQL_ADD_PERSONACURSO);) {
 				pst.setInt(1, idPersona);
 				pst.setInt(2, idCurso);
 				pst.setDouble(3, curso.getPrecio());
 				int numeroRegistrosModificados = pst.executeUpdate();
 				if (numeroRegistrosModificados != 1) {
 					LOGGER.warning(
-							"El alumno existe pero no se ha podido eliminar el registro para el Alumno=" + idPersona + ", Curso=" + idCurso + ".");
+							"Error no esperado. Se ha agregado mas de un registro");
 					throw new SQLException(
-							"El alumno existe pero no se ha podido eliminar el registro para el Alumno=" + idPersona + ", Curso=" + idCurso + ".");
+							"Error no esperado. Se ha agregado mas de un registro");
 				}
 				pc = new PersonaCurso(idPersona,idCurso,curso.getPrecio());
+				LOGGER.info("Agregado correctamente el curso para la persona");
 
 			} catch (SQLException e) {
-				LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
-				throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+				LOGGER.warning("El alumno ya tiene comprado ese curso: " + e.getMessage());
+				throw new Exception("El alumno ya tiene comprado ese curso: ");
 			}
 		}else {
+			if( persona == null && curso == null) {
+				throw new Exception("No existen ni el alumno ni el curso introducidos");
+			}else if(persona == null) {
+				throw new Exception("No existe el alumno introducido");
+			}else {
+				throw new Exception("No existe el curso introducido");
+			}
 			
 		}
 
 		return pc;
 	}
 
+	@Override
 	public PersonaCurso deletePersonaCurso(int idPersona, int idCurso) throws Exception,  SQLException {
 		LOGGER.info("deletePersonaCurso(idPersona: " + idPersona + ", idCurso: " + idCurso + ")");
 		Persona persona = PersonaDao.getInstancia().getById(idPersona);
 		Curso curso = CursoDao.getInstancia().getById(idCurso);
 		PersonaCurso pc = null;
+		
+		//No se deberia de dar el caso, porque en los getById  se lanza throw si no existe
 		if (persona != null && curso !=null) {
 			try (Connection con = ConnectionManager.getConnection();
-					PreparedStatement pst = con.prepareStatement(sql_delete_personacurso);) {
+					PreparedStatement pst = con.prepareStatement(SQL_DELETE_PERSONACURSO);) {
 				pst.setInt(1, idPersona);
 				pst.setInt(2, idCurso);
 				int numeroRegistrosModificados = pst.executeUpdate();
 				if (numeroRegistrosModificados != 1) {
 					LOGGER.warning(
-							"El alumno existe pero no se ha podido eliminar el registro para el Alumno=.");
+							"Error no esperado. Se ha eliminado mas de un registro");
 					throw new SQLException(
-							"El alumno existe pero no se ha podido eliminar el registro para el Alumno=.");
+							"Error no esperado. Se ha eliminado mas de un registro");
 				}
 				pc = new PersonaCurso(idPersona,idCurso,curso.getPrecio());
-
+				
+				LOGGER.info("Eliminado correctamente el curso para la persona");
 			} catch (SQLException e) {
-				LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
-				throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+				LOGGER.warning("No existe ningun registro que eliminar");
+				throw new Exception("No existe ningun registro que eliminar");
 			}
 		}else {
-			
+			if( persona == null && curso == null) {
+				throw new Exception("No existen ni el alumno ni el curso introducidos");
+			}else if(persona == null) {
+				throw new Exception("No existe el alumno introducido");
+			}else {
+				throw new Exception("No existe el curso introducido");
+			}
 		}
 
 		return pc;

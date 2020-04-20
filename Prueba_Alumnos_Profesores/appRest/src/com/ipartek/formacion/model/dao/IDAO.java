@@ -12,7 +12,7 @@ public interface IDAO<T> {
 	 * @return
 	 * @throws Exception si no encuentra pojo
 	 */
-	T getById(int id) throws Exception, SQLException;
+	T getById(int id) throws Exception;
 	
 	/***
 	 * Elimina pojo por su id

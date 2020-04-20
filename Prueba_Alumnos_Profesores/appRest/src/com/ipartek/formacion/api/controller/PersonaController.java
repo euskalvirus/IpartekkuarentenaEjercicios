@@ -138,15 +138,14 @@ public class PersonaController {
 			cursosIn = (ArrayList<Curso>) PersonaCursoDao.getInstancia().getPersonaCursos(id);
 			cursosNotIn = (ArrayList<Curso>) PersonaCursoDao.getInstancia().getPersonaNoCursos(id);
 			CursosINyNotIn cursosGrupo = new CursosINyNotIn(cursosIn, cursosNotIn);
-			System.out.println("aaa");
 			response = Response.status(Status.OK).entity(cursosGrupo).build();
 		} catch (SQLException e) {
-			System.out.println("bbbb");
+			LOGGER.warning("SQLException INTERNAL_SERVER_ERROR");
 			errores.add(e.getMessage());
 			response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errores).build();
 			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("cccc");
+			LOGGER.warning("No se ha encontrado ninguna persona con ese id");
 			errores.add("No se ha encontrado ninguna persona con ese id.");
 			response = Response.status(Status.NOT_FOUND).entity(errores).build();
 		}
@@ -196,7 +195,6 @@ public class PersonaController {
 		Response response = null;
 		try {
 			PersonaCurso pc = PersonaCursoDao.getInstancia().addPersonaCurso(idPersona, idCurso);
-			System.out.println(pc);
 			response = Response.status(Status.OK).entity(pc).build();
 		} catch (SQLException e) {
 			e.printStackTrace();

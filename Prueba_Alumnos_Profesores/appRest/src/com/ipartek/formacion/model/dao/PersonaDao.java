@@ -17,11 +17,11 @@ public class PersonaDao implements IDAO<Persona> {
 	private static final Logger LOGGER = Logger.getLogger(PersonaDao.class.getCanonicalName());
 	private ArrayList<Persona> registros;
 
-	private final static String sql_get_all = "SELECT  id, nombre, avatar, sexo FROM persona ORDER BY id DESC LIMIT 500";
-	private final static String sql_get_by_id = "SELECT  id, nombre, avatar, sexo FROM persona WHERE id=?";
-	private final static String sql_delete_by_id = "DELETE FROM persona WHERE id=?";
-	private final static String sql_insert = "INSERT INTO persona(nombre, avatar,sexo) VALUES(?,?,?)";
-	private final static String sql_update = "UPDATE persona SET nombre=?, avatar=?, sexo=? WHERE id=?;";
+	private final static String SQL_GET_ALL = "SELECT  id, nombre, avatar, sexo FROM persona ORDER BY id DESC LIMIT 500";
+	private final static String SQL_GET_BY_ID = "SELECT  id, nombre, avatar, sexo FROM persona WHERE id=?";
+	private final static String SQL_DELETE_BY_ID = "DELETE FROM persona WHERE id=?";
+	private final static String SQL_INSERT = "INSERT INTO persona(nombre, avatar,sexo) VALUES(?,?,?)";
+	private final static String SQL_UPDATE = "UPDATE persona SET nombre=?, avatar=?, sexo=? WHERE id=?;";
 
 	private static PersonaDao INSTANCIA = null;
 
@@ -41,7 +41,7 @@ public class PersonaDao implements IDAO<Persona> {
 		LOGGER.info("getAll");
 		registros = new ArrayList<Persona>();
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(sql_get_all);
+				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);
 				ResultSet rs = pst.executeQuery();) {
 			while (rs.next()) {
 				Persona p = mapper(rs);
@@ -57,11 +57,11 @@ public class PersonaDao implements IDAO<Persona> {
 	}
 
 	@Override
-	public Persona getById(int id) throws Exception, SQLException {
+	public Persona getById(int id) throws Exception {
 		LOGGER.info("getById(" + id + ")");
 		Persona persona = null;
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(sql_get_by_id);) {
+				PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID);) {
 			pst.setInt(1, id);
 			try (ResultSet rs = pst.executeQuery();) {
 				if (rs.next()) {
@@ -71,15 +71,10 @@ public class PersonaDao implements IDAO<Persona> {
 				}
 			}
 
-		} catch (SQLException e) {
-			LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
-			e.printStackTrace();
-			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
-
 		} catch (Exception e) {
-			LOGGER.warning("No se ha encontrado ningun registro para el id: " + id);
+			LOGGER.warning("No se ha encontrado ningun alumno para el id: " + id);
 			e.printStackTrace();
-			throw new Exception("No se ha encontrado ningun registro para el id: " + id);
+			throw new Exception("No se ha encontrado ningun alumno para el id: " + id);
 		}
 		return persona;
 	}
@@ -88,9 +83,11 @@ public class PersonaDao implements IDAO<Persona> {
 	public Persona delete(int id) throws Exception, SQLException {
 		LOGGER.info("delete(" + id + ")");
 		Persona persona = getById(id);
+		
+		//No se deberia de dar el caso, porque en el getById se lanza throw si no existe
 		if (persona != null) {
 			try (Connection con = ConnectionManager.getConnection();
-					PreparedStatement pst = con.prepareStatement(sql_delete_by_id);) {
+					PreparedStatement pst = con.prepareStatement(SQL_DELETE_BY_ID);) {
 				pst.setInt(1, id);
 				int numeroRegistrosModificados = pst.executeUpdate();
 				if (numeroRegistrosModificados != 1) {
@@ -101,8 +98,8 @@ public class PersonaDao implements IDAO<Persona> {
 				}
 
 			} catch (SQLException e) {
-				LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
-				throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+				LOGGER.warning("Ha habido algun problema de Constrain: " + e.getMessage());
+				throw new Exception("Ha habido algun problema de Constrain: " + e.getMessage());
 			}
 		}
 
@@ -113,14 +110,14 @@ public class PersonaDao implements IDAO<Persona> {
 	public Persona insert(Persona persona) throws Exception, SQLException {
 		LOGGER.info("insert(" + persona + ")");
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(sql_insert, Statement.RETURN_GENERATED_KEYS);) {
+				PreparedStatement pst = con.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);) {
 			pst.setString(1, persona.getNombre());
 			pst.setString(2, persona.getAvatar());
 			pst.setString(3, persona.getSexo());
 			int numeroRegistrosModificados = pst.executeUpdate();
 			if (numeroRegistrosModificados != 1) {
-				LOGGER.warning("No se ha podido agregar el registro.");
-				throw new Exception("No se ha podido agregar el registro.");
+				LOGGER.warning("Error no esperado, se ha guardado mas de un registro.");
+				throw new Exception("Error no esperado, se ha guardado mas de un registro.");
 			} else {
 				ResultSet keys = pst.getGeneratedKeys();
 				if (keys.next()) {
@@ -138,8 +135,8 @@ public class PersonaDao implements IDAO<Persona> {
 				LOGGER.warning("El nombre introducido ya existe.");
 				throw new SQLException("El nombre introducido ya existe.");
 			} else {
-				LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
-				throw new SQLException("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+				LOGGER.warning("Ha habido otro problema de constrain: " + e.getMessage());
+				throw new SQLException("Ha habido otro problema de constrain: " + e.getMessage());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,7 +150,7 @@ public class PersonaDao implements IDAO<Persona> {
 	public Persona update(Persona persona) throws Exception, SQLException {
 		LOGGER.info("update(" + persona + ")");
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(sql_update);) {
+				PreparedStatement pst = con.prepareStatement(SQL_UPDATE);) {
 			pst.setString(1, persona.getNombre());
 			pst.setString(2, persona.getAvatar());
 			pst.setString(3, persona.getSexo());
@@ -171,8 +168,8 @@ public class PersonaDao implements IDAO<Persona> {
 				LOGGER.warning("El nombre introducido ya existe.");
 				throw new SQLException("El nombre introducido ya existe.");
 			} else {
-				LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
-				throw new SQLException("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+				LOGGER.warning("Ha habido otro problema de constrain: " + e.getMessage());
+				throw new SQLException("Ha habido otro problema de constrain: " + e.getMessage());
 			}
 		} catch (Exception e) {
 			LOGGER.warning(e.getMessage());
