@@ -483,6 +483,6 @@ function cargarCursosModal(evento, filtro) {
             listaModal.innerHTML += `<img class="disabled" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" disabled>`
         })
     }).catch(error => {
-
+        alert(error);
     });
 }
