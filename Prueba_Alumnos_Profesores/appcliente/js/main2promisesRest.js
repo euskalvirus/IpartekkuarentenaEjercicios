@@ -133,6 +133,7 @@ function validate(id, nombre, avatar, sexo, op) {
 
 function eliminar(indice) {
     console.debug(`Eliminar`);
+    console.debug(personas);
     let personasSeleccionada = personas.filter(persona => persona.id == indice)[0];
 
     if (confirm(`¿Estas seguro que quieres eliminar a ${personasSeleccionada.nombre} ?`)) {
@@ -300,7 +301,8 @@ function obtenerDatosRest(listasexo, buscador) {
 
     const promesa = ajax('GET', url, null);
 
-    promesa.then((personas) => {
+    promesa.then((pers) => {
+        personas = pers;
         console.debug("promesa then");
         let listafiltrada = [];
         switch (listasexo.toUpperCase()) {
@@ -350,8 +352,7 @@ function ajax(metodo, url, datos) {
             if (this.readyState == 4) {
                 if (this.status == 200 || this.status == 201) {
                     console.debug("Llamada ajax GONE OK");
-                    personas = JSON.parse(this.responseText);
-                    resolve(personas);
+                    resolve(JSON.parse(this.responseText));
                 } // this.status == 200
                 else {
                     console.debug("Llamada ajax GONE WRONG");
