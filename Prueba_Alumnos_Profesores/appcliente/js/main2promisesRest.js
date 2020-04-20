@@ -28,6 +28,26 @@ function init() {
 
         obtenerDatosRest(listasexo, valor);
     })
+
+    let buscadorModal = document.getElementById('searchModal');
+
+    buscadorModal.addEventListener('keyup', function(e) {
+        console.debug("buscadorModal EventListener");
+
+        let previous = document.getElementById("previous");
+        let keyCode = e.keyCode;
+        let valor = this.value;
+        console.debug(this.value);
+        if (valor.length > 2) {
+            previous.value = valor.length;
+            cargarCursosModal(event, "?filter=" + valor);
+        } else if ((valor.length == 2 && (keyCode == 8 || e.ctrlKey)) || (valor.length < 3 && previous.value > 2)) {
+            previous.value = valor.length;
+            console.debug("longitud: " + valor.length + ", keycode: " + keyCode)
+            cargarCursosModal(event, "");
+        }
+    })
+
     console.debug('Document Load and Ready');
     obtenerDatosRest(select.value, buscador.value);
     initGallery();
@@ -237,8 +257,8 @@ function obtenerTodosLosCursos() {
         inactivos.innerHTML = "";
         activos.innerHTML = "";
 
-        cursos.forEach(cursos => {
-            inactivos.innerHTML += `<img class="disabled" id="${cursos.id}" src="img/${cursos.imagen}" alt="${cursos.nombre}" disabled>`
+        cursos.forEach(curso => {
+            inactivos.innerHTML += `<img class="disabled" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" disabled>`
         })
     });
 }
@@ -445,5 +465,24 @@ function eliminarCurso(evento) {
     }).catch(error => {
         console.debug("promesa catch");
         alert(error);
+    });
+}
+
+function cargarCursosModal(evento, filtro) {
+    console.debug("dentro de cargarCursosModal");
+    let listaModal = document.getElementById("cursosModal");
+    listaModal.innerHTML = "";
+
+    const url = "http://localhost:8080/apprest/api/cursos/" + filtro;
+
+    const promesa = ajax('GET', url, null);
+
+    promesa.then(cursos => {
+        console.log(cursos);
+        cursos.forEach(curso => {
+            listaModal.innerHTML += `<img class="disabled" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" disabled>`
+        })
+    }).catch(error => {
+
     });
 }

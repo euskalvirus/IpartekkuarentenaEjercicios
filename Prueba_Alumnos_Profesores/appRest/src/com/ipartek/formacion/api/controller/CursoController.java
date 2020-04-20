@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -15,7 +16,7 @@ import javax.ws.rs.core.Response.Status;
 import com.ipartek.formacion.model.Curso;
 import com.ipartek.formacion.model.dao.CursoDao;
 
-@Path("/cursos")
+@Path("/cursos/")
 @Produces("application/json")
 @Consumes("application/json")
 public class CursoController {
@@ -30,13 +31,17 @@ public class CursoController {
 	public CursoController() {}
 	
 	@GET
-	public Object getAll() {
-		LOGGER.info("getAll");
+	public Object getAll(@QueryParam("filter") String filtro) {
+		LOGGER.info("getAll " + filtro);
 		
 		Response response;
 		try {
 			ArrayList<Curso> cursos = new ArrayList<Curso>();
-			cursos = (ArrayList<Curso>)dao.getAll();
+			if(filtro==null) {
+				cursos = (ArrayList<Curso>)dao.getAll();
+			}else {
+				cursos = (ArrayList<Curso>)dao.getFiltered("%"+filtro+"%");
+			}
 			
 			response = Response.status(Status.OK).entity(cursos).build();
 		}catch (Exception e) {
@@ -47,4 +52,5 @@ public class CursoController {
 		}
 		return response;
 	}
+	
 }

@@ -10,22 +10,23 @@ import java.util.logging.Logger;
 
 import com.ipartek.formacion.model.Curso;
 
-
 public class CursoDao implements IDAO<Curso> {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(PersonaDao.class.getCanonicalName());
 	private ArrayList<Curso> registros;
-	
-	private final static String SQL_GET_ALL = "SELECT  id, nombre, imagen, precio FROM curso ORDER BY id ASC LIMIT 500";
+
+	private final static String SQL_GET_ALL = "SELECT  id, nombre, imagen, precio FROM curso ORDER BY id DESC LIMIT 100";
 	private final static String SQL_GET_BY_ID = "SELECT  id, nombre, imagen, precio FROM curso WHERE id= ?";
-	
+	private final static String SQL_GET_FILTERED = "SELECT  id, nombre, imagen, precio FROM curso WHERE nombre LIKE ?";
+
 	private static CursoDao INSTANCIA = null;
-	
-	private CursoDao() {}
-	
+
+	private CursoDao() {
+	}
+
 	public static IDAO<Curso> getInstancia() {
 		LOGGER.info("getInstancia");
-		if(INSTANCIA == null) {
+		if (INSTANCIA == null) {
 			INSTANCIA = new CursoDao();
 		}
 		return INSTANCIA;
@@ -41,6 +42,26 @@ public class CursoDao implements IDAO<Curso> {
 			while (rs.next()) {
 				Curso c = mapper(rs);
 				registros.add(c);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+		}
+		return registros;
+	}
+
+	public List<Curso> getFiltered(String filtro) throws Exception {
+		LOGGER.info("getFiltered " + filtro);
+		registros = new ArrayList<Curso>();
+		try (Connection con = ConnectionManager.getConnection();
+				PreparedStatement pst = con.prepareStatement(SQL_GET_FILTERED);) {
+			pst.setString(1, filtro);
+			try (ResultSet rs = pst.executeQuery();) {
+				while (rs.next()) {
+					Curso c = mapper(rs);
+					registros.add(c);
+				}
 			}
 
 		} catch (Exception e) {
