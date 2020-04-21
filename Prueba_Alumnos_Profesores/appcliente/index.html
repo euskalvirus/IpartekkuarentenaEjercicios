@@ -83,7 +83,7 @@
             </div>
         </div>
         <div id="botones" class="row justify-content-around">
-            <input class="col-5 btn btn-primary" type="button" value="Agregar Curso en Modal" data-toggle="modal" data-target="#modalCursos">
+            <input class="col-5 btn btn-primary" id="bMostrarModal" type="button" value="Agregar Curso en Modal" data-toggle="modal" data-target="#modalCursos" disabled>
         </div>
 
         <!-- Modal -->
@@ -105,7 +105,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" id="bAgregarCursoModal" onclick="agregarCursoModal(event)" class="btn btn-primary " disabled>Agregar Curso</button>
                     </div>
                 </div>
             </div>
@@ -117,7 +117,7 @@
     <script src="js/jquery-3.4.1.min.js "></script>
     <!-- Bootstrap -->
     <script src="js/bootstrap.bundle.min.js "></script>
-    <script src="js/main2promisesRest.js"></script>
+    <script src="js/main2promisesRest.js "></script>
     <script>
     </script>
 </body>

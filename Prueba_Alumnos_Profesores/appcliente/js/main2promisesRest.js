@@ -83,7 +83,7 @@ function pintar(arraypersonas) {
     limpiarFormulario();
     lista.innerHTML = '';
     for (let i = 0; i < arraypersonas.length; i++) {
-        lista.innerHTML += `<li class="list-group-item"><img src="img/${arraypersonas[i].avatar}" alt="imagen avatar ">${arraypersonas[i].nombre} 
+        lista.innerHTML += `<li class="list-group-item"><img src="img/${arraypersonas[i].avatar}" alt="imagen avatar ">${arraypersonas[i].nombre} (${arraypersonas[i].cursos.length})
             <i class="fa fa-pen" onclick="seleccionar(${arraypersonas[i].id})"></i> 
             <i class="fa fa-trash" onclick="eliminar(${arraypersonas[i].id})"></i></li>`
     }
@@ -155,6 +155,7 @@ function eliminar(indice) {
     console.debug(`Eliminar`);
     console.debug(personas);
     let personasSeleccionada = personas.filter(persona => persona.id == indice)[0];
+    // let personasSeleccionada = personas.find(persona => persona.id == indice);
 
     if (confirm(`¿Estas seguro que quieres eliminar a ${personasSeleccionada.nombre} ?`)) {
         const url = urlBase + indice;
@@ -181,6 +182,8 @@ function seleccionar(indice) {
 
     promesa.then(persona => {
         console.debug("promesa then");
+        document.getElementById('opcion').name = "modificar";
+        document.getElementById('opcion').textContent = "MODIFICAR ALUMNO"
         document.getElementById('id').value = persona.id;
         document.getElementById('nombre').value = persona.nombre;
         document.getElementById('avatar').value = persona.avatar;
@@ -189,6 +192,8 @@ function seleccionar(indice) {
         personas = tempPersonas;
         console.debug(persona.id);
         obtenerListasCursos(persona.id);
+        let bModal = document.getElementById("bMostrarModal");
+        bModal.disabled = false;
     }).catch((error) => {
         console.debug("promesa catch");
         alert(error);
@@ -242,6 +247,8 @@ function limpiarFormulario() {
     bDel.disabled = true;
     let bAdd = document.getElementById("add");
     bAdd.disabled = true;
+    let bModal = document.getElementById("bMostrarModal");
+    bModal.disabled = true;
 }
 
 function obtenerTodosLosCursos() {
@@ -308,6 +315,25 @@ function selectActivo(evento, id) {
     bDel.disabled = false;
     let bAdd = document.getElementById("add");
     bAdd.disabled = true;
+}
+
+function selectCursoModal(evento, id) {
+    console.debug("selectCursoModal");
+    const cursosModal = document.querySelectorAll('#cursosModal img');
+    cursosModal.forEach(el => el.classList.remove('selected'));
+
+    if (id == null) {
+        console.debug("id == null");
+        evento.target.classList.add('selected');
+    } else {
+        console.debug("id != null");
+        let a = document.getElementById(id);
+        a.classList.add('selected');
+    }
+
+    let bAdd = document.getElementById("bAgregarCursoModal");
+    bAdd.disabled = false;
+
 }
 
 function buscar(indicionombre, lista) {
@@ -479,9 +505,25 @@ function cargarCursosModal(evento, filtro) {
     const promesa = ajax('GET', url, null);
 
     promesa.then(cursos => {
+        let id = document.getElementById('id').value;
+        console.debug(id);
+        if (id !== undefined) {
+            console.debug(personas);
+            let pSeleccionada = personas.find(persona => persona.id == id);
+            console.debug(pSeleccionada.cursos.length);
+            if (pSeleccionada.cursos.length != 0) {
+                cursos = cursos.filter(curso => {
+                    let busqueda = pSeleccionada.cursos.find(c => c.id == curso.id);
+                    if (busqueda == undefined) {
+                        return curso;
+                    }
+
+                })
+            }
+        }
         console.log(cursos);
         cursos.forEach(curso => {
-            listaModal.innerHTML += `<img class="disabled" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}, ${curso.precio}€" disabled>`
+            listaModal.innerHTML += `<img onclick=selectCursoModal(event,null) id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}, ${curso.precio}€">`
         })
     }).catch(error => {
         alert(error);
@@ -490,9 +532,51 @@ function cargarCursosModal(evento, filtro) {
 
 $('#modalCursos').on('shown.bs.modal', function(event) {
     cargarCursosModal(event, "");
+    let bAdd = document.getElementById("bAgregarCursoModal");
+    bAdd.disabled = true;
 })
 
 $('#modalCursos').on('hidden.bs.modal', function(event) {
     document.getElementById('searchModal').value = "";
     document.getElementById('cursosModal').innerHTML = "";
+    let bAdd = document.getElementById("bAgregarCursoModal");
+    bAdd.disabled = true;
 })
+
+function agregarCursoModal(evento) {
+    let idPersona = document.getElementById("id").value;
+    let idCurso = "";
+    const cursosModal = document.querySelectorAll('#cursosModal img');
+
+    let curso;
+    cursosModal.forEach(el => {
+        if (el.classList.contains('selected')) {
+            idCurso = el.id;
+            curso = el;
+        }
+    });
+
+    let url = urlBase + idPersona + "/cursos/" + idCurso;
+
+    let promesa = ajax('POST', url, null);
+
+    promesa.then(() => {
+        console.debug("then");
+        let activos = document.getElementById("cursosactivos");
+        curso.classList.remove("selected");
+        curso.setAttribute("onclick", "selectActivo(event,null)");
+        activos.innerHTML += curso.outerHTML;
+
+        $('#modalCursos').modal('hide');
+
+        let select = document.getElementById('despegable');
+        let buscador = document.getElementById('search');
+
+        init();
+        //Promise.all(obtenerDatosRest(select.value, buscador.value)).then(seleccionar(idPersona));
+
+    }).catch(error => {
+        console.debug("promesa catch");
+        alert(error);
+    });
+}

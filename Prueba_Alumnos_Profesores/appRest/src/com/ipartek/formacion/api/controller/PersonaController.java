@@ -260,7 +260,7 @@ public class PersonaController {
 			response = Response.status(Status.OK).entity(persona).build();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			errores.add("Hay un conflicto al intentar eliminar el registro: " + e.getMessage());
+			errores.add(e.getMessage());
 			response = Response.status(Status.CONFLICT).entity(errores).build();
 		} catch (Exception e) {
 			e.printStackTrace();

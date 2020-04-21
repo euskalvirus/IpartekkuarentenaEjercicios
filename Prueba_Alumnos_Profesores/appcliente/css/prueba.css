@@ -26,7 +26,8 @@ h1 {
 }
 
 #cursosinactivos img.selected,
-#cursosactivos img.selected {
+#cursosactivos img.selected,
+#cursosModal img.selected {
     background-color: red;
 }
 
