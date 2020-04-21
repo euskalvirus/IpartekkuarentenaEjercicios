@@ -2,46 +2,61 @@ package com.ipartek.formacion.model;
 
 public class PersonaCurso {
 
-	private int idPersona;
-	private int idCurso;
+	private Persona persona;
+	private Curso curso;
 	private Double precio;
 	
-	public PersonaCurso(int idPersona, int idCurso, Double precio) {
-		setIdPersona(idPersona);
-		setIdCurso(idCurso);
-		setPrecio(precio);
-	}
 	
-	public PersonaCurso() {}
-	
-	public int getIdPersona() {
-		return idPersona;
+	public Persona getPersona() {
+		return persona;
 	}
-	public void setIdPersona(int idPersona) {
-		this.idPersona = idPersona;
+
+	public void setPersona(Persona persona) {
+		this.persona = persona;
 	}
-	public int getIdCurso() {
-		return idCurso;
+
+	public Curso getCurso() {
+		return curso;
 	}
-	public void setIdCurso(int idCurso) {
-		this.idCurso = idCurso;
+
+	public void setCurso(Curso curso) {
+		this.curso = curso;
 	}
+
 	public Double getPrecio() {
 		return precio;
 	}
+
 	public void setPrecio(Double precio) {
 		this.precio = precio;
 	}
+
+	public PersonaCurso(Persona persona, Curso curso, Double precio) {
+		setPersona(persona);
+		setCurso(curso);
+		setPrecio(precio);
+	}
+	
+	public PersonaCurso(Persona persona, Curso curso) {
+		this(persona, curso, 0.0);
+	}
+	
+	public PersonaCurso() {
+		this(null,null,null);
+	}
+
+
+
 	@Override
 	public String toString() {
-		return "PersonasCurso [idPersona=" + idPersona + ", idCurso=" + idCurso + ", precio=" + precio + "]";
+		return "PersonaCurso [persona=" + persona + ", curso=" + curso + ", precio=" + precio + "]";
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + idCurso;
-		result = prime * result + idPersona;
+		result = prime * result + ((curso == null) ? 0 : curso.hashCode());
+		result = prime * result + ((persona == null) ? 0 : persona.hashCode());
 		result = prime * result + ((precio == null) ? 0 : precio.hashCode());
 		return result;
 	}
@@ -54,9 +69,15 @@ public class PersonaCurso {
 		if (getClass() != obj.getClass())
 			return false;
 		PersonaCurso other = (PersonaCurso) obj;
-		if (idCurso != other.idCurso)
+		if (curso == null) {
+			if (other.curso != null)
+				return false;
+		} else if (!curso.equals(other.curso))
 			return false;
-		if (idPersona != other.idPersona)
+		if (persona == null) {
+			if (other.persona != null)
+				return false;
+		} else if (!persona.equals(other.persona))
 			return false;
 		if (precio == null) {
 			if (other.precio != null)

@@ -8,7 +8,7 @@ import com.ipartek.formacion.model.PersonaCurso;
 
 public interface IDAOPersonaCurso<T> {
 	
-	List<T> getAll() throws Exception;
+	List<PersonaCurso> getAll() throws Exception;
 	
 	/***
 	 * busca cursos que tenga idPersona
