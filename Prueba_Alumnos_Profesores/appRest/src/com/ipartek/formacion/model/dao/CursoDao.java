@@ -17,7 +17,7 @@ public class CursoDao implements IDAO<Curso> {
 
 	private final static String SQL_GET_ALL = "SELECT  id, nombre, imagen, precio FROM curso ORDER BY id DESC LIMIT 100";
 	private final static String SQL_GET_BY_ID = "SELECT  id, nombre, imagen, precio FROM curso WHERE id= ?";
-	private final static String SQL_GET_FILTERED = "SELECT  id, nombre, imagen, precio FROM curso WHERE nombre LIKE ?";
+	private final static String SQL_GET_FILTERED = "SELECT  id, nombre, imagen, precio FROM curso WHERE nombre LIKE ? ORDER BY id DESC LIMIT 100";
 
 	private static CursoDao INSTANCIA = null;
 

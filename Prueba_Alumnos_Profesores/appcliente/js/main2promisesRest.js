@@ -470,6 +470,7 @@ function eliminarCurso(evento) {
 
 function cargarCursosModal(evento, filtro) {
     console.debug("dentro de cargarCursosModal");
+
     let listaModal = document.getElementById("cursosModal");
     listaModal.innerHTML = "";
 
@@ -480,9 +481,18 @@ function cargarCursosModal(evento, filtro) {
     promesa.then(cursos => {
         console.log(cursos);
         cursos.forEach(curso => {
-            listaModal.innerHTML += `<img class="disabled" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" disabled>`
+            listaModal.innerHTML += `<img class="disabled" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}, ${curso.precio}€" disabled>`
         })
     }).catch(error => {
         alert(error);
     });
 }
+
+$('#modalCursos').on('shown.bs.modal', function(event) {
+    cargarCursosModal(event, "");
+})
+
+$('#modalCursos').on('hidden.bs.modal', function(event) {
+    document.getElementById('searchModal').value = "";
+    document.getElementById('cursosModal').innerHTML = "";
+})
