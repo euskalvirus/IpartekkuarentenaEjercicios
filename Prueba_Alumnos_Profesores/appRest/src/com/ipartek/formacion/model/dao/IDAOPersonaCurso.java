@@ -26,7 +26,7 @@ public interface IDAOPersonaCurso<T> {
 	 */
 	List<T> getPersonaNoCursos(int id) throws Exception;
 
-	PersonaCurso addPersonaCurso(int idPersona, int idCurso) throws Exception, SQLException;
+	void addPersonaCurso(int idPersona, int idCurso) throws Exception, SQLException;
 
 	PersonaCurso deletePersonaCurso(int idPersona, int idCurso) throws Exception, SQLException;
 }

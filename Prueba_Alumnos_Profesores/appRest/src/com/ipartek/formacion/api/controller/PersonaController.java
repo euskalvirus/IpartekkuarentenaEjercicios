@@ -194,11 +194,12 @@ public class PersonaController {
 		ArrayList<String> errores = new ArrayList<String>();
 		Response response = null;
 		try {
-			PersonaCurso pc = PersonaCursoDao.getInstancia().addPersonaCurso(idPersona, idCurso);
-			response = Response.status(Status.OK).entity(pc).build();
+			PersonaCursoDao.getInstancia().addPersonaCurso(idPersona, idCurso);
+			Persona p = dao.getById(idPersona);
+			response = Response.status(Status.OK).entity(p).build();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			errores.add("Hay un conflicto al intentar agregar el registro: " + e.getMessage());
+			errores.add(e.getMessage());
 			response = Response.status(Status.CONFLICT).entity(errores).build();
 		} catch (Exception e) {
 			e.printStackTrace();

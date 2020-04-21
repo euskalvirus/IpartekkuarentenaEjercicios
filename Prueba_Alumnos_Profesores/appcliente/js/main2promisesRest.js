@@ -194,6 +194,7 @@ function seleccionar(indice) {
         obtenerListasCursos(persona.id);
         let bModal = document.getElementById("bMostrarModal");
         bModal.disabled = false;
+        document.getElementById("cursos").removeAttribute("hidden");
     }).catch((error) => {
         console.debug("promesa catch");
         alert(error);
@@ -241,6 +242,8 @@ function limpiarFormulario() {
     avatares.forEach(el => el.classList.remove('selected'));
     let divCursos = document.getElementById("cursos");
     divCursos.disabled = true;
+
+    document.getElementById("cursos").hidden = true;
 
     obtenerTodosLosCursos();
     let bDel = document.getElementById("del");
