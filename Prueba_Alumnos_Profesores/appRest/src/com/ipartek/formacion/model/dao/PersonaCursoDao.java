@@ -129,22 +129,27 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 	}
 
 	@Override
-	public void addPersonaCurso(int idPersona, int idCurso) throws Exception, SQLException {
+	public PersonaCurso addPersonaCurso(int idPersona, int idCurso) throws Exception, SQLException {
 		LOGGER.info("addPersonaCurso(idPersona: " + idPersona + ", idCurso: " + idCurso + ")");
-
+		
+		Persona p = PersonaDao.getInstancia().getById(idPersona);
+		Curso c = CursoDao.getInstancia().getById(idCurso);
+		
 		PersonaCurso pc = null;
 
 		try (Connection con = ConnectionManager.getConnection();
 				PreparedStatement pst = con.prepareStatement(SQL_ADD_PERSONACURSO);) {
+			
 			pst.setInt(1, idPersona);
 			pst.setInt(2, idCurso);
-			pst.setDouble(3, 0.0);
+			pst.setDouble(3, c.getPrecio());
 			int numeroRegistrosModificados = pst.executeUpdate();
 			if (numeroRegistrosModificados != 1) {
 				LOGGER.warning("Error no esperado. Se ha agregado mas de un registro");
 				throw new SQLException("Error no esperado. Se ha agregado mas de un registro");
 			}
-			pc = new PersonaCurso(new Persona(idPersona,null,null,null), new Curso(idCurso,null,null,null),null);
+			
+			pc = new PersonaCurso(p, c,c.getPrecio());
 			LOGGER.info("Agregado correctamente el curso para la persona");
 
 		} catch (SQLException e) {
@@ -156,7 +161,8 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 			LOGGER.warning("El alumno ya tiene comprado ese curso: " + e.getMessage());
 			throw new Exception("El alumno ya tiene comprado ese curso: ");
 		}
-
+		
+		return pc;
 	}
 
 	@Override

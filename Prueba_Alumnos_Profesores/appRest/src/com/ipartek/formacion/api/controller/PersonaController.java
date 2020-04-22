@@ -194,9 +194,8 @@ public class PersonaController {
 		ArrayList<String> errores = new ArrayList<String>();
 		Response response = null;
 		try {
-			PersonaCursoDao.getInstancia().addPersonaCurso(idPersona, idCurso);
-			Persona p = dao.getById(idPersona);
-			response = Response.status(Status.OK).entity(p).build();
+			PersonaCurso pc =PersonaCursoDao.getInstancia().addPersonaCurso(idPersona, idCurso);
+			response = Response.status(Status.OK).entity(pc).build();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			errores.add(e.getMessage());

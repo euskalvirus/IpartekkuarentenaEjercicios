@@ -49,7 +49,7 @@ function init() {
     })
 
     console.debug('Document Load and Ready');
-    obtenerDatosRest(select.value, buscador.value);
+    obtenerDatosRest(select.value, buscador.value, true);
     initGallery();
 }
 
@@ -77,10 +77,12 @@ function selectAvatar(evento, id) {
     }
 }
 
-function pintar(arraypersonas) {
+function pintar(arraypersonas, limpiar) {
     console.debug('pintar');
     personas = arraypersonas;
-    limpiarFormulario();
+    if (limpiar) {
+        limpiarFormulario();
+    }
     lista.innerHTML = '';
     for (let i = 0; i < arraypersonas.length; i++) {
         lista.innerHTML += `<li class="list-group-item"><img src="img/${arraypersonas[i].avatar}" alt="imagen avatar ">${arraypersonas[i].nombre} (${arraypersonas[i].cursos.length})
@@ -214,12 +216,12 @@ function obtenerListasCursos(idPersona) {
         inactivos.innerHTML = "";
         activos.innerHTML = "";
         console.debug(JSON.stringify(arrayCursos));
-        arrayCursos.cursosNotIn.forEach(cursos => {
-            inactivos.innerHTML += `<img onclick="selectInactivo(event,null)" id="${cursos.id}" src="img/${cursos.imagen}" alt="${cursos.nombre}">`
+        arrayCursos.cursosNotIn.forEach(curso => {
+            inactivos.innerHTML += `<img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}">`
         })
 
-        arrayCursos.cursosIn.forEach(cursos => {
-            activos.innerHTML += `<img onclick="selectActivo(event,null)" id="${cursos.id}" src="img/${cursos.imagen}" alt="${cursos.nombre}">`
+        arrayCursos.cursosIn.forEach(curso => {
+            activos.innerHTML += `<img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}">`
         })
 
         let bDel = document.getElementById("del");
@@ -245,7 +247,7 @@ function limpiarFormulario() {
 
     document.getElementById("cursos").hidden = true;
 
-    obtenerTodosLosCursos();
+    //obtenerTodosLosCursos();
     let bDel = document.getElementById("del");
     bDel.disabled = true;
     let bAdd = document.getElementById("add");
@@ -344,7 +346,7 @@ function buscar(indicionombre, lista) {
     return lista.filter(persona => persona.nombre.toLowerCase().includes(indicionombre.toLowerCase()));
 }
 
-function obtenerDatosRest(listasexo, buscador) {
+function obtenerDatosRest(listasexo, buscador, limpiar) {
     console.debug("obtenerDatosRest");
     const url = urlBase;
 
@@ -372,7 +374,7 @@ function obtenerDatosRest(listasexo, buscador) {
             listafiltrada = buscar(buscador, listafiltrada);
         }
 
-        pintar(listafiltrada);
+        pintar(listafiltrada, limpiar);
     });
 
     promesa.catch((error) => {
@@ -461,6 +463,10 @@ function agregarCurso(evento) {
         activos.innerHTML += curso.outerHTML;
         curso.parentNode.removeChild(curso);
         evento.target.disabled = true;
+
+        let select = document.getElementById('despegable');
+        let buscador = document.getElementById('search');
+        obtenerDatosRest(select.value, buscador.value, false)
     }).catch(error => {
         console.debug("promesa catch");
         alert(error);
@@ -489,8 +495,16 @@ function eliminarCurso(evento) {
         console.debug(curso);
         curso.setAttribute("onclick", "selectInactivo(event,null)");
         inactivos.innerHTML += curso.outerHTML;
-        curso.parentNode.removeChild(curso);
+
+        //2 opciones para eliminar el elemento de la lista
+        //curso.parentNode.removeChild(curso);
+        curso.remove();
+
         evento.target.disabled = true;
+
+        let select = document.getElementById('despegable');
+        let buscador = document.getElementById('search');
+        obtenerDatosRest(select.value, buscador.value, false)
     }).catch(error => {
         console.debug("promesa catch");
         alert(error);
@@ -563,20 +577,29 @@ function agregarCursoModal(evento) {
 
     let promesa = ajax('POST', url, null);
 
-    promesa.then(() => {
+    promesa.then((personacurso) => {
         console.debug("then");
         let activos = document.getElementById("cursosactivos");
         curso.classList.remove("selected");
+        curso.remove();
         curso.setAttribute("onclick", "selectActivo(event,null)");
-        activos.innerHTML += curso.outerHTML;
+        //activos.innerHTML += curso.outerHTML;
+        activos.innerHTML += `<img onclick="selectActivo(event,null)" id="${personacurso.curso.id}" src="img/${personacurso.curso.imagen}" alt="${personacurso.curso.nombre}">`
+        const inactivos = document.querySelectorAll('#cursosinactivos img');
+        inactivos.forEach(curso => {
+            if (curso.id == idCurso) {
+                curso.remove();
+            }
+        })
 
-        $('#modalCursos').modal('hide');
+        //$('#modalCursos').modal('hide');
 
         let select = document.getElementById('despegable');
         let buscador = document.getElementById('search');
 
-        init();
-        //Promise.all(obtenerDatosRest(select.value, buscador.value)).then(seleccionar(idPersona));
+        //init();
+        obtenerDatosRest(select.value, buscador.value, false)
+            //Promise.all(obtenerDatosRest(select.value, buscador.value)).then(seleccionar(idPersona));
 
     }).catch(error => {
         console.debug("promesa catch");
