@@ -44,12 +44,12 @@ public class PersonaDao implements IDAO<Persona> {
 	public List<Persona> getAll() throws Exception {
 		LOGGER.info("getAll");
 		try (Connection con = ConnectionManager.getConnection();
-				//PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);
+				// PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);
 				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL_WITH_CURSOS);
 				ResultSet rs = pst.executeQuery();) {
 			HashMap<Integer, Persona> hm = new HashMap<Integer, Persona>();
 			while (rs.next()) {
-				//Persona p = mapper(rs);
+				// Persona p = mapper(rs);
 				mapperWithCursos(rs, hm);
 			}
 			registros = new ArrayList<Persona>(hm.values());
@@ -66,18 +66,23 @@ public class PersonaDao implements IDAO<Persona> {
 		LOGGER.info("getById(" + id + ")");
 		Persona persona = null;
 		try (Connection con = ConnectionManager.getConnection();
-				//PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID);) {
+				// PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID);) {
 				PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID_WITH_CURSOS);) {
 			pst.setInt(1, id);
 			try (ResultSet rs = pst.executeQuery();) {
 				HashMap<Integer, Persona> hm = new HashMap<Integer, Persona>();
-				while (rs.next()) {
+				if (rs.next()) {
 					mapperWithCursos(rs, hm);
-					//persona = mapper(rs);
-					//persona = mapperWithCursos(rs);
+					while (rs.next()) {
+						mapperWithCursos(rs, hm);
+						// persona = mapper(rs);
+						// persona = mapperWithCursos(rs);
+					}
+				}else {
+					throw new SQLException();
 				}
+
 				persona = hm.get(id);
-				
 			}
 
 		} catch (Exception e) {
@@ -92,8 +97,9 @@ public class PersonaDao implements IDAO<Persona> {
 	public Persona delete(int id) throws Exception, SQLException {
 		LOGGER.info("delete(" + id + ")");
 		Persona persona = getById(id);
-		
-		//No se deberia de dar el caso, porque en el getById se lanza throw si no existe
+
+		// No se deberia de dar el caso, porque en el getById se lanza throw si no
+		// existe
 		if (persona != null) {
 			try (Connection con = ConnectionManager.getConnection();
 					PreparedStatement pst = con.prepareStatement(SQL_DELETE_BY_ID);) {
@@ -196,34 +202,33 @@ public class PersonaDao implements IDAO<Persona> {
 		persona.setSexo(rs.getString("sexo"));
 		return persona;
 	}
-	
+
 	private void mapperWithCursos(ResultSet rs, HashMap<Integer, Persona> hm) throws SQLException {
 		LOGGER.info("mapperWithCursos()");
-		
-		int key  = rs.getInt("persona_id");
-		
+
+		int key = rs.getInt("persona_id");
+
 		Persona p = hm.get(key);
-		
-		if(p == null) {
+
+		if (p == null) {
 			p = new Persona();
 			p.setId(key);
 			p.setNombre(rs.getString("persona_nombre"));
 			p.setAvatar(rs.getString("persona_avatar"));
 			p.setSexo(rs.getString("persona_sexo"));
 		}
-		
+
 		int idCurso = rs.getInt("curso_id");
-		if(idCurso!=0) {
-			Curso c= new Curso();
+		if (idCurso != 0) {
+			Curso c = new Curso();
 			c.setId(rs.getInt("curso_id"));
 			c.setNombre(rs.getString("curso_nombre"));
 			c.setImagen(rs.getString("curso_imagen"));
 			c.setPrecio(rs.getDouble("curso_precio"));
-			
+
 			p.getCursos().add(c);
 		}
-		
-		
+
 		hm.put(key, p);
 	}
 

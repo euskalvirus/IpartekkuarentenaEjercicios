@@ -42,6 +42,26 @@ h1 {
     margin-left: 1.5em;
 }
 
+#lista>li>p {
+    float: right;
+    color: grey !important;
+    font-size: 10px;
+    margin-top: -10px;
+    padding-right: 20px;
+    z-index: 1000;
+}
+
+#lista>li>div {
+    width: max-content;
+    padding-top: 1em;
+}
+
+#lista>li {
+    padding-left: 0;
+    text-align: left;
+    padding-right: 0em;
+}
+
 #lista2,
 #cursosactivos,
 #cursosinactivos {
@@ -50,8 +70,12 @@ h1 {
 }
 
 #cursosactivos,
-#cursosinactivos {
-    min-height: 20em;
+#cursosinactivos,
+#cursosModal {
+    height: 20em;
+    max-height: 20em;
+    overflow-y: auto;
+    white-space: nowrap;
 }
 
 #cursosinactivos img.disabled,
@@ -104,10 +128,16 @@ body {
     font-weight: 700;
 }
 
-.list-group.lista {
-    overflow-y: scroll;
-}
-
 #bMostrarModal {
     max-width: 100%;
+}
+
+img {
+    width: 55px;
+    height: 55px;
+    align-self: center;
+}
+
+.bounceOutLeft {
+    animation-duration: 2s;
 }

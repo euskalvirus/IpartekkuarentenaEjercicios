@@ -118,7 +118,7 @@ public class PersonaController {
 			response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errores).build();
 			e.printStackTrace();
 		} catch (Exception e) {
-			errores.add("No se ha encontrado ninguna persona con ese id.");
+			errores.add(e.getMessage());
 			response = Response.status(Status.NOT_FOUND).entity(errores).build();
 		}
 		return response;

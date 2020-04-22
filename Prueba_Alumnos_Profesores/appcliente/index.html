@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="css/all.min.css" />
+    <link rel="stylesheet" href="vendors/css/animate.css">
     <link rel="stylesheet" href="css/prueba.css">
 
 
@@ -61,7 +62,7 @@
                     <div class="row">
                         <div class="col-5 bloque">
                             <label id="titulocursos" name="titulocursos" for="cursosactivos">Cursos Comprados</label>
-                            <div id="cursosactivos" class="list-group  lista"></div>
+                            <div id="cursosactivos" class="list-group slide lista"></div>
                         </div>
                         <div class="col-2 bloque">
                             <label id="titulocursos" name="titulocursos" for="botonescursos">Acción</label>
@@ -70,7 +71,7 @@
                                 <input class="col-5 list-group-item btn btn-danger" type="button" value="-" id="del" onclick="eliminarCurso(event)" disabled>
                             </div>
                         </div>
-                        <div class="col-5 bloque">
+                        <div class="col-5 bloque slider">
                             <label id="titulocursos" name="titulocursos" for="cursosinactivos">Cursos Disponibles</label>
                             <div id="cursosinactivos" class="list-group  lista"></div>
                         </div>

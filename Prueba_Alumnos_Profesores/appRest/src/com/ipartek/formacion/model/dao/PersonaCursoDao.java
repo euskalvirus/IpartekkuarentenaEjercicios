@@ -22,8 +22,8 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 
 	private final static String SQL_GET_ALL = "SELECT p.id idpersona, p.nombre nombrepersona, p.avatar avatarpersona, p.sexo sexo, c.id idcurso, c.nombre nombrecurso, c.imagen imagencurso, c.precio preciocurso, pc.precio_pagado precio_pagado "
 			+ "FROM persona p, curso c, personacurso pc " + "WHERE pc.persona_id = p.id AND pc.curso_id = c.id;";
-	private final static String SQL_GET_BY_IDPERSONA = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc, curso c WHERE pc.curso_id = c.id AND pc.persona_id = ? ";
-	private final static String SQL_GET_BY_NOTIDPERSONA = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc RIGHT JOIN curso c on pc.curso_id = c.id WHERE c.id NOT IN (SELECT curso_id FROM personacurso WHERE persona_id = ?) GROUP BY id";
+	private final static String SQL_GET_BY_IDPERSONA = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc, curso c WHERE pc.curso_id = c.id AND pc.persona_id = ? ORDER BY id DESC";
+	private final static String SQL_GET_BY_NOTIDPERSONA = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc RIGHT JOIN curso c on pc.curso_id = c.id WHERE c.id NOT IN (SELECT curso_id FROM personacurso WHERE persona_id = ?) GROUP BY id ORDER BY id DESC";
 	private final static String SQL_ADD_PERSONACURSO = "INSERT INTO personacurso VALUES(?,?,?)";
 	private final static String SQL_DELETE_PERSONACURSO = "DELETE FROM personacurso WHERE persona_id = ? AND curso_id = ?";
 
@@ -131,49 +131,59 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 	@Override
 	public PersonaCurso addPersonaCurso(int idPersona, int idCurso) throws Exception, SQLException {
 		LOGGER.info("addPersonaCurso(idPersona: " + idPersona + ", idCurso: " + idCurso + ")");
-		
+
 		Persona p = PersonaDao.getInstancia().getById(idPersona);
 		Curso c = CursoDao.getInstancia().getById(idCurso);
-		
+
 		PersonaCurso pc = null;
 
-		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(SQL_ADD_PERSONACURSO);) {
-			
-			pst.setInt(1, idPersona);
-			pst.setInt(2, idCurso);
-			pst.setDouble(3, c.getPrecio());
-			int numeroRegistrosModificados = pst.executeUpdate();
-			if (numeroRegistrosModificados != 1) {
-				LOGGER.warning("Error no esperado. Se ha agregado mas de un registro");
-				throw new SQLException("Error no esperado. Se ha agregado mas de un registro");
-			}
-			
-			pc = new PersonaCurso(p, c,c.getPrecio());
-			LOGGER.info("Agregado correctamente el curso para la persona");
+		if (p != null && c != null) {
+			try (Connection con = ConnectionManager.getConnection();
+					PreparedStatement pst = con.prepareStatement(SQL_ADD_PERSONACURSO);) {
 
-		} catch (SQLException e) {
-			if (e.getMessage().contains("fk_persona_has_curso_persona")) {
-				throw new Exception("No existe el alumno introducido.");
-			} else if (e.getMessage().contains("fk_persona_has_curso_curso1")) {
-				throw new Exception("No existe el curso introducido.");
+				pst.setInt(1, idPersona);
+				pst.setInt(2, idCurso);
+				pst.setDouble(3, c.getPrecio());
+				int numeroRegistrosModificados = pst.executeUpdate();
+				if (numeroRegistrosModificados != 1) {
+					LOGGER.warning("Error no esperado. Se ha agregado mas de un registro");
+					throw new SQLException("Error no esperado. Se ha agregado mas de un registro");
+				}
+
+				pc = new PersonaCurso(p, c, c.getPrecio());
+				LOGGER.info("Agregado correctamente el curso para la persona");
+
+			} catch (SQLException e) {
+				if (e.getMessage().contains("fk_persona_has_curso_persona")) {
+					throw new Exception("No existe el alumno introducido.");
+				} else if (e.getMessage().contains("fk_persona_has_curso_curso1")) {
+					throw new Exception("No existe el curso introducido.");
+				}
+				LOGGER.warning("El alumno ya tiene comprado ese curso " + e.getMessage());
+				throw new Exception("El alumno ya tiene comprado ese curso: ");
 			}
-			LOGGER.warning("El alumno ya tiene comprado ese curso: " + e.getMessage());
-			throw new Exception("El alumno ya tiene comprado ese curso: ");
+		} else {
+			if (p == null && c == null) {
+				throw new Exception("No existen ni el alumno ni el curso introducidos");
+			} else if (p == null) {
+				throw new Exception("No existe el alumno introducido");
+			} else {
+				throw new Exception("No existe el curso introducido");
+			}
 		}
-		
+
 		return pc;
 	}
 
 	@Override
 	public PersonaCurso deletePersonaCurso(int idPersona, int idCurso) throws Exception, SQLException {
 		LOGGER.info("deletePersonaCurso(idPersona: " + idPersona + ", idCurso: " + idCurso + ")");
-		Persona persona = PersonaDao.getInstancia().getById(idPersona);
-		Curso curso = CursoDao.getInstancia().getById(idCurso);
-		PersonaCurso pc = null;
 
-		// No se deberia de dar el caso, porque en los getById se lanza throw si no
-		// existe
+		Persona persona = PersonaDao.getInstancia().getById(idPersona);
+		System.out.println(persona);
+		Curso curso = CursoDao.getInstancia().getById(idCurso);
+
+		PersonaCurso pc = null;
 		if (persona != null && curso != null) {
 			try (Connection con = ConnectionManager.getConnection();
 					PreparedStatement pst = con.prepareStatement(SQL_DELETE_PERSONACURSO);) {
@@ -181,8 +191,8 @@ public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
 				pst.setInt(2, idCurso);
 				int numeroRegistrosModificados = pst.executeUpdate();
 				if (numeroRegistrosModificados != 1) {
-					LOGGER.warning("Error no esperado. Se ha eliminado mas de un registro");
-					throw new SQLException("Error no esperado. Se ha eliminado mas de un registro");
+					LOGGER.warning("numeroRegistrosModificados != 1");
+					throw new SQLException();
 				}
 				pc = new PersonaCurso(persona, curso, curso.getPrecio());
 

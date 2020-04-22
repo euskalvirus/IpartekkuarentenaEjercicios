@@ -85,9 +85,9 @@ function pintar(arraypersonas, limpiar) {
     }
     lista.innerHTML = '';
     for (let i = 0; i < arraypersonas.length; i++) {
-        lista.innerHTML += `<li class="list-group-item"><img src="img/${arraypersonas[i].avatar}" alt="imagen avatar ">${arraypersonas[i].nombre} (${arraypersonas[i].cursos.length})
+        lista.innerHTML += `<li class="list-group-item"><p class="row">Cursos: ${arraypersonas[i].cursos.length}</p><div class="row"><img src="img/${arraypersonas[i].avatar}" alt="imagen avatar ">${arraypersonas[i].nombre} 
             <i class="fa fa-pen" onclick="seleccionar(${arraypersonas[i].id})"></i> 
-            <i class="fa fa-trash" onclick="eliminar(${arraypersonas[i].id})"></i></li>`
+            <i class="fa fa-trash" onclick="eliminar(${arraypersonas[i].id})"></i></div></li>`
     }
 }
 
@@ -217,11 +217,11 @@ function obtenerListasCursos(idPersona) {
         activos.innerHTML = "";
         console.debug(JSON.stringify(arrayCursos));
         arrayCursos.cursosNotIn.forEach(curso => {
-            inactivos.innerHTML += `<img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}">`
+            inactivos.innerHTML += `<img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}">`
         })
 
         arrayCursos.cursosIn.forEach(curso => {
-            activos.innerHTML += `<img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}">`
+            activos.innerHTML += `<img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}">`
         })
 
         let bDel = document.getElementById("del");
@@ -460,8 +460,23 @@ function agregarCurso(evento) {
         curso.classList.remove("selected");
         curso.setAttribute("onclick", "selectActivo(event,null)");
         console.debug(curso);
-        activos.innerHTML += curso.outerHTML;
-        curso.parentNode.removeChild(curso);
+        //curso.parentNode.removeChild(curso);
+
+        let outer = curso.cloneNode(true);
+        outer.classList.add('animated', 'bounceInLeft');
+        curso.classList.add('animated', 'bounceOutLeft');
+
+        //2 opciones para eliminar el elemento de la lista
+        //curso.parentNode.removeChild(curso);
+        //curso.remove();
+        setTimeout(function() {
+            curso.remove();
+            activos.innerHTML += outer.outerHTML;
+            setTimeout(function() {
+                activos.lastChild.classList.remove('animated', 'bounceInLeft');
+            }, 800);
+        }, 800);
+
         evento.target.disabled = true;
 
         let select = document.getElementById('despegable');
@@ -494,11 +509,22 @@ function eliminarCurso(evento) {
         curso.classList.remove("selected");
         console.debug(curso);
         curso.setAttribute("onclick", "selectInactivo(event,null)");
-        inactivos.innerHTML += curso.outerHTML;
+        let outer = curso.cloneNode(true);
+        outer.classList.add('animated', 'bounceInLeft');
+        curso.classList.add('animated', 'bounceOutLeft');
 
         //2 opciones para eliminar el elemento de la lista
         //curso.parentNode.removeChild(curso);
-        curso.remove();
+        //curso.remove();
+        setTimeout(function() {
+            curso.remove();
+            inactivos.innerHTML += outer.outerHTML;
+            setTimeout(function() {
+                inactivos.lastChild.classList.remove('animated', 'bounceInLeft');
+            }, 800);
+
+
+        }, 800);
 
         evento.target.disabled = true;
 
@@ -540,7 +566,7 @@ function cargarCursosModal(evento, filtro) {
         }
         console.log(cursos);
         cursos.forEach(curso => {
-            listaModal.innerHTML += `<img onclick=selectCursoModal(event,null) id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}, ${curso.precio}€">`
+            listaModal.innerHTML += `<div><img onclick=selectCursoModal(event,null) id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}, ${curso.precio}€"> ${curso.nombre}, ${curso.precio}€</div>`
         })
     }).catch(error => {
         alert(error);
@@ -584,13 +610,35 @@ function agregarCursoModal(evento) {
         curso.remove();
         curso.setAttribute("onclick", "selectActivo(event,null)");
         //activos.innerHTML += curso.outerHTML;
-        activos.innerHTML += `<img onclick="selectActivo(event,null)" id="${personacurso.curso.id}" src="img/${personacurso.curso.imagen}" alt="${personacurso.curso.nombre}">`
         const inactivos = document.querySelectorAll('#cursosinactivos img');
-        inactivos.forEach(curso => {
-            if (curso.id == idCurso) {
-                curso.remove();
-            }
-        })
+
+        let outer = `<img onclick="selectActivo(event,null)" class="animated bounceInLeft" id="${personacurso.curso.id}" src="img/${personacurso.curso.imagen}" alt="${personacurso.curso.nombre}" title="${personacurso.curso.nombre}">`;
+
+        curso.classList.add('animated', 'bounceOutLeft');
+
+        //2 opciones para eliminar el elemento de la lista
+        //curso.parentNode.removeChild(curso);
+        //curso.remove();
+        setTimeout(function() {
+            curso.remove();
+            activos.innerHTML += outer;
+            setTimeout(function() {
+                activos.lastChild.classList.remove('animated', 'bounceInLeft');
+            }, 800);
+
+            inactivos.forEach(curso => {
+                if (curso.id == idCurso) {
+                    curso.remove();
+                }
+            });
+
+
+        }, 800);
+
+
+
+
+
 
         //$('#modalCursos').modal('hide');
 
