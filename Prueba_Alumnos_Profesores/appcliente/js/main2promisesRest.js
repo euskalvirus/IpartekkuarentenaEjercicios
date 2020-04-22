@@ -592,10 +592,12 @@ function agregarCursoModal(evento) {
     const cursosModal = document.querySelectorAll('#cursosModal img');
 
     let curso;
+    let img;
     cursosModal.forEach(el => {
         if (el.classList.contains('selected')) {
             idCurso = el.id;
-            curso = el;
+            img = el;
+            curso = img.parentNode;
         }
     });
 
@@ -606,9 +608,9 @@ function agregarCursoModal(evento) {
     promesa.then((personacurso) => {
         console.debug("then");
         let activos = document.getElementById("cursosactivos");
-        curso.classList.remove("selected");
-        curso.remove();
-        curso.setAttribute("onclick", "selectActivo(event,null)");
+        img.classList.remove("selected");
+
+        img.parentNode.setAttribute("onclick", "selectActivo(event,null)");
         //activos.innerHTML += curso.outerHTML;
         const inactivos = document.querySelectorAll('#cursosinactivos img');
 
@@ -620,17 +622,20 @@ function agregarCursoModal(evento) {
         //curso.parentNode.removeChild(curso);
         //curso.remove();
         setTimeout(function() {
-            curso.remove();
-            activos.innerHTML += outer;
-            setTimeout(function() {
-                activos.lastChild.classList.remove('animated', 'bounceInLeft');
-            }, 800);
-
+            img.parentNode.remove();
             inactivos.forEach(curso => {
                 if (curso.id == idCurso) {
-                    curso.remove();
+                    curso.classList.add('animated', 'bounceOutLeft');
+                    setTimeout(function() {
+                        curso.remove();
+                    }, 800);
                 }
             });
+            setTimeout(function() {
+                activos.lastChild.classList.remove('animated', 'bounceInLeft');
+
+                activos.innerHTML += outer;
+            }, 800);
 
 
         }, 800);
