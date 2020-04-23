@@ -141,3 +141,7 @@ img {
 .bounceOutLeft {
     animation-duration: 2s;
 }
+
+.card {
+    margin-top: 2em;
+}

@@ -10,7 +10,7 @@ public class Noticia {
 	private String contenido;
 	
 	public Noticia(Integer id, String titulo, Date fecha, String contenido) {
-		setId(id);
+		setId(0);
 		setTitulo(titulo);
 		setFecha(fecha);
 		setContenido(contenido);
