@@ -99,6 +99,14 @@ Dentro tenemos que modificar los parametros name, url, username y pasword:
 
 * name: Este parametro solo se modicaria si cada uno lo quiere, no es necesario (En este caso, ***personas***). Se utiliza en la clase ConnectionManager para obtener los datos para hacer la conexion a MySQL.
 
+~~~
+	public static Connection getConnection() {
+			...
+			DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/personas");
+			...
+	}
+~~~
+
 * url: ***alumnos*** es el nombre de la base de datos que utilizaremos.
 
 * username: El nombre de usuario con el que nos loggearemos en MySQL.
