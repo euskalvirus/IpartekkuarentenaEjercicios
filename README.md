@@ -113,3 +113,60 @@ Dentro tenemos que modificar los parametros name, url, username y pasword:
 
 * password: Contraseá del usuario.
 
+### Detalle API rest con llamadas 
+
+~~~ 
+http://{Dominio}/apprest/api/personas 
+~~~
+
+**GET**
+
+Se obtendra una lista de tod@s l@s alumn@s.
+
+**POST**
+
+Se enviara un objeto de tipo alumno, se creara si cumple las validacion y devolvera el usuario creado, sino devolvera un error.
+
+~~~ 
+http://{Dominio}/apprest/api/personas/{idpersona}
+~~~
+
+**GET**
+
+Se obtendra el alumno de id especificado, sino mandara un error.
+
+**PUT**
+
+Se enviara un objeto de tipo alumno y se modificara el alumno del id especificado si los ids concuerdan y devolvera el usuario modificado, sino devolvera un error.
+
+**DELETE**
+
+Se eliminara el alumno de id especificado y se devolvera el alumno, sino devolvera un error.
+
+~~~ 
+http://{Dominio}/apprest/api/personas/{idpersona}/cursos 
+~~~
+
+**GET**
+
+Se obtendra una Array con 2 listas. Una lista con los cursos comprados y otra con los cursos disponibles para ese alumno.
+
+~~~
+http://{Dominio}/apprest/api/personas/{idpersona}/cursos/{idCurso}
+~~~
+
+**POST**
+
+Se creara una nueva compra para el usuario con referencia a idPersona relacionada con el curso con referencia a idCurso. Si ya existe la relación se devolvera un error y si todo va bien se devovlera al relacion personacurso.
+
+**DELETE**
+
+Se eliminara la compra para el usuario con referencia a idPersona relacionada con el curso con referencia a idCurso. Si se elimina correctamente se devuelve la relacion personacurso y sino existe tal relación se madara un error.
+
+~~~ 
+http://{Dominio}/apprest/api/cursos/
+~~~
+
+**GET**
+
+Se obtendra una lista con todos los cursos existentes.
