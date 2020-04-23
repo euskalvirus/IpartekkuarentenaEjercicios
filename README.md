@@ -27,7 +27,7 @@ para configurar la bases datos cambiar el fichero **config.xml**
 En este projecto se anidan dos subprojectos, AppRest y AppCliente. Mediante el AppRest trabajaremos la parte del servidor web donde se haran todas las llamadas Rest (Get, Post, Put y Delete). Y mediante AppCliente trabajaremos la parte visual, es decir la pagina web.
 
 **IMAGEN**
-
+![Diseño apartado Web](https://github.com/euskalvirus/IpartekkuarentenaEjercicios/blob/master/Prueba_Alumnos_Profesores/Screenshoots/appclient.png)
 ## AppClient
 
 ### Introducción
