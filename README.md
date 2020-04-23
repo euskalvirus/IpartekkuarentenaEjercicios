@@ -11,3 +11,10 @@ Esto seria otro parrafo
     - elementohijo2
 - elemento2
 
+### configuración base datos
+para configurar la bases datos cambiar el fichero **config.xml** 
+
+~~~
+    db.name = "root";
+    db.pass = "root";
+~~~
