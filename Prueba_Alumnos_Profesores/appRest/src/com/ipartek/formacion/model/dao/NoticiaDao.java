@@ -80,7 +80,7 @@ public class NoticiaDao implements IDAO<Noticia> {
 		Noticia noticia = new Noticia();
 		noticia.setId(rs.getInt("id"));
 		noticia.setTitulo(rs.getString("titulo"));
-		noticia.setFecha(rs.getDate("fecha"));
+		noticia.setFecha(new java.util.Date(rs.getTimestamp("fecha").getTime()));
 		noticia.setContenido(rs.getString("contenido"));
 		return noticia;
 	}
