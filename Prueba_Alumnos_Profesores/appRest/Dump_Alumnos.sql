@@ -31,7 +31,7 @@ CREATE TABLE `curso` (
   `precio` decimal(6,2) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `titulo_UNIQUE` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,8 +40,33 @@ CREATE TABLE `curso` (
 
 LOCK TABLES `curso` WRITE;
 /*!40000 ALTER TABLE `curso` DISABLE KEYS */;
-INSERT INTO `curso` VALUES (1,'HTML/CSS','html.png',1.10),(2,'Java','java.png',2.20),(3,'Javascript','javascript.png',3.30),(4,'PHP','php.png',4.40),(5,'MySQL','mysql.png',5.50);
+INSERT INTO `curso` VALUES (1,'HTML','html.png',1.10),(2,'Java','java.png',2.20),(3,'Javascript','js.png',3.30),(4,'PHP','php.png',4.40),(5,'MySQL','mysql.png',5.50),(6,'CSS','css.png',1.10),(11,'Cerveza Artesana','cerveza.png',10.10),(12,'Enologia','enologia.png',10.10),(13,'reposteria','reposteria.png',6.60),(14,'Huerto urbano','huertourbano.png',7.60),(15,'Python','python.png',5.50);
 /*!40000 ALTER TABLE `curso` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `noticia`
+--
+
+DROP TABLE IF EXISTS `noticia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `noticia` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(250) COLLATE utf8_spanish2_ci NOT NULL,
+  `fecha` datetime NOT NULL,
+  `contenido` text COLLATE utf8_spanish2_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `noticia`
+--
+
+LOCK TABLES `noticia` WRITE;
+/*!40000 ALTER TABLE `noticia` DISABLE KEYS */;
+/*!40000 ALTER TABLE `noticia` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -58,7 +83,7 @@ CREATE TABLE `persona` (
   `sexo` enum('H','M') COLLATE utf8_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre_UNIQUE` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +92,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'Arantxa','avatar1.png','M'),(2,'Idoia','avatar2.png','M'),(3,'Iker','avatar3.png','H'),(4,'Hodei','avatar4.png','H');
+INSERT INTO `persona` VALUES (1,'Arantxaaaaaaa','avatar1.png','M'),(2,'Idoia','avatar2.png','M'),(3,'Iker','avatar3.png','H'),(4,'Hodei','avatar4.png','H'),(14,'Matias','avatar5.png','H');
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,7 +121,7 @@ CREATE TABLE `personacurso` (
 
 LOCK TABLES `personacurso` WRITE;
 /*!40000 ALTER TABLE `personacurso` DISABLE KEYS */;
-INSERT INTO `personacurso` VALUES (1,5,5.50),(2,4,4.40),(3,1,1.10),(3,2,2.20),(4,1,1.10),(4,2,2.20),(4,5,5.50);
+INSERT INTO `personacurso` VALUES (1,1,1.10),(1,4,4.40),(1,5,1.10),(1,6,1.10),(1,11,10.10),(1,15,5.50),(2,4,4.40),(2,11,10.10),(2,12,10.10),(2,13,6.60),(2,14,7.60),(2,15,5.50),(3,1,1.10),(3,2,2.20),(3,4,0.00),(3,11,10.10),(3,13,6.60),(3,14,7.60),(4,1,1.10),(4,4,4.40),(4,5,5.50),(4,6,1.10),(4,11,10.10),(4,12,10.10),(4,13,6.60),(4,14,7.60),(4,15,5.50),(14,5,5.50),(14,6,1.10),(14,11,10.10),(14,12,10.10),(14,13,6.60),(14,14,7.60);
 /*!40000 ALTER TABLE `personacurso` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,4 +142,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-20  8:52:57
+-- Dump completed on 2020-04-23 13:50:31
