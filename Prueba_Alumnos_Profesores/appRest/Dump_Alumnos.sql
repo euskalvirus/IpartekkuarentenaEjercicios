@@ -57,7 +57,7 @@ CREATE TABLE `noticia` (
   `fecha` datetime NOT NULL,
   `contenido` text COLLATE utf8_spanish2_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,6 +66,7 @@ CREATE TABLE `noticia` (
 
 LOCK TABLES `noticia` WRITE;
 /*!40000 ALTER TABLE `noticia` DISABLE KEYS */;
+INSERT INTO `noticia` VALUES (1,'Titulo 1','2020-04-23 12:12:12','En un lugar de la mancha <img src=\"img/enologia.png\" alt=\"imagen\"> mira que hay cosas bonitas y todos'),(2,'Titulo 2','2020-04-23 12:12:12','En un lugar de la mancha <img src=\"img/java.png\" alt=\"imagen\"> mira que hay cosas bonitas y todos'),(3,'Titulo 3','2020-04-23 12:12:12','En un lugar de la mancha <img src=\"img/html.png\" alt=\"imagen\"> mira que hay cosas bonitas y todos'),(4,'Titulo 4','2020-04-23 12:12:12','En un lugar de la mancha <img src=\"img/php.png\" alt=\"imagen\"> mira que hay cosas bonitas y todos'),(5,'Titulo 5','2020-04-23 12:12:12','En un lugar de la mancha <img src=\"cerveza.png\" alt=\"imagen\"> mira que hay cosas bonitas y todos');
 /*!40000 ALTER TABLE `noticia` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,4 +143,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-23 13:50:31
+-- Dump completed on 2020-04-23 14:54:55
