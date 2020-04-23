@@ -170,3 +170,17 @@ http://{Dominio}/apprest/api/cursos/
 **GET**
 
 Se obtendra una lista con todos los cursos existentes.
+
+## Tags o Versiones
+
+### V1.0
+
+En esta versión se cumple la funcionalidad del CRUD para alumno.(Crear, Ver, Editar y Eliminar)
+
+### V2.1
+
+En esta versión se pueden comprar y eliminar cursos para el alumno. Se vera que al seleccionar el alumno a modificar se cargaran las lista para sus cursos y para los cursos que puede comprar.
+
+### V2.2
+
+En esta versión se ha añadido un botón con el que activaremos un modal en donde podremos comprar cursos para el alumno. Ademas se han agregado animaciones para cuando se añaden y se eliminan cursos  de las lista, bien cuando se hace en las listas directamente, bien cuando se hace en el modal.
