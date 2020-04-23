@@ -20,3 +20,5 @@ para configurar la bases datos cambiar el fichero **config.xml**
 ~~~
 
 [Ejemplo de enlace pulsa para ir a el](https://github.com/ipartek/alumnos-profesores)
+
+![Imagen avatar1](https://github.com/euskalvirus/IpartekkuarentenaEjercicios/blob/master/Prueba_Alumnos_Profesores/appcliente/img/avatar1.png)
