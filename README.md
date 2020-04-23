@@ -48,7 +48,7 @@ En este subprojecto se implementara el apartado del servidor, donde se trataran 
 
 ### Tecnologñia usada
 
-* En el servidor se usa el lenguaje Java. 
+* En el servidor se usa el lenguaje Java (JAX-RS para el servicio RESTful). 
 * En la parte de la DDBB se usa MySQL.
 * Para las dependencia se usa Maven.
 
