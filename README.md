@@ -19,4 +19,4 @@ para configurar la bases datos cambiar el fichero **config.xml**
     db.pass = "root";
 ~~~
 
-[Ejemplo de enlace pulsa para ir a el](https://https://github.com/ipartek/alumnos-profesores)
+[Ejemplo de enlace pulsa para ir a el](https://github.com/ipartek/alumnos-profesores)
