@@ -27,7 +27,9 @@ para configurar la bases datos cambiar el fichero **config.xml**
 En este projecto se anidan dos subprojectos, AppRest y AppCliente. Mediante el AppRest trabajaremos la parte del servidor web donde se haran todas las llamadas Rest (Get, Post, Put y Delete). Y mediante AppCliente trabajaremos la parte visual, es decir la pagina web.
 
 **IMAGEN**
+
 ![Diseño apartado Web](https://github.com/euskalvirus/IpartekkuarentenaEjercicios/blob/master/Prueba_Alumnos_Profesores/Screenshoots/appclient.png)
+
 ## AppClient
 
 ### Introducción
@@ -75,3 +77,31 @@ En este subprojecto se implementara el apartado del servidor, donde se trataran 
 * Para las dependencia se usa Maven.
 
 ### Configuración
+
+Para configurar el acceso a la base de datos tenemos que acceder al fichero context.xml, que se encuentra en la ruta  appRest\WebContent\META-INF\context.xml.
+
+Dentro tenemos que modificar los parametros name, url, username y pasword: 
+
+~~~
+    <?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<Resource 
+	...
+	name="jdbc/personas" 
+	...
+	url="jdbc:mysql://localhost:3306/alumnos?serverTimezone=Europe/Madrid" 
+	username="root"
+	password="admin" 
+	.../>
+   ...
+</Context>
+~~~
+
+* name: Este parametro solo se modicaria si cada uno lo quiere, no es necesario (En este caso, ***personas***). Se utiliza en la clase ConnectionManager para obtener los datos para hacer la conexion a MySQL.
+
+* url: ***alumnos*** es el nombre de la base de datos que utilizaremos.
+
+* username: El nombre de usuario con el que nos loggearemos en MySQL.
+
+* password: Contraseá del usuario.
+
