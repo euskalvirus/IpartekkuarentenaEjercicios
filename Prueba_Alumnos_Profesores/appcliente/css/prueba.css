@@ -144,4 +144,10 @@ img {
 
 .card {
     margin-top: 2em;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.card h6 {
+    font-size: 10px !important;
 }

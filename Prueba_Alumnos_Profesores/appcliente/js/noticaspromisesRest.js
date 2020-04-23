@@ -27,7 +27,7 @@ function cargarNoticias() {
             console.log(new Date(el.fecha).toISOString().slice(0, 22).replace('T', ''))
 
             noticiasDiv.innerHTML += `<div id="${el.id}" name="card${el.id}" class="card col-5" style="width: 18rem;">
-            <img src="img/avatar1.png" class="card-img-top" alt="imagen card ${el.id}" style="height: 10rem;">
+            <img src="https://i.picsum.photos/id/${el.id}/300/200.jpg" class="card-img-top" alt="imagen card ${el.id}" style="height: 10rem;">
             <div class="card-body">
               <h5 class="card-title">${el.titulo} <h6>Created at: ${fom}<h6></h5>
               <p class="card-text">${el.contenido}</p>
