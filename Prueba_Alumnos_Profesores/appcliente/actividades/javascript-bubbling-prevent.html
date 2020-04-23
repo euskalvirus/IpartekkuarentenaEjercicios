@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=h1, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+
+<body class="container">
+    <h1 class="text-primary">Propagacion y Eventos por Defecto</h1>
+
+    <style>
+        .box {
+            display: inline-block;
+            height: 150px;
+            width: 150px;
+            background-color: blue;
+        }
+        
+        .verde {
+            height: 50px;
+            width: 50px;
+            background-color: green;
+            margin: 25px 0 0 25px;
+        }
+    </style>
+
+    <h2>Bubbling o Propagación</h2>
+    <p>Efecto bubbling, es cuando al pulsar un elemento hijo tambien desencadena el burbuja el evento del padre</p>
+    <p>https://javascript.info/bubbling-and-capturing</p>
+    <div class="box" onclick="saludar('azul')">
+        <div class="box verde" onclick="saludar('verde')"></div>
+    </div>
+
+    <h2>Eventos por defecto</h2>
+    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed, ad minima. Quia nemo perferendis, veniam quibusdam hic debitis ea, numquam velit, reprehenderit accusantium in obcaecati tenetur eligendi magni atque quis.</p>
+    <p>Labore pariatur ea fugiat quaerat ab beatae in qui, vero aperiam tempore voluptas nulla, dolorum officiis id repudiandae consequuntur quod enim ipsum nisi laboriosam libero? Quos odit reprehenderit debitis veniam.</p>
+    <p>Sequi iste fuga, corporis quas voluptates quaerat vitae nemo quidem ipsa voluptatum similique mollitia doloremque nesciunt fugit, illo minima, repellat adipisci veniam laudantium ex asperiores. Unde quis ab itaque maiores.</p>
+    <p>Rem, quas ab saepe atque quisquam illum. Esse, tempora dolor veniam architecto fugit reiciendis labore vitae optio libero recusandae laboriosam itaque iusto? Labore rem culpa, voluptate earum explicabo dolore voluptatibus?</p>
+    <p>Molestias asperiores doloribus architecto eveniet soluta illum harum dolorum velit, beatae, blanditiis molestiae? Porro impedit soluta alias sed corporis in repellat minima nostrum natus ad repellendus voluptate, quasi libero optio!</p>
+    <p>Totam, consequatur commodi officia esse vel provident suscipit mollitia quasi at non sequi sunt expedita earum fuga cumque ratione ex minus fugiat corporis animi saepe ipsa odio illo. Iure, eos!</p>
+    <p>Fugiat unde eos eius recusandae sit ratione corporis error suscipit, cum voluptatum modi minus provident. Explicabo debitis, minima totam dolore neque expedita voluptate atque aspernatur excepturi itaque maiores magnam inventore!</p>
+    <p>Sequi quo assumenda blanditiis, provident ex pariatur consequuntur consectetur debitis autem? Perspiciatis sunt odit, ad iusto in, reiciendis at et deleniti illo laboriosam hic nihil recusandae explicabo unde aliquam? Labore!</p>
+    <p>Impedit quia atque non quisquam enim suscipit architecto in nisi, magni omnis. Culpa deleniti libero omnis optio, quam maxime commodi quis ratione porro cupiditate, reprehenderit repellat eaque adipisci voluptatum nostrum?</p>
+    <p>Nulla, ducimus cumque impedit ab rerum suscipit dolorem quod. Officia, minima sit quasi cumque animi, maxime molestias sed accusantium in beatae, inventore porro obcaecati quas rem incidunt impedit at ratione!</p>
+    <a href="#" onclick="hacerAlgo()" class="btn btn-primary">Es un enlace pero maquetado como boton</a>
+
+    <script>
+        function saludar(nombre) {
+            event.stopPropagation();
+            alert('Haz hecho click en ' + nombre);
+        }
+
+        function hacerAlgo() {
+            alert('No queremos que vaya hasta arriba');
+            event.preventDefault();
+        }
+    </script>
+</body>
+
+</html>
