@@ -22,8 +22,8 @@ public class PersonaCursoDao implements IPersonaCursoDAO<Curso> {
 
 	private final static String SQL_GET_ALL = "SELECT p.id idpersona, p.nombre nombrepersona, p.avatar avatarpersona, p.sexo sexo, c.id idcurso, c.nombre nombrecurso, c.imagen imagencurso, c.precio preciocurso, pc.precio_pagado precio_pagado "
 			+ "FROM persona p, curso c, personacurso pc " + "WHERE pc.persona_id = p.id AND pc.curso_id = c.id;";
-	private final static String SQL_GET_BY_IDPERSONA = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc, curso c WHERE pc.curso_id = c.id AND pc.persona_id = ? ORDER BY id DESC";
-	private final static String SQL_GET_BY_NOTIDPERSONA = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio FROM personacurso pc RIGHT JOIN curso c on pc.curso_id = c.id WHERE c.id NOT IN (SELECT curso_id FROM personacurso WHERE persona_id = ?) GROUP BY id ORDER BY id DESC";
+	private final static String SQL_GET_BY_IDPERSONA = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio, p.id profesor_id, p.nombre profesor_nombre FROM personacurso pc, curso c, persona p WHERE pc.curso_id = c.id AND c.persona_id = p.id AND pc.persona_id = ? ORDER BY id DESC";
+	private final static String SQL_GET_BY_NOTIDPERSONA = "SELECT c.id id, c.nombre nombre, c.imagen imagen, pc.precio_pagado precio, p.id profesor_id, p.nombre profesor_nombre FROM personacurso pc RIGHT JOIN curso c ON pc.curso_id = c.id LEFT JOIN persona p ON c.persona_id = p.id  WHERE c.id NOT IN (SELECT curso_id FROM personacurso WHERE persona_id = ?) GROUP BY id ORDER BY id DESC";
 	private final static String SQL_ADD_PERSONACURSO = "INSERT INTO personacurso VALUES(?,?,?)";
 	private final static String SQL_DELETE_PERSONACURSO = "DELETE FROM personacurso WHERE persona_id = ? AND curso_id = ?";
 
@@ -125,6 +125,13 @@ public class PersonaCursoDao implements IPersonaCursoDAO<Curso> {
 		curso.setNombre(rs.getString("nombre"));
 		curso.setImagen(rs.getString("imagen"));
 		curso.setPrecio(rs.getDouble("precio"));
+		
+		Persona prof = new Persona();
+		prof.setId(rs.getInt("profesor_id"));
+		prof.setNombre(rs.getString("profesor_nombre"));
+		
+		curso.setProfesor(prof);
+		
 		return curso;
 	}
 

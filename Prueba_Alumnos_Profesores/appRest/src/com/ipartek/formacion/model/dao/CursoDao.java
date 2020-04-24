@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.ipartek.formacion.model.Curso;
+import com.ipartek.formacion.model.Persona;
 
 public class CursoDao implements IDAO<Curso> {
 
@@ -18,6 +19,10 @@ public class CursoDao implements IDAO<Curso> {
 	private final static String SQL_GET_ALL = "SELECT  id, nombre, imagen, precio FROM curso ORDER BY id DESC LIMIT 100";
 	private final static String SQL_GET_BY_ID = "SELECT  id, nombre, imagen, precio FROM curso WHERE id= ?";
 	private final static String SQL_GET_FILTERED = "SELECT  id, nombre, imagen, precio FROM curso WHERE nombre LIKE ? ORDER BY id DESC LIMIT 100";
+	
+	private final static String SQL_GET_ALL_WITH_PROFESOR = "SELECT  c.id id, c.nombre nombre, c.imagen imagen, c.precio precio, p.id profesor_id, p.nombre profesor_nombre FROM curso c LEFT JOIN persona p ON c.persona_id = p.id ORDER BY id DESC LIMIT 100";
+	private final static String SQL_GET_BY_ID_WITH_PROFESOR = "SELECT  c.id id, c.nombre nombre, c.imagen imagen, c.precio precio, p.id profesor_id, p.nombre profesor_nombre FROM curso c LEFT JOIN persona p ON c.persona_id = p.id WHERE c.id= ?";
+	private final static String SQL_GET_FILTERED_WITH_PROFESOR = "SELECT  c.id id, c.nombre nombre, c.imagen imagen, c.precio precio, p.id profesor_id, p.nombre profesor_nombre FROM curso c LEFT JOIN persona p ON c.persona_id = p.id WHERE c.nombre LIKE ? ORDER BY id DESC LIMIT 100";
 
 	private static CursoDao INSTANCIA = null;
 
@@ -37,7 +42,7 @@ public class CursoDao implements IDAO<Curso> {
 		LOGGER.info("getAll");
 		registros = new ArrayList<Curso>();
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);
+				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL_WITH_PROFESOR);
 				ResultSet rs = pst.executeQuery();) {
 			while (rs.next()) {
 				Curso c = mapper(rs);
@@ -55,7 +60,7 @@ public class CursoDao implements IDAO<Curso> {
 		LOGGER.info("getFiltered " + filtro);
 		registros = new ArrayList<Curso>();
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(SQL_GET_FILTERED);) {
+				PreparedStatement pst = con.prepareStatement(SQL_GET_FILTERED_WITH_PROFESOR);) {
 			pst.setString(1, filtro);
 			try (ResultSet rs = pst.executeQuery();) {
 				while (rs.next()) {
@@ -76,7 +81,7 @@ public class CursoDao implements IDAO<Curso> {
 		LOGGER.info("getById(" + id + ")");
 		Curso curso = null;
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID);) {
+				PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID_WITH_PROFESOR);) {
 			pst.setInt(1, id);
 			try (ResultSet rs = pst.executeQuery();) {
 				if (rs.next()) {
@@ -124,6 +129,12 @@ public class CursoDao implements IDAO<Curso> {
 		curso.setNombre(rs.getString("nombre"));
 		curso.setImagen(rs.getString("imagen"));
 		curso.setPrecio(rs.getDouble("precio"));
+		
+		Persona p = new Persona();
+		p.setId(rs.getInt("profesor_id"));
+		p.setNombre(rs.getString("profesor_nombre"));
+		
+		curso.setProfesor(p);
 		
 		//TODO crear profesor
 		return curso;

@@ -223,11 +223,11 @@ function obtenerListasCursos(idPersona) {
         activos.innerHTML = "";
         console.debug(JSON.stringify(arrayCursos));
         arrayCursos.cursosNotIn.forEach(curso => {
-            inactivos.innerHTML += `<img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}">`
+            inactivos.innerHTML += `<div><img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"> ${curso.profesor.nombre}</div>`
         })
 
         arrayCursos.cursosIn.forEach(curso => {
-            activos.innerHTML += `<img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}">`
+            activos.innerHTML += `<div><img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"> ${curso.profesor.nombre}</div>`
         })
 
         let bDel = document.getElementById("del");
@@ -468,15 +468,15 @@ function agregarCurso(evento) {
         console.debug(curso);
         //curso.parentNode.removeChild(curso);
 
-        let outer = curso.cloneNode(true);
+        let outer = curso.parentElement.cloneNode(true);
         outer.classList.add('animated', 'bounceInLeft');
-        curso.classList.add('animated', 'bounceOutLeft');
+        curso.parentElement.classList.add('animated', 'bounceOutLeft');
 
         //2 opciones para eliminar el elemento de la lista
         //curso.parentNode.removeChild(curso);
         //curso.remove();
         setTimeout(function() {
-            curso.remove();
+            curso.parentElement.remove();
             activos.innerHTML += outer.outerHTML;
             setTimeout(function() {
                 activos.lastChild.classList.remove('animated', 'bounceInLeft');
@@ -515,15 +515,15 @@ function eliminarCurso(evento) {
         curso.classList.remove("selected");
         console.debug(curso);
         curso.setAttribute("onclick", "selectInactivo(event,null)");
-        let outer = curso.cloneNode(true);
+        let outer = curso.parentElement.cloneNode(true);
         outer.classList.add('animated', 'bounceInLeft');
-        curso.classList.add('animated', 'bounceOutLeft');
+        curso.parentNode.classList.add('animated', 'bounceOutLeft');
 
         //2 opciones para eliminar el elemento de la lista
         //curso.parentNode.removeChild(curso);
         //curso.remove();
         setTimeout(function() {
-            curso.remove();
+            curso.parentNode.remove();
             inactivos.innerHTML += outer.outerHTML;
             setTimeout(function() {
                 inactivos.lastChild.classList.remove('animated', 'bounceInLeft');
@@ -620,7 +620,7 @@ function agregarCursoModal(evento) {
         //activos.innerHTML += curso.outerHTML;
         const inactivos = document.querySelectorAll('#cursosinactivos img');
 
-        let outer = `<img onclick="selectActivo(event,null)" class="animated bounceInLeft" id="${personacurso.curso.id}" src="img/${personacurso.curso.imagen}" alt="${personacurso.curso.nombre}" title="${personacurso.curso.nombre}">`;
+        let outer = `<div class="animated bounceInLeft"><img onclick="selectActivo(event,null)" id="${personacurso.curso.id}" src="img/${personacurso.curso.imagen}" alt="${personacurso.curso.nombre}" title="${personacurso.curso.nombre}"> ${personacurso.curso.profesor.nombre}</div>`;
 
         curso.classList.add('animated', 'bounceOutLeft');
 
@@ -628,28 +628,26 @@ function agregarCursoModal(evento) {
         //curso.parentNode.removeChild(curso);
         //curso.remove();
         setTimeout(function() {
-            img.parentNode.remove();
+            img.parentElement.remove();
             inactivos.forEach(curso => {
                 if (curso.id == idCurso) {
-                    curso.classList.add('animated', 'bounceOutLeft');
+                    curso.parentElement.classList.add('animated', 'bounceOutLeft');
                     setTimeout(function() {
-                        curso.remove();
+                        curso.parentElement.remove();
                     }, 800);
                 }
             });
             setTimeout(function() {
-                activos.lastChild.classList.remove('animated', 'bounceInLeft');
-
                 activos.innerHTML += outer;
+                setTimeout(function() {
+                    activos.parentElement.lastChild.classList.remove('animated', 'bounceInLeft');
+                }, 800);
+
+
             }, 800);
 
 
         }, 800);
-
-
-
-
-
 
         //$('#modalCursos').modal('hide');
 
