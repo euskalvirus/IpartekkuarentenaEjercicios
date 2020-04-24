@@ -134,7 +134,14 @@ function guardar() {
     }
     promesa.then(() => {
         console.debug("promesa then");
-        obtenerDatosRest('T', "")
+
+        if (op == "NUEVO ALUMNO") {
+            document.getElementById('despegable').value = 't';
+            document.getElementById('search').value = "";
+        }
+        let sex = document.getElementById('despegable').value;
+        let filt = document.getElementById('search').value;
+        obtenerDatosRest(sex.toUpperCase(), filt, true);
     });
 
     promesa.catch((error) => {
