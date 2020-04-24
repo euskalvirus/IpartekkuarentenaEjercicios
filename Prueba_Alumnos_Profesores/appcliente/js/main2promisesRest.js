@@ -48,9 +48,17 @@ function init() {
         }
     })
 
+    cargarTodosLosAlumnos();
+
+}
+
+function cargarTodosLosAlumnos() {
     console.debug('Document Load and Ready');
-    obtenerDatosRest(select.value, buscador.value, true);
-    initGallery();
+    const promesa = ajax('GET', urlBase + "?rol=" + 1, null).then(alumnos => {
+        personas = alumnos;
+        pintar(alumnos, true);
+        initGallery();
+    }).catch();
 }
 
 function initGallery() {
@@ -134,14 +142,7 @@ function guardar() {
     }
     promesa.then(() => {
         console.debug("promesa then");
-
-        if (op == "NUEVO ALUMNO") {
-            document.getElementById('despegable').value = 't';
-            document.getElementById('search').value = "";
-        }
-        let sex = document.getElementById('despegable').value;
-        let filt = document.getElementById('search').value;
-        obtenerDatosRest(sex.toUpperCase(), filt, true);
+        obtenerDatosRest('T', "")
     });
 
     promesa.catch((error) => {
@@ -150,14 +151,6 @@ function guardar() {
     })
 }
 
-/**
- * 
- * @param {*} id 
- * @param {*} nombre 
- * @param {*} avatar 
- * @param {*} sexo 
- * @param {*} op 
- */
 function validate(id, nombre, avatar, sexo, op) {
     console.debug("validate");
     if (op === "NUEVO ALUMNO") { id = "1000"; }

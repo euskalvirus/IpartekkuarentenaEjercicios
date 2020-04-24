@@ -30,7 +30,7 @@ import com.ipartek.formacion.model.Rol;
 import com.ipartek.formacion.model.dao.PersonaCursoDao;
 import com.ipartek.formacion.model.dao.PersonaDao;
 
-@Path("/personas")
+@Path("/personas/")
 @Produces("application/json")
 @Consumes("application/json")
 public class PersonaController {
@@ -83,18 +83,17 @@ public class PersonaController {
 	}
 
 	@GET
-	public Object getAll(@QueryParam("rol") Integer rol) {
-		LOGGER.info("getAll");
+	public Object getAll(@QueryParam("rol") int rol) {
+		LOGGER.info("getAll" + rol);
 
 		Response response;
 		try {
 			ArrayList<Persona> personas = new ArrayList<Persona>();
-			personas = (ArrayList<Persona>) dao.getAll();
-			/*if(rol != null) {
-			personas = (ArrayList<Persona>) dao.getAll();
+			if(rol ==0) {
+				personas = (ArrayList<Persona>) dao.getAll();
 			}else {
 				personas = (ArrayList<Persona>) dao.getAllByRol(new Rol(rol,""));
-			}*/
+			}
 			response = Response.status(Status.OK).entity(personas).build();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -25,6 +25,7 @@ public class PersonaDao implements IPersonaDAO {
 	private final static String SQL_GET_ALL_WITH_CURSOS_BY_ROL_ID = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id, rol_id, r.nombre rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id LEFT JOIN rol r ON p.rol_id = r.id WHERE p.rol_id = ?";
 	private final static String SQL_GET_BY_ID = "SELECT  id, nombre, avatar, sexo FROM persona WHERE id=?";
 	private final static String SQL_GET_BY_ID_WITH_CURSOS = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id WHERE p.id = ?; ";
+	private final static String SQL_GET_BY_ID_WITH_CURSOS_WITH_ROL = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id rol_id, r.id rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id LEFT JOIN rol r ON p.rol_id = r.id WHERE p.id = ?; ";
 	private final static String SQL_DELETE_BY_ID = "DELETE FROM persona WHERE id=?";
 	private final static String SQL_INSERT = "INSERT INTO persona(nombre, avatar,sexo) VALUES(?,?,?)";
 	private final static String SQL_UPDATE = "UPDATE persona SET nombre=?, avatar=?, sexo=? WHERE id=?;";
@@ -69,7 +70,7 @@ public class PersonaDao implements IPersonaDAO {
 		Persona persona = null;
 		try (Connection con = ConnectionManager.getConnection();
 				// PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID);) {
-				PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID_WITH_CURSOS);) {
+				PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID_WITH_CURSOS_WITH_ROL);) {
 			pst.setInt(1, id);
 			try (ResultSet rs = pst.executeQuery();) {
 				HashMap<Integer, Persona> hm = new HashMap<Integer, Persona>();
@@ -237,7 +238,7 @@ public class PersonaDao implements IPersonaDAO {
 
 	@Override
 	public List<Persona> getAllByRol(Rol rol) throws Exception{
-		LOGGER.info("getAll");
+		LOGGER.info("getAllByRol");
 		try (Connection con = ConnectionManager.getConnection();
 				// PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);
 				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL_WITH_CURSOS_BY_ROL_ID);){
