@@ -150,6 +150,14 @@ function guardar() {
     })
 }
 
+/**
+ * 
+ * @param {*} id 
+ * @param {*} nombre 
+ * @param {*} avatar 
+ * @param {*} sexo 
+ * @param {*} op 
+ */
 function validate(id, nombre, avatar, sexo, op) {
     console.debug("validate");
     if (op === "NUEVO ALUMNO") { id = "1000"; }
