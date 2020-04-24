@@ -12,7 +12,7 @@ import com.ipartek.formacion.model.Curso;
 import com.ipartek.formacion.model.Persona;
 import com.ipartek.formacion.model.PersonaCurso;
 
-public class PersonaCursoDao implements IDAOPersonaCurso<Curso> {
+public class PersonaCursoDao implements IPersonaCursoDAO<Curso> {
 
 	private static final Logger LOGGER = Logger.getLogger(PersonaCursoDao.class.getCanonicalName());
 	private ArrayList<Curso> registrosCurso;

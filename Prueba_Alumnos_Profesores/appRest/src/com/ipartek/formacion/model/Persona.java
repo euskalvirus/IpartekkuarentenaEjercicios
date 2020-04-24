@@ -20,6 +20,8 @@ public class Persona {
 	//@Pattern(regexp = "")
 	private String sexo;
 	
+	private Rol rol;
+	
 	private ArrayList<Curso> cursos;
 	
 	public Persona() {
@@ -28,7 +30,18 @@ public class Persona {
 		this.avatar = "avatar1.png";
 		this.sexo = "";
 		this.cursos = new ArrayList<Curso>();
+		this.rol = new Rol();
 	}
+	
+	public Persona(int id, String nombre, String avatar, String sexo, int idRol) {		
+		this.id = id;
+		this.nombre = nombre;
+		this.avatar = avatar;
+		this.sexo = sexo;
+		this.cursos = new ArrayList<Curso>();	
+		this.rol = new Rol(idRol,"");
+	}
+	
 
 	public Persona(int id, String nombre, String avatar, String sexo) {		
 		this.id = id;
@@ -72,6 +85,14 @@ public class Persona {
 	}
 	
 
+	public Rol getRol() {
+		return rol;
+	}
+
+	public void setRol(Rol rol) {
+		this.rol = rol;
+	}
+
 	public ArrayList<Curso> getCursos() {
 		return cursos;
 	}
@@ -88,6 +109,7 @@ public class Persona {
 		result = prime * result + ((cursos == null) ? 0 : cursos.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
+		result = prime * result + ((rol == null) ? 0 : rol.hashCode());
 		result = prime * result + ((sexo == null) ? 0 : sexo.hashCode());
 		return result;
 	}
@@ -118,6 +140,11 @@ public class Persona {
 				return false;
 		} else if (!nombre.equals(other.nombre))
 			return false;
+		if (rol == null) {
+			if (other.rol != null)
+				return false;
+		} else if (!rol.equals(other.rol))
+			return false;
 		if (sexo == null) {
 			if (other.sexo != null)
 				return false;
@@ -128,8 +155,8 @@ public class Persona {
 
 	@Override
 	public String toString() {
-		return "Persona [id=" + id + ", nombre=" + nombre + ", avatar=" + avatar + ", sexo=" + sexo + ", cursos="
-				+ cursos + "]";
+		return "Persona [id=" + id + ", nombre=" + nombre + ", avatar=" + avatar + ", sexo=" + sexo + ", rol=" + rol
+				+ ", cursos=" + cursos + "]";
 	}
 	
 }

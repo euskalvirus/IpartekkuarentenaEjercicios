@@ -124,6 +124,8 @@ public class CursoDao implements IDAO<Curso> {
 		curso.setNombre(rs.getString("nombre"));
 		curso.setImagen(rs.getString("imagen"));
 		curso.setPrecio(rs.getDouble("precio"));
+		
+		//TODO crear profesor
 		return curso;
 	}
 }

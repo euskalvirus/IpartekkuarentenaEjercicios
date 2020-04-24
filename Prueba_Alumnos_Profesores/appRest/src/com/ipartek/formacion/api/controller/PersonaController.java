@@ -18,6 +18,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -25,6 +26,7 @@ import javax.ws.rs.core.Response.Status;
 import com.ipartek.formacion.model.Curso;
 import com.ipartek.formacion.model.Persona;
 import com.ipartek.formacion.model.PersonaCurso;
+import com.ipartek.formacion.model.Rol;
 import com.ipartek.formacion.model.dao.PersonaCursoDao;
 import com.ipartek.formacion.model.dao.PersonaDao;
 
@@ -81,13 +83,18 @@ public class PersonaController {
 	}
 
 	@GET
-	public Object getAll() {
+	public Object getAll(@QueryParam("rol") Integer rol) {
 		LOGGER.info("getAll");
 
 		Response response;
 		try {
 			ArrayList<Persona> personas = new ArrayList<Persona>();
 			personas = (ArrayList<Persona>) dao.getAll();
+			/*if(rol != null) {
+			personas = (ArrayList<Persona>) dao.getAll();
+			}else {
+				personas = (ArrayList<Persona>) dao.getAllByRol(new Rol(rol,""));
+			}*/
 			response = Response.status(Status.OK).entity(personas).build();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

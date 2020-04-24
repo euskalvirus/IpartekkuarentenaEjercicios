@@ -11,16 +11,18 @@ import java.util.logging.Logger;
 
 import com.ipartek.formacion.model.Curso;
 import com.ipartek.formacion.model.Persona;
+import com.ipartek.formacion.model.Rol;
 
 import java.sql.Statement;
 
-public class PersonaDao implements IDAO<Persona> {
+public class PersonaDao implements IPersonaDAO {
 
 	private static final Logger LOGGER = Logger.getLogger(PersonaDao.class.getCanonicalName());
 	private ArrayList<Persona> registros;
 
 	private final static String SQL_GET_ALL = "SELECT  id, nombre, avatar, sexo FROM persona ORDER BY id DESC LIMIT 500";
-	private final static String SQL_GET_ALL_WITH_CURSOS = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id";
+	private final static String SQL_GET_ALL_WITH_CURSOS = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id, rol_id, r.nombre rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id LEFT JOIN rol r ON p.rol_id = r.id";
+	private final static String SQL_GET_ALL_WITH_CURSOS_BY_ROL_ID = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id, rol_id, r.nombre rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id LEFT JOIN rol r ON p.rol_id = r.id WHERE p.rol_id = ?";
 	private final static String SQL_GET_BY_ID = "SELECT  id, nombre, avatar, sexo FROM persona WHERE id=?";
 	private final static String SQL_GET_BY_ID_WITH_CURSOS = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id WHERE p.id = ?; ";
 	private final static String SQL_DELETE_BY_ID = "DELETE FROM persona WHERE id=?";
@@ -78,7 +80,7 @@ public class PersonaDao implements IDAO<Persona> {
 						// persona = mapper(rs);
 						// persona = mapperWithCursos(rs);
 					}
-				}else {
+				} else {
 					throw new SQLException();
 				}
 
@@ -216,6 +218,7 @@ public class PersonaDao implements IDAO<Persona> {
 			p.setNombre(rs.getString("persona_nombre"));
 			p.setAvatar(rs.getString("persona_avatar"));
 			p.setSexo(rs.getString("persona_sexo"));
+			p.setRol(new Rol(rs.getInt("rol_id"), rs.getString("rol_nombre")));
 		}
 
 		int idCurso = rs.getInt("curso_id");
@@ -230,6 +233,27 @@ public class PersonaDao implements IDAO<Persona> {
 		}
 
 		hm.put(key, p);
+	}
+
+	@Override
+	public List<Persona> getAllByRol(Rol rol) throws Exception{
+		LOGGER.info("getAll");
+		try (Connection con = ConnectionManager.getConnection();
+				// PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);
+				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL_WITH_CURSOS_BY_ROL_ID);){
+				pst.setInt(1, rol.getId());
+				ResultSet rs = pst.executeQuery();
+				HashMap<Integer, Persona> hm = new HashMap<Integer, Persona>();
+				while (rs.next()) {
+					// Persona p = mapper(rs);
+					mapperWithCursos(rs, hm);
+				}
+				registros = new ArrayList<Persona>(hm.values());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+		}
+		return registros;
 	}
 
 }
