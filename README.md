@@ -89,6 +89,8 @@ Dentro tenemos que modificar los parametros name, url, username y pasword:
 
 * password: Contraseá del usuario.
 
+El Dump de la base de datos se encuentra en [Prueba_Alumnos_Profesores\appRest\Dump_Alumnos.sql](https://github.com/euskalvirus/IpartekkuarentenaEjercicios/blob/master/Prueba_Alumnos_Profesores/appRest/Dump_Alumnos.sql)
+
 ### Detalle API rest con llamadas 
 
 ~~~ 
