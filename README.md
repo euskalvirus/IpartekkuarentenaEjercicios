@@ -101,9 +101,21 @@ http://{Dominio}/apprest/api/personas
 
 Se obtendra una lista de tod@s l@s alumn@s.
 
+- Código 200: si va bien.
+	
+- Código 500: Error de servidor.
+
 **POST**
 
 Se enviara un objeto de tipo alumno, se creara si cumple las validacion y devolvera el usuario creado, sino devolvera un error.
+
+- Código 201: Si todo va bien.
+
+- Código 400: Si los datos enviados no son correctos.
+
+- Código 409: Si existe algun conflicto, por ejemplo nombre repetido.
+
+- Código 500: Error de servidor.
 
 ~~~ 
 http://{Dominio}/apprest/api/personas/{idpersona}
@@ -113,13 +125,33 @@ http://{Dominio}/apprest/api/personas/{idpersona}
 
 Se obtendra el alumno de id especificado, sino mandara un error.
 
+- Código 200: Si todo va bien.
+
+- Código 404: Si no se encuentra el alumno.
+
+- Código 500: Error de servidor.
+
 **PUT**
 
 Se enviara un objeto de tipo alumno y se modificara el alumno del id especificado si los ids concuerdan y devolvera el usuario modificado, sino devolvera un error.
 
+- Código 201: Si todo va bien.
+
+- Código 400: Datos incorrectos.
+
+- Código 404: Si no se encuentra el alumno a actualizar.
+
+- Código 500: Error de servidor.
+
 **DELETE**
 
 Se eliminara el alumno de id especificado y se devolvera el alumno, sino devolvera un error.
+
+- Código 200: Si todo va bien.
+
+- Código 404: Si no se encuentra el alumno a eliminar.
+
+- Código 409: Si existe un clonflicto, por ejemplo que el alumno tenga cursos asociados.
 
 ~~~ 
 http://{Dominio}/apprest/api/personas/{idpersona}/cursos 
@@ -129,6 +161,12 @@ http://{Dominio}/apprest/api/personas/{idpersona}/cursos
 
 Se obtendra una Array con 2 listas. Una lista con los cursos comprados y otra con los cursos disponibles para ese alumno.
 
+- Código 200: Si todo va bien.
+
+- Código 404: Si no se encuentra el alumno.
+
+- Código 500: Error de servidor.
+
 ~~~
 http://{Dominio}/apprest/api/personas/{idpersona}/cursos/{idCurso}
 ~~~
@@ -137,9 +175,21 @@ http://{Dominio}/apprest/api/personas/{idpersona}/cursos/{idCurso}
 
 Se creara una nueva compra para el usuario con referencia a idPersona relacionada con el curso con referencia a idCurso. Si ya existe la relación se devolvera un error y si todo va bien se devovlera al relacion personacurso.
 
+- Código 200: Si todo va bien.
+
+- Código 404: Si no se encuentra el alumno, el curso o los 2.
+
+- Código 409: Si existe un clonflicto, por ejemplo que la relación alumno y curso ya exista.
+
 **DELETE**
 
 Se eliminara la compra para el usuario con referencia a idPersona relacionada con el curso con referencia a idCurso. Si se elimina correctamente se devuelve la relacion personacurso y sino existe tal relación se madara un error.
+
+- Código 200: Si todo va bien.
+
+- Código 404: Si no se encuentra la relación alumno y curso a eliminar.
+
+- Código 409: Si existe un clonflicto.
 
 ~~~ 
 http://{Dominio}/apprest/api/cursos/
@@ -148,6 +198,10 @@ http://{Dominio}/apprest/api/cursos/
 **GET**
 
 Se obtendra una lista con todos los cursos existentes.
+
+- Código 200: Si todo va bien.
+
+- Código 500: Error de servidor.
 
 ## Tags o Versiones
 
