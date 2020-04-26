@@ -5,6 +5,9 @@ const urlBase = "http://localhost:8080/apprest/api/personas/";
 let personas = [];
 window.addEventListener('load', init());
 
+/**
+ * Función que se ejecuta al cargar la pagina
+ */
 function init() {
 
     let select = document.getElementById('despegable');
@@ -54,6 +57,9 @@ function init() {
 
 }
 
+/**
+ * Carga la lista de Avatares del formulario
+ */
 function initGallery() {
     console.debug("initGallery")
     let divImagenes = document.getElementById('imagenes');
@@ -63,6 +69,12 @@ function initGallery() {
     }
 }
 
+
+/**
+ * Se selecciona el avatar y se cargar el valir en el input con id 'Avatar'.
+ * @param {*} evento 
+ * @param {*} id 
+ */
 function selectAvatar(evento, id) {
     console.debug("selectAvatar");
     const avatares = document.querySelectorAll('#imagenes img');
@@ -78,6 +90,11 @@ function selectAvatar(evento, id) {
     }
 }
 
+/**
+ * Se pinta la lista de los alumnos
+ * @param {*} arraypersonas 
+ * @param {*} limpiar Boolean que determina si se limpiar el formulario o no
+ */
 function pintar(arraypersonas, limpiar) {
     console.debug('pintar');
     personas = arraypersonas;
@@ -92,6 +109,9 @@ function pintar(arraypersonas, limpiar) {
     }
 }
 
+/**
+ * Se crea un nuevo alumno o actualiza el alumno con los datos del formulario
+ */
 function guardar() {
     console.debug('dentro de guardar');
     let id = document.getElementById('id').value;
@@ -149,6 +169,14 @@ function guardar() {
     })
 }
 
+/**
+ * Valida que todos los datos necesarios para un nuevo usuario han sido introducidos
+ * @param {*} id 
+ * @param {*} nombre 
+ * @param {*} avatar 
+ * @param {*} sexo 
+ * @param {*} op 
+ */
 function validate(id, nombre, avatar, sexo, op) {
     console.debug("validate");
     if (op === "NUEVO ALUMNO") { id = "1000"; }
@@ -159,6 +187,10 @@ function validate(id, nombre, avatar, sexo, op) {
     }
 }
 
+/**
+ * Se elimina el Alumno seleccionado
+ * @param {*} indice 
+ */
 function eliminar(indice) {
     console.debug(`Eliminar`);
     console.debug(personas);
@@ -180,6 +212,10 @@ function eliminar(indice) {
 
 }
 
+/**
+ * Se cargan los datos del Alumno seleccionado en el formulario y se hace visible la seccion de cursos
+ * @param {*} indice 
+ */
 function seleccionar(indice) {
     console.debug(`seleccionar(${indice})`);
     document.getElementById('opcion').name = "modificar";
@@ -209,6 +245,10 @@ function seleccionar(indice) {
     });
 }
 
+/**
+ * Se obtienen las listas de cursos comprado y no comprado del usuario con ese idPersona
+ * @param {*} idPersona 
+ */
 function obtenerListasCursos(idPersona) {
     console.debug("obtenerListasCursos")
     const url = urlBase + idPersona + "/cursos/";
@@ -237,6 +277,9 @@ function obtenerListasCursos(idPersona) {
     });
 }
 
+/**
+ * Se limpian todos los datos del formulario y se hace invisible la sección de cursos
+ */
 function limpiarFormulario() {
     console.debug("limpiarFormulario");
     document.getElementById('opcion').name = "nuevo";
@@ -262,6 +305,9 @@ function limpiarFormulario() {
     bModal.disabled = true;
 }
 
+/**
+ * Se obtienen todos los cursos existentes
+ */
 function obtenerTodosLosCursos() {
     console.debug("obtenerTodosLosCursos")
     const url = "http://localhost:8080/apprest/api/cursos/";
@@ -281,10 +327,20 @@ function obtenerTodosLosCursos() {
     });
 }
 
+/**
+ * Se filtra la lista de Alumnos segun el sexo
+ * @param {*} sexo 
+ * @param {*} lista 
+ */
 function filtarPorSexo(sexo, lista) {
     return lista.filter(persona => persona.sexo == sexo);
 }
 
+/**
+ * Se activa al seleccionar un curso que el alumno no tiene comprado y da la opcion de comprarlo
+ * @param {*} evento 
+ * @param {*} id 
+ */
 function selectInactivo(evento, id) {
     console.debug("selectInactivo");
     const cursosIna = document.querySelectorAll('#cursosinactivos img');
@@ -307,6 +363,11 @@ function selectInactivo(evento, id) {
     bAdd.disabled = false;
 }
 
+/**
+ * Se activa al seleccionar un curso que el alumno tiene comprado y da la opcion de eliminarlo
+ * @param {*} evento 
+ * @param {*} id 
+ */
 function selectActivo(evento, id) {
     console.debug("selectInactivo");
     const cursosIna = document.querySelectorAll('#cursosinactivos img');
@@ -328,6 +389,11 @@ function selectActivo(evento, id) {
     bAdd.disabled = true;
 }
 
+/**
+ * Se hace visible el modal de comprar cursos para el Alumno
+ * @param {*} evento 
+ * @param {*} id 
+ */
 function selectCursoModal(evento, id) {
     console.debug("selectCursoModal");
     const cursosModal = document.querySelectorAll('#cursosModal img');
@@ -347,11 +413,22 @@ function selectCursoModal(evento, id) {
 
 }
 
+/**
+ * Se filtra la lista buscando que el nombre del alumno contenga el texto introducido
+ * @param {*} indicionombre 
+ * @param {*} lista 
+ */
 function buscar(indicionombre, lista) {
     //usar startsWith si quires empieze por y no que contenga
     return lista.filter(persona => persona.nombre.toLowerCase().includes(indicionombre.toLowerCase()));
 }
 
+/**
+ * Es la funcion que se usa para buscar los usuarios segun los filtros de sexo o texto contenido en el nombre
+ * @param {*} listasexo 
+ * @param {*} buscador 
+ * @param {*} limpiar 
+ */
 function obtenerDatosRest(listasexo, buscador, limpiar) {
     console.debug("obtenerDatosRest");
     const url = urlBase + "?rol=" + 1;
@@ -390,7 +467,7 @@ function obtenerDatosRest(listasexo, buscador, limpiar) {
 }
 
 /**
- * 
+ * Es la función principal para hacer las llamadas RESTful
  * @param {*} metodo 
  * @param {*} url 
  * @param {*} datos 
@@ -441,6 +518,10 @@ function ajax(metodo, url, datos) {
     });
 }
 
+/**
+ * Función que compra el curso para el Alumno
+ * @param {*} evento 
+ */
 function agregarCurso(evento) {
     let idPersona = document.getElementById("id").value;
     let idCurso = "";
@@ -494,6 +575,10 @@ function agregarCurso(evento) {
     });
 }
 
+/**
+ * Función que elimina el curso para el Alumno
+ * @param {*} evento 
+ */
 function eliminarCurso(evento) {
     let idPersona = document.getElementById("id").value;
     let idCurso = "";
@@ -543,6 +628,11 @@ function eliminarCurso(evento) {
     });
 }
 
+/**
+ * Funcion que carga los cursos que el Alumno no tiene comprados en la lista del Modal
+ * @param {*} evento 
+ * @param {*} filtro 
+ */
 function cargarCursosModal(evento, filtro) {
     console.debug("dentro de cargarCursosModal");
 
@@ -579,12 +669,18 @@ function cargarCursosModal(evento, filtro) {
     });
 }
 
+/**
+ * Acciones que hacer al hacer visible el Modal
+ */
 $('#modalCursos').on('shown.bs.modal', function(event) {
     cargarCursosModal(event, "");
     let bAdd = document.getElementById("bAgregarCursoModal");
     bAdd.disabled = true;
 })
 
+/**
+ * Acciones que hacer al hacer invisibel el Modal
+ */
 $('#modalCursos').on('hidden.bs.modal', function(event) {
     document.getElementById('searchModal').value = "";
     document.getElementById('cursosModal').innerHTML = "";
@@ -592,6 +688,10 @@ $('#modalCursos').on('hidden.bs.modal', function(event) {
     bAdd.disabled = true;
 })
 
+/**
+ * Funcion que agrega un curso al alumno desde el Modal
+ * @param {*} evento 
+ */
 function agregarCursoModal(evento) {
     let idPersona = document.getElementById("id").value;
     let idCurso = "";
