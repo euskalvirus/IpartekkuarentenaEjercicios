@@ -17,6 +17,8 @@ body {
     width: 1080px !important;
     align-content: center;
     margin: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 main {
