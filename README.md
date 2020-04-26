@@ -93,6 +93,8 @@ El Dump de la base de datos se encuentra en [Prueba_Alumnos_Profesores\appRest\D
 
 ### Detalle API rest con llamadas 
 
+Se obtendra un Objeto de tipo Error, siempre que la respuesta no sea un 200 o 201.
+
 ~~~ 
 http://{Dominio}/apprest/api/personas 
 ~~~
@@ -101,21 +103,25 @@ http://{Dominio}/apprest/api/personas
 
 Se obtendra una lista de tod@s l@s alumn@s.
 
-- Código 200: si va bien.
+- Código 200: si va bien. Se obtiene un ArrayList de tipo Persona.
 	
 - Código 500: Error de servidor.
+
+Se obtiene como respuesta un array de objetos persona.
 
 **POST**
 
 Se enviara un objeto de tipo alumno, se creara si cumple las validacion y devolvera el usuario creado, sino devolvera un error.
 
-- Código 201: Si todo va bien.
+- Código 201: Si todo va bien. Se obtiene un Objeto de tipo Persona con el ID generado.
 
 - Código 400: Si los datos enviados no son correctos.
 
 - Código 409: Si existe algun conflicto, por ejemplo nombre repetido.
 
 - Código 500: Error de servidor.
+
+Se envia envian las variables id (Vacío), nombre, avatar y sexo y se recibe un objeto tipo persona pero sin lista de cursos.
 
 ~~~ 
 http://{Dominio}/apprest/api/personas/{idpersona}
@@ -125,17 +131,19 @@ http://{Dominio}/apprest/api/personas/{idpersona}
 
 Se obtendra el alumno de id especificado, sino mandara un error.
 
-- Código 200: Si todo va bien.
+- Código 200: Si todo va bien. Se obtiene un Objeto de tipo Persona.
 
 - Código 404: Si no se encuentra el alumno.
 
 - Código 500: Error de servidor.
 
+Se obtiene como respuesta un objetos de tipo persona.
+
 **PUT**
 
 Se enviara un objeto de tipo alumno y se modificara el alumno del id especificado si los ids concuerdan y devolvera el usuario modificado, sino devolvera un error.
 
-- Código 201: Si todo va bien.
+- Código 201: Si todo va bien. Se obtiene un Objeto de tipo Persona actualizado.
 
 - Código 400: Datos incorrectos.
 
@@ -143,11 +151,13 @@ Se enviara un objeto de tipo alumno y se modificara el alumno del id especificad
 
 - Código 500: Error de servidor.
 
+
+
 **DELETE**
 
 Se eliminara el alumno de id especificado y se devolvera el alumno, sino devolvera un error.
 
-- Código 200: Si todo va bien.
+- Código 200: Si todo va bien. Se obtiene un Objeto de tipo Persona.
 
 - Código 404: Si no se encuentra el alumno a eliminar.
 
@@ -161,11 +171,16 @@ http://{Dominio}/apprest/api/personas/{idpersona}/cursos
 
 Se obtendra una Array con 2 listas. Una lista con los cursos comprados y otra con los cursos disponibles para ese alumno.
 
-- Código 200: Si todo va bien.
+- Código 200: Si todo va bien. Se obtiene un ArrayList de Cursos.
 
 - Código 404: Si no se encuentra el alumno.
 
 - Código 500: Error de servidor.
+
+Se obtendra un objeto con 2 arraylist:
+
+	{'cursosIn' : [{Objeto Curso,...}],
+	'cursosNotIn' : [{Objeto Curso,...}]}
 
 ~~~
 http://{Dominio}/apprest/api/personas/{idpersona}/cursos/{idCurso}
@@ -175,7 +190,7 @@ http://{Dominio}/apprest/api/personas/{idpersona}/cursos/{idCurso}
 
 Se creara una nueva compra para el usuario con referencia a idPersona relacionada con el curso con referencia a idCurso. Si ya existe la relación se devolvera un error y si todo va bien se devovlera al relacion personacurso.
 
-- Código 200: Si todo va bien.
+- Código 200: Si todo va bien. Se devuelve un objeto PersonaCurso.
 
 - Código 404: Si no se encuentra el alumno, el curso o los 2.
 
@@ -185,7 +200,7 @@ Se creara una nueva compra para el usuario con referencia a idPersona relacionad
 
 Se eliminara la compra para el usuario con referencia a idPersona relacionada con el curso con referencia a idCurso. Si se elimina correctamente se devuelve la relacion personacurso y sino existe tal relación se madara un error.
 
-- Código 200: Si todo va bien.
+- Código 200: Si todo va bien. Se devuelve un objeto PersonaCurso.
 
 - Código 404: Si no se encuentra la relación alumno y curso a eliminar.
 
@@ -199,9 +214,46 @@ http://{Dominio}/apprest/api/cursos/
 
 Se obtendra una lista con todos los cursos existentes.
 
-- Código 200: Si todo va bien.
+- Código 200: Si todo va bien. Se obtiene un ArrayList de Cursos
 
 - Código 500: Error de servidor.
+
+Estructura de los objetos:
+
+- Objeto Error:
+
+~~~ 
+	{'error': string}
+~~~ 
+
+ - Objeto Persona:
+
+~~~ 
+ 	{'id': int,
+	'nombre' : string,
+	'avatar' : string.png,
+	'sexo' : string (M -> mujer, H -> Hombre),
+	'rol' : Objeto Rol,
+	'cursos': [{Cursos1,Curso2...}]}
+~~~ 
+
+- Objeto Curso:
+
+~~~ 
+	{'id' : int,
+	'nombre' : string,
+	'imagen' : string,
+	'precio' : double,
+	profesor : Objeto Persona} 
+~~~ 
+	
+- Objeto PersonaCurso:
+
+~~~ 
+	{'persona' : Objeto Persona,
+	'curso' : Objeto Curso,
+	'precio' : double}
+~~~ 
 
 ## Tags o Versiones
 
