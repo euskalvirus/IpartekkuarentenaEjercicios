@@ -268,3 +268,7 @@ En esta versión se pueden comprar y eliminar cursos para el alumno. Se vera que
 ### V2.2
 
 En esta versión se ha añadido un botón con el que activaremos un modal en donde podremos comprar cursos para el alumno. Ademas se han agregado animaciones para cuando se añaden y se eliminan cursos  de las lista, bien cuando se hace en las listas directamente, bien cuando se hace en el modal.
+
+### V2.3
+
+Cambio en el diseño de la página web.
