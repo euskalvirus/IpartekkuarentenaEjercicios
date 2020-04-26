@@ -29,8 +29,10 @@ CREATE TABLE `curso` (
   `nombre` varchar(45) COLLATE utf8_spanish2_ci NOT NULL,
   `imagen` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
   `precio` decimal(6,2) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `titulo_UNIQUE` (`nombre`)
+  `persona_id` int unsigned NOT NULL,
+  PRIMARY KEY (`id`,`persona_id`),
+  UNIQUE KEY `titulo_UNIQUE` (`nombre`),
+  KEY `fk_curso_persona1_idx` (`persona_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -40,7 +42,7 @@ CREATE TABLE `curso` (
 
 LOCK TABLES `curso` WRITE;
 /*!40000 ALTER TABLE `curso` DISABLE KEYS */;
-INSERT INTO `curso` VALUES (1,'HTML','html.png',1.10),(2,'Java','java.png',2.20),(3,'Javascript','js.png',3.30),(4,'PHP','php.png',4.40),(5,'MySQL','mysql.png',5.50),(6,'CSS','css.png',1.10),(11,'Cerveza Artesana','cerveza.png',10.10),(12,'Enologia','enologia.png',10.10),(13,'reposteria','reposteria.png',6.60),(14,'Huerto urbano','huertourbano.png',7.60),(15,'Python','python.png',5.50);
+INSERT INTO `curso` VALUES (1,'HTML','html.png',1.10,1),(2,'Java','java.png',2.20,1),(3,'Javascript','js.png',3.30,1),(4,'PHP','php.png',4.40,1),(5,'MySQL','mysql.png',5.50,1),(6,'CSS','css.png',1.10,1),(11,'Cerveza Artesana','cerveza.png',10.10,4),(12,'Enologia','enologia.png',10.10,4),(13,'reposteria','reposteria.png',6.60,4),(14,'Huerto urbano','huertourbano.png',7.60,4),(15,'Python','python.png',5.50,1);
 /*!40000 ALTER TABLE `curso` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -82,9 +84,11 @@ CREATE TABLE `persona` (
   `nombre` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
   `avatar` varchar(250) COLLATE utf8_spanish2_ci NOT NULL,
   `sexo` enum('H','M') COLLATE utf8_spanish2_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `nombre_UNIQUE` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+  `rol_id` int unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`,`rol_id`),
+  UNIQUE KEY `nombre_UNIQUE` (`nombre`),
+  KEY `fk_persona_rol1_idx` (`rol_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +97,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,'Arantxaaaaaaa','avatar1.png','M'),(2,'Idoia','avatar2.png','M'),(3,'Iker','avatar3.png','H'),(4,'Hodei','avatar4.png','H'),(14,'Matias','avatar5.png','H');
+INSERT INTO `persona` VALUES (1,'Arantxa','avatar1.png','M',2),(2,'Idoia','avatar5.png','M',1),(3,'Iker Zeta','avatar3.png','H',1),(4,'Hodei','avatar4.png','H',2),(14,'Matias','avatar7.png','H',1),(24,'pepita','avatar1.png','M',1),(29,'asdasd','avatar1.png','H',1),(31,'asdasd asd','avatar2.png','M',1),(32,'qwe','avatar3.png','H',1),(33,'ewqeqweqw','avatar4.png','H',1),(34,'asdasd as das d','avatar4.png','H',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,8 +126,32 @@ CREATE TABLE `personacurso` (
 
 LOCK TABLES `personacurso` WRITE;
 /*!40000 ALTER TABLE `personacurso` DISABLE KEYS */;
-INSERT INTO `personacurso` VALUES (1,1,1.10),(1,4,4.40),(1,5,1.10),(1,6,1.10),(1,11,10.10),(1,15,5.50),(2,4,4.40),(2,11,10.10),(2,12,10.10),(2,13,6.60),(2,14,7.60),(2,15,5.50),(3,1,1.10),(3,2,2.20),(3,4,0.00),(3,11,10.10),(3,13,6.60),(3,14,7.60),(4,1,1.10),(4,4,4.40),(4,5,5.50),(4,6,1.10),(4,11,10.10),(4,12,10.10),(4,13,6.60),(4,14,7.60),(4,15,5.50),(14,5,5.50),(14,6,1.10),(14,11,10.10),(14,12,10.10),(14,13,6.60),(14,14,7.60);
+INSERT INTO `personacurso` VALUES (1,4,4.40),(1,5,1.10),(1,6,1.10),(1,11,10.10),(1,14,7.60),(1,15,5.50),(2,1,1.10),(2,6,1.10),(2,12,10.10),(2,13,6.60),(2,14,7.60),(2,15,5.50),(3,2,2.20),(3,5,5.50),(3,12,10.10),(3,13,6.60),(3,15,5.50),(4,1,1.10),(4,4,4.40),(4,5,5.50),(4,6,1.10),(4,11,10.10),(4,12,10.10),(4,13,6.60),(4,14,7.60),(4,15,5.50),(14,1,1.10),(14,2,2.20),(14,6,1.10),(14,11,10.10),(14,12,10.10),(14,15,5.50),(24,6,1.10),(24,11,10.10),(24,12,10.10),(24,13,6.60),(24,14,7.60),(24,15,5.50);
 /*!40000 ALTER TABLE `personacurso` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `rol`
+--
+
+DROP TABLE IF EXISTS `rol`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rol` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) COLLATE utf8_spanish2_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rol`
+--
+
+LOCK TABLES `rol` WRITE;
+/*!40000 ALTER TABLE `rol` DISABLE KEYS */;
+INSERT INTO `rol` VALUES (1,'alumno'),(2,'profesor');
+/*!40000 ALTER TABLE `rol` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -143,4 +171,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-23 14:54:55
+-- Dump completed on 2020-04-27  1:01:44
