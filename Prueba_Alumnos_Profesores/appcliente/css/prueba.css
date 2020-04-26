@@ -4,17 +4,37 @@
 
 #lista {
     margin-top: 10px;
+    height: fit-content !important;
+}
+
+#lista.list-group {
+    background-color: sandybrown !important;
+}
+
+body {
+    margin: 0.5em;
+    background-color: black;
 }
 
 main {
     padding-top: 10px;
     margin: auto;
+    background-color: sandybrown;
+    border-radius: 10px;
+    padding-bottom: 5px;
+}
+
+main .list-group {
+    background-color: white !important;
 }
 
 h1 {
-    background-color: rgb(7, 124, 109);
+    background-color: rgb(124, 63, 7);
     color: white;
     font-size: 2em;
+    height: 50px;
+    text-align: center;
+    border-radius: 10px;
 }
 
 #imagenes img {
@@ -28,7 +48,7 @@ h1 {
 #cursosinactivos img.selected,
 #cursosactivos img.selected,
 #cursosModal img.selected {
-    background-color: red;
+    background-color: steelblue;
 }
 
 #formularioAlumno>* {
@@ -60,13 +80,19 @@ h1 {
     padding-left: 0;
     text-align: left;
     padding-right: 0em;
+    height: 95px;
 }
 
-#lista2,
 #cursosactivos,
 #cursosinactivos {
     border: solid 1px;
     border-color: rgb(199, 199, 199);
+    border-radius: 3px !important;
+}
+
+#lista2,
+.modal-body {
+    background-color: sandybrown !important;
 }
 
 #cursosactivos,
@@ -80,7 +106,7 @@ h1 {
 
 #cursosinactivos img.disabled,
 #cursosactivos img.disabled {
-    background-color: red;
+    background-color: steelblue;
     filter: grayscale(100%);
 }
 
@@ -118,8 +144,9 @@ body {
 }
 
 #cursos {
-    margin: 2px;
-    padding-top: 2em;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 3px;
 }
 
 .titulos {
@@ -150,4 +177,46 @@ img {
 
 .card h6 {
     font-size: 10px !important;
+}
+
+.persona {
+    padding-left: 1.5em;
+    width: 100% !important;
+    justify-content: space-between;
+    display: flex;
+}
+
+#lista>li>div {
+    width: 100%;
+    padding-top: 0;
+}
+
+#formularioAlumno>.list-group-item {
+    border: 0;
+}
+
+#formularioAlumno {
+    border-radius: 3px !important;
+}
+
+.bloque {
+    padding-left: 5px !important;
+    padding-right: 20px;
+}
+
+div.col-2.bloque {
+    vertical-align: middle !important;
+    align-self: center;
+}
+
+#cursosactivos>div,
+#cursosinactivos>div {
+    background-color: rgb(252, 228, 217);
+}
+
+input#add,
+input#del {
+    margin-top: 10px;
+    padding-left: 10px;
+    padding-right: 70px;
 }
