@@ -87,7 +87,7 @@ function pintar(arraypersonas, limpiar) {
     lista.innerHTML = '';
     for (let i = 0; i < arraypersonas.length; i++) {
         lista.innerHTML += `<li class="list-group-item"><p class="row">Cursos: ${arraypersonas[i].cursos.length}</p><div class="row persona"><div><img src="img/${arraypersonas[i].avatar}" alt="imagen avatar ">${arraypersonas[i].nombre}</div> 
-            <div><i class="fa fa-pen" onclick="seleccionar(${arraypersonas[i].id})"></i> 
+            <div class="zoom"><i class="fa fa-pen" onclick="seleccionar(${arraypersonas[i].id})"></i> 
             <i class="fa fa-trash" onclick="eliminar(${arraypersonas[i].id})"></i></div></div></li>`
     }
 }

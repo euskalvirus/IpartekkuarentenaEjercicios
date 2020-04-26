@@ -14,6 +14,9 @@
 body {
     margin: 0.5em;
     background-color: black;
+    width: 1080px !important;
+    align-content: center;
+    margin: auto;
 }
 
 main {
@@ -219,4 +222,17 @@ input#del {
     margin-top: 10px;
     padding-left: 10px;
     padding-right: 70px;
+}
+
+i:hover {
+    transform: scale(1.7);
+    transition: all ease 500ms;
+}
+
+.fa-pen:hover {
+    color: blue;
+}
+
+.fa-trash:hover {
+    color: rgb(253, 9, 9);
 }
