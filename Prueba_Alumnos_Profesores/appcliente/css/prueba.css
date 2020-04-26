@@ -5,6 +5,9 @@
 #lista {
     margin-top: 10px;
     height: fit-content !important;
+    max-height: 80vh;
+    overflow-y: auto;
+    white-space: nowrap;
 }
 
 #lista.list-group {
