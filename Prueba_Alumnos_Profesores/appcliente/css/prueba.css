@@ -249,3 +249,7 @@ i:hover {
 .invalid {
     background-color: red;
 }
+
+.menu {
+    float: right;
+}
