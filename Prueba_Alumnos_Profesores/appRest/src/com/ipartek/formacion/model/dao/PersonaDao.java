@@ -24,9 +24,14 @@ public class PersonaDao implements IPersonaDAO {
 	private final static String SQL_GET_ALL_WITH_CURSOS = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id, rol_id, r.nombre rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id LEFT JOIN rol r ON p.rol_id = r.id";
 	private final static String SQL_GET_ALL_WITH_CURSOS_BY_ROL_ID = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id rol_id, r.id rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio, c.persona_id profesor_id, prof.nombre profesor_nombre FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id LEFT JOIN rol r ON p.rol_id = r.id LEFT JOIN persona prof ON c.persona_id = prof.id WHERE p.rol_id = ?";
 	private final static String SQL_GET_ALL_PROFESORES_WITH_CURSOS_BY_ROL_ID = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id rol_id, r.id rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio, c.persona_id profesor_id FROM persona p LEFT JOIN curso c ON c.persona_id = p.id LEFT JOIN rol r ON p.rol_id = r.id WHERE p.rol_id = ?";
+	
 	private final static String SQL_GET_BY_ID = "SELECT  id, nombre, avatar, sexo FROM persona WHERE id=?";
 	private final static String SQL_GET_BY_ID_WITH_CURSOS = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id WHERE p.id = ?; ";
 	private final static String SQL_GET_BY_ID_WITH_CURSOS_WITH_ROL = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id rol_id, r.id rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio, c.persona_id profesor_id, prof.nombre profesor_nombre FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id LEFT JOIN rol r ON p.rol_id = r.id LEFT JOIN persona prof ON c.persona_id = prof.id WHERE p.id = ?; ";
+	
+	private final static String SQL_GET_BY_NAME = "SELECT  id, nombre FROM persona WHERE nombre = ?";
+
+	
 	private final static String SQL_GET_PROFESOR_BY_ID_WITH_CURSOS_WITH_ROL = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id rol_id, r.id rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio, c.persona_id profesor_id FROM persona p LEFT JOIN curso c ON c.persona_id = p.id LEFT JOIN rol r ON p.rol_id = r.id WHERE p.id = ?; ";
 	private final static String SQL_DELETE_BY_ID = "DELETE FROM persona WHERE id=?";
 	private final static String SQL_INSERT = "INSERT INTO persona(nombre, avatar,sexo, rol_id) VALUES(?,?,?,?)";
@@ -304,6 +309,29 @@ public class PersonaDao implements IPersonaDAO {
 			throw new Exception("No se ha encontrado ningun alumno para el id: " + id);
 		}
 		return persona;
+	}
+
+	public Boolean getByName(String filtro) throws Exception {
+		LOGGER.info("getByName(" + filtro + ")");
+		Persona persona = null;
+		try (Connection con = ConnectionManager.getConnection();
+				// PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID);) {
+				PreparedStatement pst = con.prepareStatement(SQL_GET_BY_NAME);) {
+			pst.setString(1, filtro);
+			try (ResultSet rs = pst.executeQuery();) {
+				HashMap<Integer, Persona> hm = new HashMap<Integer, Persona>();
+				if (rs.next()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+		} catch (Exception e) {
+			LOGGER.warning("Ha habido algun error");
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
+		}
 	}
 
 }

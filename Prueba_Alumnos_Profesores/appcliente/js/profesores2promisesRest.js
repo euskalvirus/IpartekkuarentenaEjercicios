@@ -32,6 +32,24 @@ function init() {
         obtenerDatosRest(listasexo, valor);
     })
 
+    let nombre = document.getElementById('nombre');
+
+    nombre.addEventListener('keyup', function() {
+        console.debug("buscador EventListener");
+        let valor = this.value;
+        let listasexo = document.getElementById('despegable').value;
+        let url = urlBase + "?filtro=" + valor;
+        const promesa = ajax('GET', url, null);
+
+        promesa.then(() => {
+            nombre.classList.add('invalid');
+            nombre.classList.remove('valid')
+        }).catch(() => {
+            nombre.classList.add('valid');
+            nombre.classList.remove('invalid')
+        })
+    })
+
     let buscadorModal = document.getElementById('searchModal');
 
     buscadorModal.addEventListener('keyup', function(e) {
@@ -441,6 +459,7 @@ function obtenerDatosRest(listasexo, buscador, limpiar) {
         alert(error);
     })
 }
+
 
 /**
  * Es la función principal para hacer las llamadas RESTful

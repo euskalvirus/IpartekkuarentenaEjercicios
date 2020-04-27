@@ -51,6 +51,23 @@ function init() {
         }
     })
 
+    let nombre = document.getElementById('nombre');
+
+    buscador.addEventListener('keyup', function() {
+        console.debug("buscador EventListener");
+        let valor = this.value;
+        let url = urlBase + "?filtro=" + valor;
+        const promesa = ajax('GET', url, null);
+
+        promesa.then(() => {
+            nombre.classList.add('invalid');
+            nombre.classList.remove('valid')
+        }).catch(() => {
+            nombre.classList.add('valid');
+            nombre.classList.remove('invalid')
+        })
+    })
+
 
     obtenerDatosRest(select.value, buscador.value, true);
     initGallery();

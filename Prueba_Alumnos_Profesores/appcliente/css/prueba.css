@@ -241,3 +241,11 @@ i:hover {
 .fa-trash:hover {
     color: rgb(253, 9, 9);
 }
+
+.valid {
+    background-color: greenyellow;
+}
+
+.invalid {
+    background-color: red;
+}

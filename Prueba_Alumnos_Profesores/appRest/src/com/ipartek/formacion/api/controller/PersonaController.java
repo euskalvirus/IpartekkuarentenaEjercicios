@@ -84,10 +84,31 @@ public class PersonaController {
 	}
 
 	@GET
-	public Object getAll(@QueryParam("rol") int rol) {
+	public Object getAll(@QueryParam("rol") int rol,@QueryParam("filtro") String filtro) {
 		LOGGER.info("getAll" + rol);
-
 		Response response;
+		if(filtro!= null) {
+			LOGGER.info("getAll" + filtro);
+
+			
+			try {
+				Boolean existe =  dao.getByName(filtro);
+				if(existe) {
+					response = Response.status(Status.OK).entity(new ArrayList<String>()).build();
+				}else {
+					response = Response.status(Status.NOT_FOUND).entity(new ArrayList<String>()).build();
+				}
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				ArrayList<String> errores = new ArrayList<String>();
+				errores.add(e.getMessage());
+				response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errores).build();
+			}
+			return response;
+		}
+
 		try {
 			ArrayList<Persona> personas = new ArrayList<Persona>();
 			if(rol ==0) {
@@ -107,6 +128,7 @@ public class PersonaController {
 		}
 		return response;
 	}
+	
 
 	@GET
 	@Path("/{id}")
