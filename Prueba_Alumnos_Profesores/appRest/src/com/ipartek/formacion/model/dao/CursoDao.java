@@ -19,10 +19,14 @@ public class CursoDao implements IDAO<Curso> {
 	private final static String SQL_GET_ALL = "SELECT  id, nombre, imagen, precio FROM curso ORDER BY id DESC LIMIT 100";
 	private final static String SQL_GET_BY_ID = "SELECT  id, nombre, imagen, precio FROM curso WHERE id= ?";
 	private final static String SQL_GET_FILTERED = "SELECT  id, nombre, imagen, precio FROM curso WHERE nombre LIKE ? ORDER BY id DESC LIMIT 100";
-	
+
 	private final static String SQL_GET_ALL_WITH_PROFESOR = "SELECT  c.id id, c.nombre nombre, c.imagen imagen, c.precio precio, p.id profesor_id, p.nombre profesor_nombre FROM curso c LEFT JOIN persona p ON c.persona_id = p.id ORDER BY id DESC LIMIT 100";
+	private final static String SQL_GET_ALL_WITHOUT_PROFESOR = "SELECT  c.id id, c.nombre nombre, c.imagen imagen, c.precio precio, c.persona_id profesor_id FROM curso c WHERE c.persona_id = 0 ORDER BY id DESC LIMIT 100";
 	private final static String SQL_GET_BY_ID_WITH_PROFESOR = "SELECT  c.id id, c.nombre nombre, c.imagen imagen, c.precio precio, p.id profesor_id, p.nombre profesor_nombre FROM curso c LEFT JOIN persona p ON c.persona_id = p.id WHERE c.id= ?";
 	private final static String SQL_GET_FILTERED_WITH_PROFESOR = "SELECT  c.id id, c.nombre nombre, c.imagen imagen, c.precio precio, p.id profesor_id, p.nombre profesor_nombre FROM curso c LEFT JOIN persona p ON c.persona_id = p.id WHERE c.nombre LIKE ? ORDER BY id DESC LIMIT 100";
+	private final static String SQL_GET_FILTERED_WITHOUT_PROFESOR = "SELECT  c.id id, c.nombre nombre, c.imagen imagen, c.precio precio, c.persona_id profesor_id FROM curso c WHERE c.persona_id = 0 AND c.nombre LIKE ? ORDER BY id DESC LIMIT 100";
+
+	private final static String SQL_UPDATE = "UPDATE curso SET persona_id = ? WHERE id = ?";
 
 	private static CursoDao INSTANCIA = null;
 
@@ -117,9 +121,31 @@ public class CursoDao implements IDAO<Curso> {
 	}
 
 	@Override
-	public Curso update(Curso pojo) throws Exception, SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public Curso update(Curso curso) throws Exception, SQLException {
+		LOGGER.info("update(" + curso + ")");
+		try (Connection con = ConnectionManager.getConnection();
+				PreparedStatement pst = con.prepareStatement(SQL_UPDATE);) {
+			pst.setInt(1, curso.getProfesor().getId());
+			pst.setInt(2, curso.getId());
+
+			int numeroRegistrosModificados = pst.executeUpdate();
+			if (numeroRegistrosModificados != 1) {
+				LOGGER.warning("No se modificado ningun registro para el idCurso=" + curso.getId() + ".");
+				throw new Exception("No se modificado ningun registro para el idCurso=" + curso.getId() + ".");
+			}
+			LOGGER.info("Curso UPDATE correctamente: " + curso);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+				LOGGER.warning("Ha habido otro problema de constrain: " + e.getMessage());
+				throw new SQLException("Ha habido otro problema de constrain: " + e.getMessage());
+
+		} catch (Exception e) {
+			LOGGER.warning(e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+		return curso;
 	}
 
 	private Curso mapper(ResultSet rs) throws SQLException {
@@ -129,14 +155,54 @@ public class CursoDao implements IDAO<Curso> {
 		curso.setNombre(rs.getString("nombre"));
 		curso.setImagen(rs.getString("imagen"));
 		curso.setPrecio(rs.getDouble("precio"));
-		
-		Persona p = new Persona();
-		p.setId(rs.getInt("profesor_id"));
-		p.setNombre(rs.getString("profesor_nombre"));
-		
-		curso.setProfesor(p);
-		
-		//TODO crear profesor
+
+		if (rs.getInt("profesor_id") != 0) {
+			Persona p = new Persona();
+			p.setId(rs.getInt("profesor_id"));
+			p.setNombre(rs.getString("profesor_nombre"));
+
+			curso.setProfesor(p);
+		}
+		// TODO crear profesor
 		return curso;
+	}
+
+	public ArrayList<Curso> getAllWithoutProfessor() throws Exception {
+		LOGGER.info("getAllWithoutProfessor");
+		registros = new ArrayList<Curso>();
+		try (Connection con = ConnectionManager.getConnection();
+				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL_WITHOUT_PROFESOR);
+				ResultSet rs = pst.executeQuery();) {
+			while (rs.next()) {
+				Curso c = mapper(rs);
+				registros.add(c);
+			}
+			System.out.println(registros);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+		}
+		return registros;
+	}
+
+	public ArrayList<Curso> getFilteredWithoutProfessor(String filtro) throws Exception {
+		LOGGER.info("getFilteredWithoutProfessor " + filtro);
+		registros = new ArrayList<Curso>();
+		try (Connection con = ConnectionManager.getConnection();
+				PreparedStatement pst = con.prepareStatement(SQL_GET_FILTERED_WITHOUT_PROFESOR);) {
+			pst.setString(1, filtro);
+			try (ResultSet rs = pst.executeQuery();) {
+				while (rs.next()) {
+					Curso c = mapper(rs);
+					registros.add(c);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+		}
+		return registros;
 	}
 }

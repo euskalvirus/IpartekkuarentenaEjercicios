@@ -23,11 +23,13 @@ public class PersonaDao implements IPersonaDAO {
 	private final static String SQL_GET_ALL = "SELECT  id, nombre, avatar, sexo FROM persona ORDER BY id DESC LIMIT 500";
 	private final static String SQL_GET_ALL_WITH_CURSOS = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id, rol_id, r.nombre rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id LEFT JOIN rol r ON p.rol_id = r.id";
 	private final static String SQL_GET_ALL_WITH_CURSOS_BY_ROL_ID = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id rol_id, r.id rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio, c.persona_id profesor_id, prof.nombre profesor_nombre FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id LEFT JOIN rol r ON p.rol_id = r.id LEFT JOIN persona prof ON c.persona_id = prof.id WHERE p.rol_id = ?";
+	private final static String SQL_GET_ALL_PROFESORES_WITH_CURSOS_BY_ROL_ID = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id rol_id, r.id rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio, c.persona_id profesor_id FROM persona p LEFT JOIN curso c ON c.persona_id = p.id LEFT JOIN rol r ON p.rol_id = r.id WHERE p.rol_id = ?";
 	private final static String SQL_GET_BY_ID = "SELECT  id, nombre, avatar, sexo FROM persona WHERE id=?";
 	private final static String SQL_GET_BY_ID_WITH_CURSOS = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id WHERE p.id = ?; ";
 	private final static String SQL_GET_BY_ID_WITH_CURSOS_WITH_ROL = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id rol_id, r.id rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio, c.persona_id profesor_id, prof.nombre profesor_nombre FROM (persona p LEFT JOIN personacurso pc ON p.id = pc.persona_id) LEFT JOIN curso c ON pc.curso_id =  c.id LEFT JOIN rol r ON p.rol_id = r.id LEFT JOIN persona prof ON c.persona_id = prof.id WHERE p.id = ?; ";
+	private final static String SQL_GET_PROFESOR_BY_ID_WITH_CURSOS_WITH_ROL = "SELECT p.id persona_id, p.nombre persona_nombre, p.avatar persona_avatar, p.sexo persona_sexo, p.rol_id rol_id, r.id rol_nombre, c.id curso_id, c.nombre curso_nombre, c.imagen curso_imagen, c.precio curso_precio, c.persona_id profesor_id FROM persona p LEFT JOIN curso c ON c.persona_id = p.id LEFT JOIN rol r ON p.rol_id = r.id WHERE p.id = ?; ";
 	private final static String SQL_DELETE_BY_ID = "DELETE FROM persona WHERE id=?";
-	private final static String SQL_INSERT = "INSERT INTO persona(nombre, avatar,sexo) VALUES(?,?,?)";
+	private final static String SQL_INSERT = "INSERT INTO persona(nombre, avatar,sexo, rol_id) VALUES(?,?,?,?)";
 	private final static String SQL_UPDATE = "UPDATE persona SET nombre=?, avatar=?, sexo=? WHERE id=?;";
 
 	private static PersonaDao INSTANCIA = null;
@@ -132,6 +134,7 @@ public class PersonaDao implements IPersonaDAO {
 			pst.setString(1, persona.getNombre());
 			pst.setString(2, persona.getAvatar());
 			pst.setString(3, persona.getSexo());
+			pst.setInt(4, persona.getRol().getId());
 			int numeroRegistrosModificados = pst.executeUpdate();
 			if (numeroRegistrosModificados != 1) {
 				LOGGER.warning("Error no esperado, se ha guardado mas de un registro.");
@@ -229,13 +232,14 @@ public class PersonaDao implements IPersonaDAO {
 			c.setNombre(rs.getString("curso_nombre"));
 			c.setImagen(rs.getString("curso_imagen"));
 			c.setPrecio(rs.getDouble("curso_precio"));
-			
-			Persona prof = new Persona();
-			prof.setId(rs.getInt("profesor_id"));
-			prof.setNombre(rs.getString("profesor_nombre"));
-			
-			c.setProfesor(prof);
 
+			if (rs.getInt("rol_id") == 1) {
+				Persona prof = new Persona();
+				prof.setId(rs.getInt("profesor_id"));
+				prof.setNombre(rs.getString("profesor_nombre"));
+
+				c.setProfesor(prof);
+			}
 			p.getCursos().add(c);
 		}
 
@@ -243,24 +247,63 @@ public class PersonaDao implements IPersonaDAO {
 	}
 
 	@Override
-	public List<Persona> getAllByRol(Rol rol) throws Exception{
+	public List<Persona> getAllByRol(Rol rol) throws Exception {
 		LOGGER.info("getAllByRol");
+
+		String sql_llamada = "";
+		if (rol.getId() == 1) {
+			sql_llamada = SQL_GET_ALL_WITH_CURSOS_BY_ROL_ID;
+		} else if (rol.getId() == 2) {
+			LOGGER.info("SQL_GET_ALL_PROFESORES_WITH_CURSOS_BY_ROL_ID");
+			sql_llamada = SQL_GET_ALL_PROFESORES_WITH_CURSOS_BY_ROL_ID;
+		}
 		try (Connection con = ConnectionManager.getConnection();
 				// PreparedStatement pst = con.prepareStatement(SQL_GET_ALL);
-				PreparedStatement pst = con.prepareStatement(SQL_GET_ALL_WITH_CURSOS_BY_ROL_ID);){
-				pst.setInt(1, rol.getId());
-				ResultSet rs = pst.executeQuery();
-				HashMap<Integer, Persona> hm = new HashMap<Integer, Persona>();
-				while (rs.next()) {
-					// Persona p = mapper(rs);
-					mapperWithCursos(rs, hm);
-				}
-				registros = new ArrayList<Persona>(hm.values());
+				PreparedStatement pst = con.prepareStatement(sql_llamada);) {
+			pst.setInt(1, rol.getId());
+			ResultSet rs = pst.executeQuery();
+			HashMap<Integer, Persona> hm = new HashMap<Integer, Persona>();
+			while (rs.next()) {
+				// Persona p = mapper(rs);
+				mapperWithCursos(rs, hm);
+			}
+			registros = new ArrayList<Persona>(hm.values());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
 		}
 		return registros;
+	}
+
+	public Persona getProfesorById(int id) throws Exception {
+		LOGGER.info("getById(" + id + ")");
+		Persona persona = null;
+		try (Connection con = ConnectionManager.getConnection();
+				// PreparedStatement pst = con.prepareStatement(SQL_GET_BY_ID);) {
+				PreparedStatement pst = con.prepareStatement(SQL_GET_PROFESOR_BY_ID_WITH_CURSOS_WITH_ROL);) {
+			pst.setInt(1, id);
+			try (ResultSet rs = pst.executeQuery();) {
+				HashMap<Integer, Persona> hm = new HashMap<Integer, Persona>();
+				if (rs.next()) {
+					mapperWithCursos(rs, hm);
+					while (rs.next()) {
+						mapperWithCursos(rs, hm);
+						// persona = mapper(rs);
+						// persona = mapperWithCursos(rs);
+					}
+				} else {
+					throw new SQLException();
+				}
+
+				persona = hm.get(id);
+			}
+
+		} catch (Exception e) {
+			LOGGER.warning("No se ha encontrado ningun alumno para el id: " + id);
+			e.printStackTrace();
+			throw new Exception("No se ha encontrado ningun alumno para el id: " + id);
+		}
+		return persona;
 	}
 
 }

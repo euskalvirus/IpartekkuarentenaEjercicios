@@ -27,6 +27,7 @@ import com.ipartek.formacion.model.Curso;
 import com.ipartek.formacion.model.Persona;
 import com.ipartek.formacion.model.PersonaCurso;
 import com.ipartek.formacion.model.Rol;
+import com.ipartek.formacion.model.dao.CursoDao;
 import com.ipartek.formacion.model.dao.PersonaCursoDao;
 import com.ipartek.formacion.model.dao.PersonaDao;
 
@@ -91,8 +92,10 @@ public class PersonaController {
 			ArrayList<Persona> personas = new ArrayList<Persona>();
 			if(rol ==0) {
 				personas = (ArrayList<Persona>) dao.getAll();
+				System.out.println(personas);
 			}else {
 				personas = (ArrayList<Persona>) dao.getAllByRol(new Rol(rol,""));
+				System.out.println(personas);
 			}
 			response = Response.status(Status.OK).entity(personas).build();
 		} catch (Exception e) {
@@ -115,6 +118,32 @@ public class PersonaController {
 		Persona persona;
 		try {
 			persona = dao.getById(id);
+
+			if (persona != null) {
+				response = Response.status(Status.OK).entity(persona).build();
+			}
+		} catch (SQLException e) {
+			errores.add(e.getMessage());
+			response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errores).build();
+			e.printStackTrace();
+		} catch (Exception e) {
+			errores.add(e.getMessage());
+			response = Response.status(Status.NOT_FOUND).entity(errores).build();
+		}
+		return response;
+
+	}
+	
+	@GET
+	@Path("/profesor/{id}")
+	public Object getProfesor(@PathParam("id") int id) {
+		LOGGER.info("getPersona");
+		ArrayList<String> errores = new ArrayList<String>();
+		Response response = null;
+
+		Persona persona;
+		try {
+			persona = dao.getProfesorById(id);
 
 			if (persona != null) {
 				response = Response.status(Status.OK).entity(persona).build();
@@ -158,7 +187,33 @@ public class PersonaController {
 		return response;
 
 	}
-
+	
+	@GET
+	@Path("/profesor/{idPersona}/cursos/")
+	public Object getProfesorCursos(@PathParam("idPersona") int id) {
+		LOGGER.info("getPersonaCursos");
+		ArrayList<String> errores = new ArrayList<String>();
+		Response response = null;
+		
+		ArrayList<Curso> cursosIn = new ArrayList<Curso>();
+		ArrayList<Curso> cursosNotIn = new ArrayList<Curso>();
+		try {
+			cursosIn = (ArrayList<Curso>) PersonaCursoDao.getInstancia().getProfesorCursos(id);
+			cursosNotIn = (ArrayList<Curso>) ((CursoDao)CursoDao.getInstancia()).getAllWithoutProfessor();
+			CursosINyNotIn cursosGrupo = new CursosINyNotIn(cursosIn, cursosNotIn);
+			response = Response.status(Status.OK).entity(cursosGrupo).build();
+		} catch (SQLException e) {
+			LOGGER.warning("SQLException INTERNAL_SERVER_ERROR");
+			errores.add(e.getMessage());
+			response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errores).build();
+			e.printStackTrace();
+		} catch (Exception e) {
+			LOGGER.warning("No se ha encontrado ninguna persona con ese id");
+			errores.add("No se ha encontrado ninguna persona con ese id.");
+			response = Response.status(Status.NOT_FOUND).entity(errores).build();
+		}
+		return response;
+	}
 
 	@POST
 	public Object addPersona(Persona persona) {

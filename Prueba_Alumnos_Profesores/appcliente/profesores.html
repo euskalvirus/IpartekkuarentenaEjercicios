@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="css/all.min.css" />
+    <link rel="stylesheet" href="vendors/css/animate.css">
+    <link rel="stylesheet" href="css/prueba.css">
+
+
+    <title>Profesores Pruebas</title>
+</head>
+
+<body>
+    <main class="container">
+        <h1>LISTADO DE PROFESORES</h1>
+        <div class="container-filter">
+            <p id="buscador"><b>BUSCADOR</b></p>
+
+            <div class="row justify-content-around">
+                <select id="despegable" class="list col-2">
+                    <option value="t" selected>Todos</option>
+                    <option value="m">Mujeres</option>
+                    <option value="h">Hombres</option>
+                </select>
+                <input id="search" type="search " placeholder="Escribe un nombre " class="form-control col-9">
+            </div>
+        </div>
+        <div class="row justify-content-around" id="formulario">
+            <ul class="list-group col-4" id="lista">
+                <li>Cargando...</li>
+            </ul>
+            <div class="col-7 list-group" id="lista2">
+                <div class="list-group " id="formularioProfesor">
+                    <label id="opcion" name="nuevo" class="titulos">NUEVO PROFESOR</label>
+                    <div class="list-group-item">
+                        <label for="id">ID:</label>
+                        <input type="text" name="id" id="id" placeholder="id" readonly>
+                    </div>
+                    <div class="list-group-item">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" name="nombre" id="nombre" placeholder="Nombre">
+                    </div>
+                    <div class="list-group-item">
+                        <label for="avatar">Avatar:</label>
+                        <input type="text" name="avatar" id="avatar" placeholder="Avatar" readonly hidden>
+
+                        <div id="imagenes"></div>
+                    </div>
+                    <div class="list-group-item">
+                        <label for="sexo">Sexo:</label>
+                        <div class="form-check" name="sexo" id="sexo">
+                            <input class="form-check-input" type="radio" name="radio" id="radioHombre" value="H" checked>
+                            <label class="form-check-label" for="radioHombre">Hombre</label>
+                            <input class="form-check-input" type="radio" name="radio" id="radioMujer" value="M">
+                            <label class="form-check-label" for="radioMujer" id="labelRadioMujer">Mujer</label>
+                        </div>
+                    </div>
+                    <!--div id="botones" class="row justify-content-around">
+                        <input class="col-5 btn btn-primary" type="button" value="Guardar" onclick="guardar()">
+                        <input class="col-5 btn btn btn-warning" type="button" value="Nuevo Alumno" onclick="limpiarFormulario()">
+                    </div -->
+                </div>
+                <div id="cursos" class="list-group" hidden>
+                    <label id="titulocursos" name="titulocursos" class="titulos">MENU CURSOS</label>
+                    <div class="row">
+                        <div class="col-5 bloque">
+                            <label id="titulocursos" name="titulocursos" for="cursosactivos">Cursos Comprados</label>
+                            <div id="cursosactivos" class="list-group slide lista"></div>
+                        </div>
+                        <div class="col-2 bloque">
+                            <label id="titulocursos" name="titulocursos" for="botonescursos">Acción</label>
+                            <div id="botonescursos" class="list-group d-flex align-items-center">
+                                <input class="col-5 list-group-item btn btn-primary " type="button" value="Comprar" id="add" alt="Comprar Curso" title="Comprar Curso" onclick="agregarCurso(event)" disabled>
+                                <input class="col-5 list-group-item btn btn-danger" type="button" value="Eliminar" id="del" alt="Eliminar Curso" title="Eliminar Curso" onclick="eliminarCurso(event)" disabled>
+                            </div>
+                        </div>
+                        <div class="col-5 bloque slider">
+                            <label id="titulocursos" name="titulocursos" for="cursosinactivos">Cursos Disponibles</label>
+                            <div id="cursosinactivos" class="list-group  lista"></div>
+                        </div>
+                    </div>
+                    <div id="botones" class="row justify-content-around">
+                        <input class="col-5 btn btn-primary" id="bMostrarModal" type="button" value="Agregar Curso en Modal" data-toggle="modal" data-target="#modalCursos" disabled>
+                    </div>
+                </div>
+                <div id="botones" class="row justify-content-around">
+                    <input class="col-5 btn btn-primary" type="button" value="Guardar" onclick="guardar()">
+                    <input class="col-5 btn btn btn-dark" type="button" value="Nuevo Alumno" onclick="limpiarFormulario()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalCursos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal Cursos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" value="" id="previous" hidden>
+                        <label for="searchModal">Busqueda por nombre</label>
+                        <input id="searchModal" type="search " placeholder="Escribe un nombre " class="form-control col-9">
+                        <label for="cursosModal">Todos Los Cursos</label>
+                        <div id="cursosModal" class="list-group lista"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="bAgregarCursoModal" onclick="agregarCursoModal(event)" class="btn btn-primary " disabled>Agregar Curso</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </main>
+    <!-- jQuery -->
+    <script src="js/jquery-3.4.1.min.js "></script>
+    <!-- Bootstrap -->
+    <script src="js/bootstrap.bundle.min.js "></script>
+    <script src="js/profesores2promisesRest.js "></script>
+    <script>
+    </script>
+</body>
+
+</html>

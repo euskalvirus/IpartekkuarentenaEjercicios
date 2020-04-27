@@ -221,4 +221,25 @@ public class PersonaCursoDao implements IPersonaCursoDAO<Curso> {
 		return pc;
 	}
 
+	public ArrayList<Curso> getProfesorCursos(int id) throws Exception {
+		LOGGER.info("getPersonaCursos(" + id + ")");
+		ArrayList<Curso> cursos = null;
+		try (Connection con = ConnectionManager.getConnection();
+				PreparedStatement pst = con.prepareStatement("");) {
+			pst.setInt(1, id);
+			try (ResultSet rs = pst.executeQuery();) {
+				cursos = new ArrayList<Curso>();
+				while (rs.next()) {
+					cursos.add(mapperCurso(rs));
+				}
+			}
+
+		} catch (Exception e) {
+			LOGGER.warning("Ha habido algun problema con la conexion DDBB: " + id);
+			e.printStackTrace();
+			throw new Exception("Ha habido algun problema con la conexion DDBB: " + e.getMessage());
+		}
+		return cursos;
+	}
+
 }

@@ -131,19 +131,19 @@ function guardar() {
             "nombre": nombre,
             "avatar": `${avatar}`,
             "sexo": sexo,
-            "rol": { "id": 1, "nombre": 'alumno' }
+            "rol": { "id": 2, "nombre": 'profesor' }
         }
 
 
 
         switch (op) {
-            case "MODIFICAR ALUMNO":
-                console.debug("MODIFICAR ALUMNO");
+            case "MODIFICAR PROFESOR":
+                console.debug("MODIFICAR PROFESOR");
                 url = urlBase + id;
                 promesa = ajax('PUT', url, persona);
                 break;
-            case "NUEVO ALUMNO":
-                console.debug("NUEVO ALUMNO");
+            case "NUEVO PROFESOR":
+                console.debug("NUEVO PROFESOR");
                 url = urlBase;
                 promesa = ajax('POST', url, persona);
                 break;
@@ -180,7 +180,7 @@ function guardar() {
  */
 function validate(id, nombre, avatar, sexo, op) {
     console.debug("validate");
-    if (op === "NUEVO ALUMNO") { id = "1000"; }
+    if (op === "NUEVO PROFESOR") { id = "1000"; }
     if (id !== "" && nombre !== "" && avatar !== "" && (sexo === 'M' || sexo === 'H')) {
         return true;
     } else {
@@ -220,15 +220,15 @@ function eliminar(indice) {
 function seleccionar(indice) {
     console.debug(`seleccionar(${indice})`);
     document.getElementById('opcion').name = "modificar";
-    document.getElementById('opcion').textContent = "MODIFICAR ALUMNO"
-    const url = urlBase + indice
+    document.getElementById('opcion').textContent = "MODIFICAR PROFESOR"
+    const url = urlBase + "profesor/" + indice
     let tempPersonas = personas;
     const promesa = ajax('GET', url, null);
 
     promesa.then(persona => {
         console.debug("promesa then");
         document.getElementById('opcion').name = "modificar";
-        document.getElementById('opcion').textContent = "MODIFICAR ALUMNO"
+        document.getElementById('opcion').textContent = "MODIFICAR PROFESOR"
         document.getElementById('id').value = persona.id;
         document.getElementById('nombre').value = persona.nombre;
         document.getElementById('avatar').value = persona.avatar;
@@ -236,7 +236,15 @@ function seleccionar(indice) {
         selectAvatar(null, persona.avatar);
         personas = tempPersonas;
         console.debug(persona.id);
-        obtenerListasCursos(persona.id);
+
+        let activos = document.getElementById("cursosactivos");
+        activos.innerHTML = "";
+        console.debug("Persona cursos: " + JSON.stringify(persona));
+        persona.cursos.forEach(curso => {
+            activos.innerHTML += `<div><img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"></div>`
+        })
+
+        obtenerTodosLosCursos();
         let bModal = document.getElementById("bMostrarModal");
         bModal.disabled = false;
         document.getElementById("cursos").removeAttribute("hidden");
@@ -247,44 +255,12 @@ function seleccionar(indice) {
 }
 
 /**
- * Se obtienen las listas de cursos comprado y no comprado del usuario con ese idPersona
- * @param {*} idPersona 
- */
-function obtenerListasCursos(idPersona) {
-    console.debug("obtenerListasCursos")
-    const url = urlBase + idPersona + "/cursos/";
-
-    const promesa = ajax('GET', url, null);
-
-    promesa.then(arrayCursos => {
-        console.debug("dentro then");
-        let activos = document.getElementById("cursosactivos");
-        let inactivos = document.getElementById("cursosinactivos");
-        inactivos.innerHTML = "";
-        activos.innerHTML = "";
-        console.debug(JSON.stringify(arrayCursos));
-        arrayCursos.cursosNotIn.forEach(curso => {
-            inactivos.innerHTML += `<div><img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"> (${curso.profesor.nombre})</div>`
-        })
-
-        arrayCursos.cursosIn.forEach(curso => {
-            activos.innerHTML += `<div><img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"> (${curso.profesor.nombre})</div>`
-        })
-
-        let bDel = document.getElementById("del");
-        bDel.disabled = true;
-        let bAdd = document.getElementById("add");
-        bAdd.disabled = true;
-    });
-}
-
-/**
  * Se limpian todos los datos del formulario y se hace invisible la sección de cursos
  */
 function limpiarFormulario() {
     console.debug("limpiarFormulario");
     document.getElementById('opcion').name = "nuevo";
-    document.getElementById('opcion').textContent = "NUEVO ALUMNO"
+    document.getElementById('opcion').textContent = "NUEVO PROFESOR"
     document.getElementById('id').value = "";
     document.getElementById('nombre').value = "";
     document.getElementById('avatar').value = "";
@@ -311,19 +287,18 @@ function limpiarFormulario() {
  */
 function obtenerTodosLosCursos() {
     console.debug("obtenerTodosLosCursos")
-    const url = "http://localhost:8080/apprest/api/cursos/";
+    const url = "http://localhost:8080/apprest/api/cursos/profesor";
 
     const promesa = ajax('GET', url, null);
 
     promesa.then(cursos => {
         console.debug("dentro then");
+        console.debug(JSON.stringify(cursos));
         let inactivos = document.getElementById("cursosinactivos");
-        let activos = document.getElementById("cursosactivos");
         inactivos.innerHTML = "";
-        activos.innerHTML = "";
 
         cursos.forEach(curso => {
-            inactivos.innerHTML += `<div><img class="disabled" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" disabled> Profesor: ${curso.profesor.nombre}</div>`
+            inactivos.innerHTML += `<div><img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"></div>`
         })
     });
 }
@@ -432,7 +407,7 @@ function buscar(indicionombre, lista) {
  */
 function obtenerDatosRest(listasexo, buscador, limpiar) {
     console.debug("obtenerDatosRest");
-    const url = urlBase + "?rol=" + 1;
+    const url = urlBase + "?rol=" + 2;
 
     const promesa = ajax('GET', url, null);
 
@@ -536,12 +511,12 @@ function agregarCurso(evento) {
         }
     });
 
-    let url = urlBase + idPersona + "/cursos/" + idCurso;
+    let url = "http://localhost:8080/apprest/api/" + "cursos/" + idCurso + "/profesor/" + idPersona;
 
     console.debug(curso)
     console.debug(curso.innerHTML)
     console.debug(curso.outerHTML)
-    let promesa = ajax('POST', url, null);
+    let promesa = ajax('PUT', url, null);
 
     promesa.then(() => {
         let activos = document.getElementById("cursosactivos");
@@ -593,7 +568,7 @@ function eliminarCurso(evento) {
             curso = el;
         }
     });
-    let url = urlBase + idPersona + "/cursos/" + idCurso;
+    let url = "http://localhost:8080/apprest/api/" + "cursos/" + idCurso + "/profesor/" + idPersona;
     let promesa = ajax('DELETE', url, null);
 
     promesa.then(() => {
@@ -640,7 +615,7 @@ function cargarCursosModal(evento, filtro) {
     let listaModal = document.getElementById("cursosModal");
     listaModal.innerHTML = "";
 
-    const url = "http://localhost:8080/apprest/api/cursos/" + filtro;
+    const url = "http://localhost:8080/apprest/api/cursos/profesor/" + filtro;
 
     const promesa = ajax('GET', url, null);
 
@@ -663,7 +638,7 @@ function cargarCursosModal(evento, filtro) {
         }
         console.log(cursos);
         cursos.forEach(curso => {
-            listaModal.innerHTML += `<div><img onclick=selectCursoModal(event,null) id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}, ${curso.precio}€"> Nombre: ${curso.nombre},  Profesor: ${curso.profesor.nombre} Precio: ${curso.precio}€</div>`
+            listaModal.innerHTML += `<div><img onclick=selectCursoModal(event,null) id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}, ${curso.precio}€"> Nombre: ${curso.nombre} Precio: ${curso.precio}€</div>`
         })
     }).catch(error => {
         alert(error);
@@ -708,11 +683,11 @@ function agregarCursoModal(evento) {
         }
     });
 
-    let url = urlBase + idPersona + "/cursos/" + idCurso;
+    let url = "http://localhost:8080/apprest/api/" + "cursos/" + idCurso + "/profesor/" + idPersona;
 
-    let promesa = ajax('POST', url, null);
+    let promesa = ajax('PUT', url, null);
 
-    promesa.then((personacurso) => {
+    promesa.then((el) => {
         console.debug("then");
         let activos = document.getElementById("cursosactivos");
         img.classList.remove("selected");
@@ -721,7 +696,7 @@ function agregarCursoModal(evento) {
         //activos.innerHTML += curso.outerHTML;
         const inactivos = document.querySelectorAll('#cursosinactivos img');
 
-        let outer = `<div class="animated bounceInRight"><img onclick="selectActivo(event,null)" id="${personacurso.curso.id}" src="img/${personacurso.curso.imagen}" alt="${personacurso.curso.nombre}" title="${personacurso.curso.nombre}"> Profesor:  ${personacurso.curso.profesor.nombre}</div>`;
+        let outer = `<div class="animated bounceInRight"><img onclick="selectActivo(event,null)" id="${el.id}" src="img/${el.imagen}" alt="${el.nombre}" title="${el.nombre}"></div>`;
 
         curso.classList.add('animated', 'bounceOutLeft');
 
