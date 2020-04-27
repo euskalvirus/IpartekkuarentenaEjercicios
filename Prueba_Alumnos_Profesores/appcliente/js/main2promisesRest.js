@@ -53,19 +53,27 @@ function init() {
 
     let nombre = document.getElementById('nombre');
 
-    buscador.addEventListener('keyup', function() {
+    nombre.addEventListener('keyup', function() {
         console.debug("buscador EventListener");
         let valor = this.value;
+        let listasexo = document.getElementById('despegable').value;
         let url = urlBase + "?filtro=" + valor;
-        const promesa = ajax('GET', url, null);
+        if (this.name != valor) {
+            const promesa = ajax('GET', url, null);
 
-        promesa.then(() => {
-            nombre.classList.add('invalid');
-            nombre.classList.remove('valid')
-        }).catch(() => {
+            promesa.then(() => {
+                nombre.classList.add('invalid');
+                nombre.classList.remove('valid')
+            }).catch(() => {
+                nombre.classList.add('valid');
+                nombre.classList.remove('invalid')
+            })
+        } else {
             nombre.classList.add('valid');
             nombre.classList.remove('invalid')
-        })
+        }
+
+
     })
 
 
@@ -142,6 +150,7 @@ function guardar() {
     console.debug(document.getElementById('opcion'));
     let url = "";
     let promesa = {};
+
     if (validate(id, nombre, avatar, sexo, op)) {
         let persona = {
             "id": id,
@@ -169,7 +178,11 @@ function guardar() {
                 break;
         }
     } else {
-        alert("no has rellenado todos los campos");
+        if (document.getElementById('nombre').classList.contains('invalid')) {
+            alert("El nombre no esta disponible");
+        } else {
+            alert("no has rellenado todos los campos");
+        }
     }
     promesa.then(() => {
         if (op == "NUEVO ALUMNO") {
@@ -196,6 +209,7 @@ function guardar() {
  * @param {*} op 
  */
 function validate(id, nombre, avatar, sexo, op) {
+
     console.debug("validate");
     if (op === "NUEVO ALUMNO") { id = "1000"; }
     if (id !== "" && nombre !== "" && avatar !== "" && (sexo === 'M' || sexo === 'H')) {
@@ -247,7 +261,13 @@ function seleccionar(indice) {
         document.getElementById('opcion').name = "modificar";
         document.getElementById('opcion').textContent = "MODIFICAR ALUMNO"
         document.getElementById('id').value = persona.id;
-        document.getElementById('nombre').value = persona.nombre;
+
+        let name = document.getElementById('nombre');
+        name.classList.remove('valid');
+        name.classList.remove('invalid');
+        name.value = persona.nombre;
+        name.name = persona.nombre;
+
         document.getElementById('avatar').value = persona.avatar;
         (persona.sexo == "H") ? document.getElementById('radioHombre').checked = true: document.getElementById('radioMujer').checked = true;
         selectAvatar(null, persona.avatar);
@@ -303,7 +323,12 @@ function limpiarFormulario() {
     document.getElementById('opcion').name = "nuevo";
     document.getElementById('opcion').textContent = "NUEVO ALUMNO"
     document.getElementById('id').value = "";
-    document.getElementById('nombre').value = "";
+
+    let name = document.getElementById('nombre');
+    name.classList.remove('valid');
+    name.classList.remove('invalid');
+    name.value = "";
+    name.name = "";
     document.getElementById('avatar').value = "";
     document.getElementById('radioHombre').checked = true;
 
