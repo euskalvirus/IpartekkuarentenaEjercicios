@@ -91,7 +91,7 @@ function selectAvatar(evento, id) {
 }
 
 /**
- * Se pinta la lista de los alumnos
+ * Se pinta la lista de los profesores
  * @param {*} arraypersonas 
  * @param {*} limpiar Boolean que determina si se limpiar el formulario o no
  */
@@ -110,7 +110,7 @@ function pintar(arraypersonas, limpiar) {
 }
 
 /**
- * Se crea un nuevo alumno o actualiza el alumno con los datos del formulario
+ * Se crea un nuevo rofesor o actualiza el profesor con los datos del formulario
  */
 function guardar() {
     console.debug('dentro de guardar');
@@ -171,7 +171,7 @@ function guardar() {
 }
 
 /**
- * Valida que todos los datos necesarios para un nuevo usuario han sido introducidos
+ * Valida que todos los datos necesarios para un nuevo profesor han sido introducidos
  * @param {*} id 
  * @param {*} nombre 
  * @param {*} avatar 
@@ -189,7 +189,7 @@ function validate(id, nombre, avatar, sexo, op) {
 }
 
 /**
- * Se elimina el Alumno seleccionado
+ * Se elimina el Profesor seleccionado
  * @param {*} indice 
  */
 function eliminar(indice) {
@@ -214,7 +214,7 @@ function eliminar(indice) {
 }
 
 /**
- * Se cargan los datos del Alumno seleccionado en el formulario y se hace visible la seccion de cursos
+ * Se cargan los datos del Profesor seleccionado en el formulario y se hace visible la seccion de cursos
  * @param {*} indice 
  */
 function seleccionar(indice) {
@@ -304,7 +304,7 @@ function obtenerTodosLosCursos() {
 }
 
 /**
- * Se filtra la lista de Alumnos segun el sexo
+ * Se filtra la lista de Profesores segun el sexo
  * @param {*} sexo 
  * @param {*} lista 
  */
@@ -313,7 +313,7 @@ function filtarPorSexo(sexo, lista) {
 }
 
 /**
- * Se activa al seleccionar un curso que el alumno no tiene comprado y da la opcion de comprarlo
+ * Se activa al seleccionar un curso que el profesor no tiene comprado y da la opcion de comprarlo
  * @param {*} evento 
  * @param {*} id 
  */
@@ -340,7 +340,7 @@ function selectInactivo(evento, id) {
 }
 
 /**
- * Se activa al seleccionar un curso que el alumno tiene comprado y da la opcion de eliminarlo
+ * Se activa al seleccionar un curso que el profesor tiene comprado y da la opcion de eliminarlo
  * @param {*} evento 
  * @param {*} id 
  */
@@ -366,7 +366,7 @@ function selectActivo(evento, id) {
 }
 
 /**
- * Se hace visible el modal de comprar cursos para el Alumno
+ * Se hace visible el modal de comprar cursos para el Profesor
  * @param {*} evento 
  * @param {*} id 
  */
@@ -390,7 +390,7 @@ function selectCursoModal(evento, id) {
 }
 
 /**
- * Se filtra la lista buscando que el nombre del alumno contenga el texto introducido
+ * Se filtra la lista buscando que el nombre del profesor contenga el texto introducido
  * @param {*} indicionombre 
  * @param {*} lista 
  */
@@ -495,7 +495,7 @@ function ajax(metodo, url, datos) {
 }
 
 /**
- * Función que compra el curso para el Alumno
+ * Función que compra el curso para el Profesor
  * @param {*} evento 
  */
 function agregarCurso(evento) {
@@ -552,7 +552,7 @@ function agregarCurso(evento) {
 }
 
 /**
- * Función que elimina el curso para el Alumno
+ * Función que elimina el curso para el Profesor
  * @param {*} evento 
  */
 function eliminarCurso(evento) {
@@ -605,7 +605,7 @@ function eliminarCurso(evento) {
 }
 
 /**
- * Funcion que carga los cursos que el Alumno no tiene comprados en la lista del Modal
+ * Funcion que carga los cursos que el Profesor no tiene comprados en la lista del Modal
  * @param {*} evento 
  * @param {*} filtro 
  */
@@ -665,7 +665,7 @@ $('#modalCursos').on('hidden.bs.modal', function(event) {
 })
 
 /**
- * Funcion que agrega un curso al alumno desde el Modal
+ * Funcion que agrega un curso al profesor desde el Modal
  * @param {*} evento 
  */
 function agregarCursoModal(evento) {
