@@ -17,7 +17,7 @@
 body {
     margin: 0.5em;
     background-color: black;
-    width: 1080px !important;
+    width: 100% !important;
     align-content: center;
     margin: auto;
     padding-top: 10px;
@@ -39,7 +39,7 @@ main .list-group {
 h1 {
     background-color: rgb(124, 63, 7);
     color: white;
-    font-size: 2em;
+    font-size: 1.5em;
     height: 50px;
     text-align: center;
     border-radius: 10px;
@@ -212,7 +212,7 @@ img {
     padding-right: 20px;
 }
 
-div.col-2.bloque {
+div.col-lg-2.bloque {
     vertical-align: middle !important;
     align-self: center;
 }
@@ -225,8 +225,9 @@ div.col-2.bloque {
 input#add,
 input#del {
     margin-top: 10px;
-    padding-left: 10px;
-    padding-right: 70px;
+    padding-left: 7px;
+    padding-right: 50px;
+    font-size: 12px;
 }
 
 i:hover {
@@ -251,5 +252,44 @@ i:hover {
 }
 
 .menu {
-    float: right;
+    text-align: right;
+}
+
+.row.persona {
+    padding-left: 10px;
+}
+
+.row.persona * {
+    font-size: 10px;
+    height: fit-content;
+}
+
+i.fa.fa-pen,
+i.fa.fa-trash {
+    font-size: 14px;
+}
+
+@media (min-width: 1080px) {
+    body {
+        width: 1080px !important;
+    }
+}
+
+@media (min-width: 640px) {
+    .row.persona * {
+        font-size: 100% !important;
+    }
+    .row.persona {
+        padding-left: 25px;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    input#add,
+    input#del {
+        margin-top: 10px;
+        padding-left: 10px;
+        padding-right: 70px;
+        font-size: 100%;
+    }
 }

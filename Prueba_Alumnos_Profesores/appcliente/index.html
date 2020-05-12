@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <main class="container">
+    <main class="container-fluid">
         <div>
             <h1>LISTADO DE ALUMNOS</h1>
             <div class="menu">
@@ -29,19 +29,19 @@
             <p id="buscador"><b>BUSCADOR</b></p>
 
             <div class="row justify-content-around">
-                <select id="despegable" class="list col-2">
+                <select id="despegable" class="list col-3 col-md-2">
                     <option value="t" selected>Todos</option>
                     <option value="m">Mujeres</option>
                     <option value="h">Hombres</option>
                 </select>
-                <input id="search" type="search " placeholder="Escribe un nombre " class="form-control col-9">
+                <input id="search" type="search " placeholder="Escribe un nombre " class="form-control col-8 col-md-9">
             </div>
         </div>
         <div class="row justify-content-around" id="formulario">
-            <ul class="list-group col-4" id="lista">
+            <ul class="list-group col-5 col-lg-4" id="lista">
                 <li>Cargando...</li>
             </ul>
-            <div class="col-7 list-group" id="lista2">
+            <div class="col-6 col-lg-7 list-group" id="lista2">
                 <div class="list-group " id="formularioAlumno">
                     <label id="opcion" name="nuevo" class="titulos">NUEVO ALUMNO</label>
                     <div class="list-group-item">
@@ -75,18 +75,18 @@
                 <div id="cursos" class="list-group" hidden>
                     <label id="titulocursos" name="titulocursos" class="titulos">MENU CURSOS</label>
                     <div class="row">
-                        <div class="col-5 bloque">
+                        <div class="col-4 col-lg-5 bloque">
                             <label id="titulocursos" name="titulocursos" for="cursosactivos">Cursos Comprados</label>
                             <div id="cursosactivos" class="list-group slide lista"></div>
                         </div>
-                        <div class="col-2 bloque">
+                        <div class="col-3 col-lg-2 bloque">
                             <label id="titulocursos" name="titulocursos" for="botonescursos">Acción</label>
                             <div id="botonescursos" class="list-group d-flex align-items-center">
                                 <input class="col-5 list-group-item btn btn-primary " type="button" value="Comprar" id="add" alt="Comprar Curso" title="Comprar Curso" onclick="agregarCurso(event)" disabled>
                                 <input class="col-5 list-group-item btn btn-danger" type="button" value="Eliminar" id="del" alt="Eliminar Curso" title="Eliminar Curso" onclick="eliminarCurso(event)" disabled>
                             </div>
                         </div>
-                        <div class="col-5 bloque slider">
+                        <div class="col-4 col-lg-5 bloque slider">
                             <label id="titulocursos" name="titulocursos" for="cursosinactivos">Cursos Disponibles</label>
                             <div id="cursosinactivos" class="list-group  lista"></div>
                         </div>
