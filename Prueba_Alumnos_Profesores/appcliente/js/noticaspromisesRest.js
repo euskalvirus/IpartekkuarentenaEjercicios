@@ -23,8 +23,8 @@ function cargarNoticias() {
     promesa.then(noticias => {
 
         noticias.forEach(el => {
-            let fom = new Date(el.fecha).toISOString().slice(0, 22).replace('T', ', ');
-            console.log(new Date(el.fecha).toISOString().slice(0, 22).replace('T', ''))
+            let fom = new Date(el.fecha).toISOString().slice(0, 19).replace('T', ', ');
+            console.log(new Date(el.fecha).toISOString().slice(0, 19).replace('T', ''))
 
             noticiasDiv.innerHTML += `<div id="${el.id}" name="card${el.id}" class="card col-8 col-md-5" style="width: 18rem;">
             <img src="https://i.picsum.photos/id/${el.id}/300/200.jpg" class="card-img-top" alt="imagen card ${el.id}" style="height: 10rem;">

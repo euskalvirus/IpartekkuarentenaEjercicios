@@ -276,7 +276,7 @@ function seleccionar(indice) {
         activos.innerHTML = "";
         console.debug("Persona cursos: " + JSON.stringify(persona));
         persona.cursos.forEach(curso => {
-            activos.innerHTML += `<div><img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"></div>`
+            activos.innerHTML += `<div><img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"> <b>Nombre</b>: ${curso.nombre} </div>`
         })
 
         obtenerTodosLosCursos();
@@ -338,7 +338,7 @@ function obtenerTodosLosCursos() {
         inactivos.innerHTML = "";
 
         cursos.forEach(curso => {
-            inactivos.innerHTML += `<div><img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"></div>`
+            inactivos.innerHTML += `<div><img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"> <b>Nombre</b>: ${curso.nombre} </div>`
         })
     });
 }

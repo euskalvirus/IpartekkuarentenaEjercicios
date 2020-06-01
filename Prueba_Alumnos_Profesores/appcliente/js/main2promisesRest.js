@@ -96,7 +96,7 @@ function initGallery() {
 
 
 /**
- * Se selecciona el avatar y se cargar el valir en el input con id 'Avatar'.
+ * Se selecciona el avatar y se cargar el valor en el input con id 'Avatar'.
  * @param {*} evento 
  * @param {*} id 
  */
@@ -301,11 +301,11 @@ function obtenerListasCursos(idPersona) {
         activos.innerHTML = "";
         console.debug(JSON.stringify(arrayCursos));
         arrayCursos.cursosNotIn.forEach(curso => {
-            inactivos.innerHTML += `<div><img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"> (${curso.profesor.nombre})</div>`
+            inactivos.innerHTML += `<div><img onclick="selectInactivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"> (${curso.profesor.nombre == null ? "Profesor sin asignar" : curso.profesor.nombre})</div>`
         })
 
         arrayCursos.cursosIn.forEach(curso => {
-            activos.innerHTML += `<div><img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"> (${curso.profesor.nombre})</div>`
+            activos.innerHTML += `<div><img onclick="selectActivo(event,null)" id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}" title="${curso.nombre}"> (${curso.profesor.nombre == null ? "Profesor sin asignar" : curso.profesor.nombre})</div>`
         })
 
         let bDel = document.getElementById("del");
@@ -705,7 +705,7 @@ function cargarCursosModal(evento, filtro) {
         }
         console.log(cursos);
         cursos.forEach(curso => {
-            listaModal.innerHTML += `<div><img onclick=selectCursoModal(event,null) id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}, ${curso.precio}€"> Nombre: ${curso.nombre},  Profesor: ${curso.profesor.nombre} Precio: ${curso.precio}€</div>`
+            listaModal.innerHTML += `<div><img onclick=selectCursoModal(event,null) id="${curso.id}" src="img/${curso.imagen}" alt="${curso.nombre}, ${curso.precio}€"> <b>Nombre</b>: ${curso.nombre},  <b>Profesor</b>: ${curso.profesor == null ? "Profesor sin asignar" : curso.profesor.nombre}, <b>Precio</b>: ${curso.precio}€</div>`
         })
     }).catch(error => {
         alert(error);
